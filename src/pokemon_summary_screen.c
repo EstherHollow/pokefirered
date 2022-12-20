@@ -2084,6 +2084,7 @@ static void BufferMonInfo(void)
     u16 gender;
     u16 heldItem;
     u32 otId;
+    u32 personality;
 
     dexNum = SpeciesToPokedexNum(GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_SPECIES));
     if (dexNum == 0xffff)
@@ -2104,8 +2105,9 @@ static void BufferMonInfo(void)
         return;
     }
 
-    sMonSummaryScreen->monTypes[0] = gSpeciesInfo[dexNum].types[0];
-    sMonSummaryScreen->monTypes[1] = gSpeciesInfo[dexNum].types[1];
+    personality = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_PERSONALITY);
+    sMonSummaryScreen->monTypes[0] = GetType1(dexNum, personality);
+    sMonSummaryScreen->monTypes[1] = GetType2(dexNum, personality);
 
     GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_NICKNAME, tempStr);
     StringCopyN_Multibyte(sMonSummaryScreen->summary.nicknameStrBuf, tempStr, POKEMON_NAME_LENGTH);

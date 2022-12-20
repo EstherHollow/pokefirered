@@ -12,6 +12,12 @@ u16 Random(void)
     return gRngValue >> 16;
 }
 
+u16 RandomRange(u16 min, u16 max)
+{
+    u16 range = max - min + 1;
+    return Random() % range + min;
+}
+
 void SeedRng(u16 seed)
 {
     gRngValue = seed;

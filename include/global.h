@@ -259,6 +259,7 @@ struct RecordMixingGift
 #include "global.fieldmap.h"
 #include "global.berry.h"
 #include "pokemon.h"
+#include "pokemon_stats.h"
 
 struct BattleTowerRecord // record mixing
 {

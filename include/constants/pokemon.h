@@ -212,6 +212,8 @@
 #define MON_FEMALE     0xFE
 #define MON_GENDERLESS 0xFF
 
+#define MON_FLAG_IS_STARTER     1
+
 #define FRIENDSHIP_EVENT_GROW_LEVEL           0
 #define FRIENDSHIP_EVENT_VITAMIN              1
 #define FRIENDSHIP_EVENT_BATTLE_ITEM          2

@@ -10,6 +10,9 @@ extern u32 gRng2Value;
 u16 Random(void);
 u16 Random2(void);
 
+//Returns a 16-bit number between min and max, inclusive
+u16 RandomRange(u16 min, u16 max);
+
 //Returns a 32-bit pseudorandom number
 #define Random32() (Random() | (Random() << 16))
 

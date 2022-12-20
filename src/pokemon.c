@@ -1391,6 +1391,7 @@ static const s8 sNatureStatTable[NUM_NATURES][NUM_NATURE_STATS] =
 #include "data/pokemon/cry_ids.h"
 #include "data/pokemon/experience_tables.h"
 #include "data/pokemon/species_info.h"
+#include "data/pokemon/variant_stats.h"
 #include "data/pokemon/level_up_learnsets.h"
 #include "data/pokemon/evolution.h"
 #include "data/pokemon/level_up_learnset_pointers.h"
@@ -1859,6 +1860,19 @@ void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, 
     }
 
     GiveBoxMonInitialMoveset(boxMon);
+}
+
+void CreateMonWithFlags(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u32 flags)
+{
+    if (flags & MON_FLAG_IS_STARTER)
+    {
+        // Nothing different
+        CreateMon(mon, species, level, fixedIV, 0, 0, OT_ID_PLAYER_ID, 0);
+    }
+    else
+    {
+        CreateMon(mon, species, level, fixedIV, 0, 0, OT_ID_PLAYER_ID, 0);
+    }
 }
 
 void CreateMonWithNature(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 nature)
@@ -3938,8 +3952,8 @@ static void CopyPlayerPartyMonToBattleData(u8 battlerId, u8 partyIndex)
     gBattleMons[battlerId].isEgg = GetMonData(&gPlayerParty[partyIndex], MON_DATA_IS_EGG, NULL);
     gBattleMons[battlerId].abilityNum = GetMonData(&gPlayerParty[partyIndex], MON_DATA_ABILITY_NUM, NULL);
     gBattleMons[battlerId].otId = GetMonData(&gPlayerParty[partyIndex], MON_DATA_OT_ID, NULL);
-    gBattleMons[battlerId].type1 = gSpeciesInfo[gBattleMons[battlerId].species].types[0];
-    gBattleMons[battlerId].type2 = gSpeciesInfo[gBattleMons[battlerId].species].types[1];
+    gBattleMons[battlerId].type1 = GetType1(gBattleMons[battlerId].species, gBattleMons[battlerId].personality);
+    gBattleMons[battlerId].type2 = GetType2(gBattleMons[battlerId].species, gBattleMons[battlerId].personality);
     gBattleMons[battlerId].ability = GetAbilityBySpecies(gBattleMons[battlerId].species, gBattleMons[battlerId].abilityNum);
     GetMonData(&gPlayerParty[partyIndex], MON_DATA_NICKNAME, nickname);
     StringCopy_Nickname(gBattleMons[battlerId].nickname, nickname);
@@ -5881,26 +5895,14 @@ void PlayMapChosenOrBattleBGM(u16 songId)
         PlayNewMapMusic(GetBattleBGM());
 }
 
-const u32 *GetMonFrontSpritePal(struct Pokemon *mon)
+const u32 *GetMonSpritePal(struct Pokemon *mon)
 {
-    u16 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG, NULL);
-    u32 otId = GetMonData(mon, MON_DATA_OT_ID, NULL);
-    u32 personality = GetMonData(mon, MON_DATA_PERSONALITY, NULL);
-    return GetMonSpritePalFromSpeciesAndPersonality(species, otId, personality);
+    return GetMonSpritePalStruct(mon)->data;
 }
 
-const u32 *GetMonSpritePalFromSpeciesAndPersonality(u16 species, u32 otId, u32 personality)
+const u32 *GetMonSpritePalFromPersonality(u16 species, u32 otId, u32 personality)
 {
-    u32 shinyValue;
-
-    if (species > SPECIES_EGG)
-        return gMonPaletteTable[0].data;
-
-    shinyValue = GET_SHINY_VALUE(otId, personality);
-    if (shinyValue < SHINY_ODDS)
-        return gMonShinyPaletteTable[species].data;
-    else
-        return gMonPaletteTable[species].data;
+	return GetMonSpritePalStructFromPersonality(species, otId, personality)->data;
 }
 
 const struct CompressedSpritePalette *GetMonSpritePalStruct(struct Pokemon *mon)
@@ -5908,18 +5910,29 @@ const struct CompressedSpritePalette *GetMonSpritePalStruct(struct Pokemon *mon)
     u16 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG, NULL);
     u32 otId = GetMonData(mon, MON_DATA_OT_ID, NULL);
     u32 personality = GetMonData(mon, MON_DATA_PERSONALITY, NULL);
-    return GetMonSpritePalStructFromOtIdPersonality(species, otId, personality);
+    return GetMonSpritePalStructFromPersonality(species, otId, personality);
 }
 
-const struct CompressedSpritePalette *GetMonSpritePalStructFromOtIdPersonality(u16 species, u32 otId , u32 personality)
+const struct CompressedSpritePalette *GetMonSpritePalStructFromPersonality(u16 species, u32 otId, u32 personality)
 {
-    u32 shinyValue;
+	if (species > SPECIES_EGG) return &gMonPaletteTable[SPECIES_EGG][0];
+	if (otId == 0 && personality == 0x8000) return &gMonPaletteTable[species][0];
+    if (IsShinyOtIdPersonality(otId, personality)) return &gMonPaletteTable[species][1];
 
-    shinyValue = GET_SHINY_VALUE(otId, personality);
-    if (shinyValue < SHINY_ODDS)
-        return &gMonShinyPaletteTable[species];
-    else
-        return &gMonPaletteTable[species];
+    switch (species) {
+	case SPECIES_BULBASAUR:
+	case SPECIES_IVYSAUR:
+	case SPECIES_VENUSAUR:
+	case SPECIES_CHARMANDER:
+	case SPECIES_CHARMELEON:
+	case SPECIES_CHARIZARD:
+	case SPECIES_SQUIRTLE:
+	case SPECIES_WARTORTLE:
+	case SPECIES_BLASTOISE:
+	    return &gMonPaletteTable[species][personality % 4 + 2];
+	default:
+		return &gMonPaletteTable[species][0];
+	}
 }
 
 bool32 IsHMMove2(u16 move)
