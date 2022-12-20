@@ -278,8 +278,7 @@ const union AnimCmd *const gAnims_MonPic[] =
 };
 
 #define SPECIES_SPRITE(species, sprite) [SPECIES_##species] = {sprite, 0x800, SPECIES_##species}
-#define SPECIES_PAL(species, pal) [SPECIES_##species] = {pal, SPECIES_##species}
-#define SPECIES_SHINY_PAL(species, pal) [SPECIES_##species] = {pal, SPECIES_##species + SPECIES_SHINY_TAG}
+#define SPECIES_PAL(species, index, pal) {pal, SPECIES_##species + (SPECIES_TAG_INCREMENT * index)}
 
 #define TRAINER_SPRITE(trainerPic, sprite, size) [TRAINER_PIC_##trainerPic] = {sprite, size, TRAINER_PIC_##trainerPic}
 #define TRAINER_PAL(trainerPic, pal) [TRAINER_PIC_##trainerPic] = {pal, TRAINER_PIC_##trainerPic}
@@ -289,7 +288,6 @@ const union AnimCmd *const gAnims_MonPic[] =
 #include "data/pokemon_graphics/back_pic_coordinates.h"
 #include "data/pokemon_graphics/back_pic_table.h"
 #include "data/pokemon_graphics/palette_table.h"
-#include "data/pokemon_graphics/shiny_palette_table.h"
 
 #include "data/trainer_graphics/front_pic_anims.h"
 #include "data/trainer_graphics/front_pic_tables.h"
