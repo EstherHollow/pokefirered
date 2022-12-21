@@ -2263,20 +2263,24 @@ static void GiveMonInitialMoveset(struct Pokemon *mon)
 static void GiveBoxMonInitialMoveset(struct BoxPokemon *boxMon)
 {
     u16 species = GetBoxMonData(boxMon, MON_DATA_SPECIES, NULL);
+    u32 personality = GetBoxMonData(boxMon, MON_DATA_PERSONALITY, NULL);
     s32 level = GetLevelFromBoxMonExp(boxMon);
     s32 i;
+    u16 learnset[24];
 
-    for (i = 0; gLevelUpLearnsets[species][i] != LEVEL_UP_END; i++)
+    GetLevelUpLearnset(species, personality, learnset);
+
+    for (i = 0; learnset[i] != LEVEL_UP_END; i++)
     {
         u16 moveLevel;
         u16 move;
 
-        moveLevel = (gLevelUpLearnsets[species][i] & 0xFE00);
+        moveLevel = (learnset[i] & 0xFE00);
 
         if (moveLevel > (level << 9))
             break;
 
-        move = (gLevelUpLearnsets[species][i] & 0x1FF);
+        move = (learnset[i] & 0x1FF);
 
         if (GiveMoveToBoxMon(boxMon, move) == 0xFFFF)
             DeleteFirstMoveAndGiveMoveToBoxMon(boxMon, move);
@@ -2287,7 +2291,11 @@ u16 MonTryLearningNewMove(struct Pokemon *mon, bool8 firstMove)
 {
     u32 retVal = 0;
     u16 species = GetMonData(mon, MON_DATA_SPECIES, NULL);
+    u32 personality = GetMonData(mon, MON_DATA_PERSONALITY, NULL);
     u8 level = GetMonData(mon, MON_DATA_LEVEL, NULL);
+    u16 learnset[24];
+
+    GetLevelUpLearnset(species, personality, learnset);
 
     // since you can learn more than one move per level
     // the game needs to know whether you decided to
@@ -2297,17 +2305,17 @@ u16 MonTryLearningNewMove(struct Pokemon *mon, bool8 firstMove)
     {
         sLearningMoveTableID = 0;
 
-        while ((gLevelUpLearnsets[species][sLearningMoveTableID] & 0xFE00) != (level << 9))
+        while ((learnset[sLearningMoveTableID] & 0xFE00) != (level << 9))
         {
             sLearningMoveTableID++;
-            if (gLevelUpLearnsets[species][sLearningMoveTableID] == LEVEL_UP_END)
+            if (learnset[sLearningMoveTableID] == LEVEL_UP_END)
                 return 0;
         }
     }
 
-    if ((gLevelUpLearnsets[species][sLearningMoveTableID] & 0xFE00) == (level << 9))
+    if ((learnset[sLearningMoveTableID] & 0xFE00) == (level << 9))
     {
-        gMoveToLearn = (gLevelUpLearnsets[species][sLearningMoveTableID] & 0x1FF);
+        gMoveToLearn = (learnset[sLearningMoveTableID] & 0x1FF);
         sLearningMoveTableID++;
         retVal = GiveMoveToMon(mon, gMoveToLearn);
     }
@@ -5777,6 +5785,12 @@ const struct CompressedSpritePalette *GetMonSpritePalStructFromPersonality(u16 s
 	case SPECIES_WARTORTLE:
 	case SPECIES_BLASTOISE:
 	    return &gMonPaletteTable[species][personality % 4 + 2];
+	case SPECIES_PIDGEY:
+    case SPECIES_PIDGEOTTO:
+    case SPECIES_PIDGEOT:
+    case SPECIES_RATTATA:
+    case SPECIES_RATICATE:
+        return &gMonPaletteTable[species][personality % 3 + 2];
 	default:
 		return &gMonPaletteTable[species][0];
 	}
