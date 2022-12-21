@@ -20,7 +20,7 @@ struct VariantStats
     u8 type1;
     u8 type2;
     u8 ability;
-    u16 learnset[3];
+    u16 learnset[4];
 };
 
 extern const struct VariantStats gVariantStats[][MAX_VARIANTS_PER_SPECIES];
@@ -35,5 +35,6 @@ u8 GetType1(u16 species, u32 personality);
 u8 GetType2(u16 species, u32 personality);
 //u8 GetAbility1(u16 species);
 //u8 GetAbility2(u16 species);
+u8 GetLevelUpLearnset(u16 species, u32 personality, u16 *moves);
 
 #endif // GUARD_POKEMON_STATS_H

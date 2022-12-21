@@ -192,6 +192,9 @@ const u32 gMonPalettes_Pidgey[8][16] =
 {
 		INCBIN_U32("graphics/pokemon/pidgey/normal.gbapal.lz"),
 		INCBIN_U32("graphics/pokemon/pidgey/shiny.gbapal.lz"),
+        INCBIN_U32("graphics/pokemon/pidgey/yellow.gbapal.lz"),
+        INCBIN_U32("graphics/pokemon/pidgey/red.gbapal.lz"),
+        INCBIN_U32("graphics/pokemon/pidgey/blue.gbapal.lz"),
 };
 
 const u32 gMonFrontPic_Pidgeotto[] = INCBIN_U32("graphics/pokemon/pidgeotto/front.4bpp.lz");
@@ -202,6 +205,9 @@ const u32 gMonPalettes_Pidgeotto[8][16] =
 {
 		INCBIN_U32("graphics/pokemon/pidgeotto/normal.gbapal.lz"),
 		INCBIN_U32("graphics/pokemon/pidgeotto/shiny.gbapal.lz"),
+        INCBIN_U32("graphics/pokemon/pidgeotto/yellow.gbapal.lz"),
+        INCBIN_U32("graphics/pokemon/pidgeotto/red.gbapal.lz"),
+        INCBIN_U32("graphics/pokemon/pidgeotto/blue.gbapal.lz"),
 };
 
 const u32 gMonFrontPic_Pidgeot[] = INCBIN_U32("graphics/pokemon/pidgeot/front.4bpp.lz");
@@ -212,6 +218,9 @@ const u32 gMonPalettes_Pidgeot[8][16] =
 {
 		INCBIN_U32("graphics/pokemon/pidgeot/normal.gbapal.lz"),
 		INCBIN_U32("graphics/pokemon/pidgeot/shiny.gbapal.lz"),
+        INCBIN_U32("graphics/pokemon/pidgeot/yellow.gbapal.lz"),
+        INCBIN_U32("graphics/pokemon/pidgeot/red.gbapal.lz"),
+        INCBIN_U32("graphics/pokemon/pidgeot/blue.gbapal.lz"),
 };
 
 const u32 gMonFrontPic_Rattata[] = INCBIN_U32("graphics/pokemon/rattata/front.4bpp.lz");
@@ -222,6 +231,9 @@ const u32 gMonPalettes_Rattata[8][16] =
 {
 		INCBIN_U32("graphics/pokemon/rattata/normal.gbapal.lz"),
 		INCBIN_U32("graphics/pokemon/rattata/shiny.gbapal.lz"),
+        INCBIN_U32("graphics/pokemon/rattata/purple.gbapal.lz"),
+        INCBIN_U32("graphics/pokemon/rattata/brown.gbapal.lz"),
+        INCBIN_U32("graphics/pokemon/rattata/white.gbapal.lz"),
 };
 
 const u32 gMonFrontPic_Raticate[] = INCBIN_U32("graphics/pokemon/raticate/front.4bpp.lz");
@@ -232,6 +244,9 @@ const u32 gMonPalettes_Raticate[8][16] =
 {
 		INCBIN_U32("graphics/pokemon/raticate/normal.gbapal.lz"),
 		INCBIN_U32("graphics/pokemon/raticate/shiny.gbapal.lz"),
+        INCBIN_U32("graphics/pokemon/raticate/brown.gbapal.lz"),
+        INCBIN_U32("graphics/pokemon/raticate/purple.gbapal.lz"),
+        INCBIN_U32("graphics/pokemon/raticate/black.gbapal.lz"),
 };
 
 const u32 gMonFrontPic_Spearow[] = INCBIN_U32("graphics/pokemon/spearow/front.4bpp.lz");
