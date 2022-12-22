@@ -1781,24 +1781,51 @@ void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, 
 
     SetBoxMonData(boxMon, MON_DATA_PERSONALITY, &personality);
 
-    //Determine original trainer ID
-    if (otIdType == OT_ID_TRAINER) //Pokemon cannot be shiny
-    {
-        u32 shinyValue;
-        do
-        {
-            value = Random32();
-            shinyValue = GET_SHINY_VALUE(value, personality);
-        } while (shinyValue < SHINY_ODDS);
-        SetBoxMonData(boxMon, MON_DATA_OT_ID, &value);
-    }
-    else if (otIdType == OT_ID_OTHER) //Pokemon has a preset OT ID
-    {
+    if (otIdType == OT_ID_OTHER) {
         value = otIdValue;
         SetBoxMonData(boxMon, MON_DATA_OT_ID, &value);
     }
-    else //Player is the OT
-    {
+    else if (otIdType == OT_ID_TRAINER) {
+        switch (otIdValue) {
+        case TRAINER_RIVAL_OAKS_LAB_SQUIRTLE:
+        case TRAINER_RIVAL_OAKS_LAB_BULBASAUR:
+        case TRAINER_RIVAL_OAKS_LAB_CHARMANDER:
+        case TRAINER_RIVAL_ROUTE22_EARLY_SQUIRTLE:
+        case TRAINER_RIVAL_ROUTE22_EARLY_BULBASAUR:
+        case TRAINER_RIVAL_ROUTE22_EARLY_CHARMANDER:
+        case TRAINER_RIVAL_CERULEAN_SQUIRTLE:
+        case TRAINER_RIVAL_CERULEAN_BULBASAUR:
+        case TRAINER_RIVAL_CERULEAN_CHARMANDER:
+        case TRAINER_RIVAL_SS_ANNE_SQUIRTLE:
+        case TRAINER_RIVAL_SS_ANNE_BULBASAUR:
+        case TRAINER_RIVAL_SS_ANNE_CHARMANDER:
+        case TRAINER_RIVAL_POKENON_TOWER_SQUIRTLE:
+        case TRAINER_RIVAL_POKENON_TOWER_BULBASAUR:
+        case TRAINER_RIVAL_POKENON_TOWER_CHARMANDER:
+        case TRAINER_RIVAL_SILPH_SQUIRTLE:
+        case TRAINER_RIVAL_SILPH_BULBASAUR:
+        case TRAINER_RIVAL_SILPH_CHARMANDER:
+        case TRAINER_RIVAL_ROUTE22_LATE_SQUIRTLE:
+        case TRAINER_RIVAL_ROUTE22_LATE_BULBASAUR:
+        case TRAINER_RIVAL_ROUTE22_LATE_CHARMANDER:
+        case TRAINER_CHAMPION_FIRST_SQUIRTLE:
+        case TRAINER_CHAMPION_FIRST_BULBASAUR:
+        case TRAINER_CHAMPION_FIRST_CHARMANDER:
+        case TRAINER_CHAMPION_REMATCH_SQUIRTLE:
+        case TRAINER_CHAMPION_REMATCH_BULBASAUR:
+        case TRAINER_CHAMPION_REMATCH_CHARMANDER:
+            otIdValue = 0xFFFFFFFF;
+            break;
+        }
+
+        value = gSaveBlock2Ptr->playerTrainerId[0]
+              | (gSaveBlock2Ptr->playerTrainerId[1] << 8)
+              | (gSaveBlock2Ptr->playerTrainerId[2] << 16)
+              | (gSaveBlock2Ptr->playerTrainerId[3] << 24);
+        value ^= otIdValue;
+        SetBoxMonData(boxMon, MON_DATA_OT_ID, &value);
+    }
+    else {
         value = gSaveBlock2Ptr->playerTrainerId[0]
               | (gSaveBlock2Ptr->playerTrainerId[1] << 8)
               | (gSaveBlock2Ptr->playerTrainerId[2] << 16)
@@ -1806,74 +1833,16 @@ void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, 
         SetBoxMonData(boxMon, MON_DATA_OT_ID, &value);
     }
 
-//    if (otIdType == OT_ID_OTHER) {
-//        value = otIdValue;
-//        SetBoxMonData(boxMon, MON_DATA_OT_ID, &value);
-//
-//        variant = GetTrainerMonVariant(species, value);
-//        SetBoxMonData(boxMon, MON_DATA_VARIANT, &variant);
-//    }
-//    else if (otIdType == OT_ID_TRAINER) {
-//        switch (otIdValue) {
-//        case TRAINER_RIVAL_OAKS_LAB_SQUIRTLE:
-//        case TRAINER_RIVAL_OAKS_LAB_BULBASAUR:
-//        case TRAINER_RIVAL_OAKS_LAB_CHARMANDER:
-//        case TRAINER_RIVAL_ROUTE22_EARLY_SQUIRTLE:
-//        case TRAINER_RIVAL_ROUTE22_EARLY_BULBASAUR:
-//        case TRAINER_RIVAL_ROUTE22_EARLY_CHARMANDER:
-//        case TRAINER_RIVAL_CERULEAN_SQUIRTLE:
-//        case TRAINER_RIVAL_CERULEAN_BULBASAUR:
-//        case TRAINER_RIVAL_CERULEAN_CHARMANDER:
-//        case TRAINER_RIVAL_SS_ANNE_SQUIRTLE:
-//        case TRAINER_RIVAL_SS_ANNE_BULBASAUR:
-//        case TRAINER_RIVAL_SS_ANNE_CHARMANDER:
-//        case TRAINER_RIVAL_POKENON_TOWER_SQUIRTLE:
-//        case TRAINER_RIVAL_POKENON_TOWER_BULBASAUR:
-//        case TRAINER_RIVAL_POKENON_TOWER_CHARMANDER:
-//        case TRAINER_RIVAL_SILPH_SQUIRTLE:
-//        case TRAINER_RIVAL_SILPH_BULBASAUR:
-//        case TRAINER_RIVAL_SILPH_CHARMANDER:
-//        case TRAINER_RIVAL_ROUTE22_LATE_SQUIRTLE:
-//        case TRAINER_RIVAL_ROUTE22_LATE_BULBASAUR:
-//        case TRAINER_RIVAL_ROUTE22_LATE_CHARMANDER:
-//        case TRAINER_CHAMPION_FIRST_SQUIRTLE:
-//        case TRAINER_CHAMPION_FIRST_BULBASAUR:
-//        case TRAINER_CHAMPION_FIRST_CHARMANDER:
-//        case TRAINER_CHAMPION_REMATCH_SQUIRTLE:
-//        case TRAINER_CHAMPION_REMATCH_BULBASAUR:
-//        case TRAINER_CHAMPION_REMATCH_CHARMANDER:
-//            otIdValue = 0xFFFFFFFF;
-//            break;
-//        }
-//
-//        value = gSaveBlock2Ptr->playerTrainerId[0]
-//              | (gSaveBlock2Ptr->playerTrainerId[1] << 8)
-//              | (gSaveBlock2Ptr->playerTrainerId[2] << 16)
-//              | (gSaveBlock2Ptr->playerTrainerId[3] << 24);
-//        value ^= otIdValue;
-//        SetBoxMonData(boxMon, MON_DATA_OT_ID, &value);
-//
-//        variant = GetTrainerMonVariant(species, value);
-//        SetBoxMonData(boxMon, MON_DATA_VARIANT, &variant);
-//    }
-//    else {
-//        value = gSaveBlock2Ptr->playerTrainerId[0]
-//              | (gSaveBlock2Ptr->playerTrainerId[1] << 8)
-//              | (gSaveBlock2Ptr->playerTrainerId[2] << 16)
-//              | (gSaveBlock2Ptr->playerTrainerId[3] << 24);
-//        SetBoxMonData(boxMon, MON_DATA_OT_ID, &value);
-//
-//        variant = GetPlayerMonVariant(species);
-//        SetBoxMonData(boxMon, MON_DATA_VARIANT, &variant);
-//    }
-
     checksum = CalculateBoxMonChecksum(boxMon);
     SetBoxMonData(boxMon, MON_DATA_CHECKSUM, &checksum);
     EncryptBoxMon(boxMon);
 
     GetSpeciesName(speciesName, species);
     SetBoxMonData(boxMon, MON_DATA_NICKNAME, speciesName);
-    variant = GetPlayerMonVariant(species);
+    if (otIdType == OT_ID_PLAYER)
+        variant = GetPlayerMonVariant(species);
+    else
+        variant = GetTrainerMonVariant(species, value);
     SetBoxMonData(boxMon, MON_DATA_VARIANT, &variant);
     SetBoxMonData(boxMon, MON_DATA_LANGUAGE, &gGameLanguage);
     SetBoxMonData(boxMon, MON_DATA_OT_NAME, gSaveBlock2Ptr->playerName);
