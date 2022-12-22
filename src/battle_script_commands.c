@@ -4480,8 +4480,8 @@ static void Cmd_switchindataupdate(void)
     for (i = 0; i < sizeof(struct BattlePokemon); i++)
         monData[i] = gBattleBufferB[gActiveBattler][4 + i];
 
-    gBattleMons[gActiveBattler].type1 = GetType1(gBattleMons[gActiveBattler].species, gBattleMons[gActiveBattler].personality);
-    gBattleMons[gActiveBattler].type2 = GetType2(gBattleMons[gActiveBattler].species, gBattleMons[gActiveBattler].personality);
+    gBattleMons[gActiveBattler].type1 = GetType1(gBattleMons[gActiveBattler].species, gBattleMons[gActiveBattler].variant);
+    gBattleMons[gActiveBattler].type2 = GetType2(gBattleMons[gActiveBattler].species, gBattleMons[gActiveBattler].variant);
     gBattleMons[gActiveBattler].ability = GetAbilityBySpecies(gBattleMons[gActiveBattler].species, gBattleMons[gActiveBattler].abilityNum);
 
     // check knocked off item
@@ -9697,8 +9697,8 @@ static void Cmd_displaydexinfo(void)
         if (!IsDma3ManagerBusyWithBgCopy())
         {
             CreateMonPicSprite_HandleDeoxys(species,
-                                            gBattleMons[B_POSITION_OPPONENT_LEFT].otId,
                                             gBattleMons[B_POSITION_OPPONENT_LEFT].personality,
+                                            gBattleMons[B_POSITION_OPPONENT_LEFT].variant,
                                             TRUE,
                                             120,
                                             64,

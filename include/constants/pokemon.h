@@ -91,6 +91,7 @@
 #define MON_DATA_SPEED2                   86
 #define MON_DATA_SPATK2                   87
 #define MON_DATA_SPDEF2                   88
+#define MON_DATA_VARIANT                  89
 
 // Pokemon types
 #define TYPE_NONE           255
@@ -206,7 +207,16 @@
 #define LEVEL_UP_MOVE_LV   0xFE00
 #define LEVEL_UP_END       0xFFFF
 
-#define MAX_LEVEL_UP_MOVES       20
+#define MAX_LEVEL_UP_MOVES  20
+#define MAX_LEVEL          100
+
+#define OT_ID_PLAYER 0
+#define OT_ID_TRAINER 1
+#define OT_ID_OTHER 2
+
+#define MON_GIVEN_TO_PARTY      0x0
+#define MON_GIVEN_TO_PC         0x1
+#define MON_CANT_GIVE           0x2
 
 #define MON_MALE       0x00
 #define MON_FEMALE     0xFE

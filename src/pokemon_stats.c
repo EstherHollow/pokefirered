@@ -1,14 +1,7 @@
 #include "global.h"
 #include "pokemon_stats.h"
 
-u8 GetType1(u16 species, u32 personality) {
-    u8 variant = 0;
-    switch (species) {
-    case SPECIES_BULBASAUR:
-        variant = personality % 4 + 2;
-        break;
-    }
-
+u8 GetType1(u16 species, u8 variant) {
     if ((gVariantStats[species][variant].variantFlags & VARIANT_FLAG_TYPE) > 0) {
         return gVariantStats[species][variant].type1;
     }
@@ -17,14 +10,7 @@ u8 GetType1(u16 species, u32 personality) {
     }
 }
 
-u8 GetType2(u16 species, u32 personality) {
-    u8 variant = 0;
-    switch (species) {
-    case SPECIES_BULBASAUR:
-        variant = personality % 4 + 2;
-        break;
-    }
-
+u8 GetType2(u16 species, u8 variant) {
     if ((gVariantStats[species][variant].variantFlags & VARIANT_FLAG_TYPE) > 0) {
         return gVariantStats[species][variant].type2;
     }
@@ -33,22 +19,15 @@ u8 GetType2(u16 species, u32 personality) {
     }
 }
 
-u8 GetLevelUpLearnset(u16 species, u32 personality, u16 *learnset) {
+u8 GetLevelUpLearnset(u16 species, u8 variant, u16 *learnset) {
     u8 count = 0;
-    u8 variant = 0;
     int i;
     u8 baseIndex = 0;
     u8 variantIndex = 0;
     u16 baseLevel;
     u16 variantLevel;
 
-    switch (species) {
-    case SPECIES_RATTATA:
-        variant = personality % 3 + 2;
-        break;
-    }
-
-    if ((gVariantStats[species][2].variantFlags & VARIANT_FLAG_LEARNSET) > 0) {
+    if ((gVariantStats[species][variant].variantFlags & VARIANT_FLAG_LEARNSET) > 0) {
         for (i = 0; i < 24; i++) {
             if (gLevelUpLearnsets[species][baseIndex] == 0xFFFF && gVariantStats[species][variant].learnset[variantIndex] == 0xFFFF) {
                 break;

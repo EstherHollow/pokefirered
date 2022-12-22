@@ -1570,7 +1570,7 @@ static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum)
 
                 personalityValue += nameHash << 8;
                 fixedIV = partyData[i].iv * MAX_PER_STAT_IVS / 255;
-                CreateMon(&party[i], partyData[i].species, partyData[i].lvl, fixedIV, TRUE, personalityValue, OT_ID_RANDOM_NO_SHINY, 0);
+                CreateMon(&party[i], partyData[i].species, partyData[i].lvl, fixedIV, TRUE, personalityValue, OT_ID_TRAINER, trainerNum);
                 break;
             }
             case F_TRAINER_PARTY_CUSTOM_MOVESET:
@@ -1582,7 +1582,7 @@ static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum)
 
                 personalityValue += nameHash << 8;
                 fixedIV = partyData[i].iv * MAX_PER_STAT_IVS / 255;
-                CreateMon(&party[i], partyData[i].species, partyData[i].lvl, fixedIV, TRUE, personalityValue, OT_ID_RANDOM_NO_SHINY, 0);
+                CreateMon(&party[i], partyData[i].species, partyData[i].lvl, fixedIV, TRUE, personalityValue, OT_ID_TRAINER, trainerNum);
 
                 for (j = 0; j < MAX_MON_MOVES; j++)
                 {
@@ -1600,7 +1600,7 @@ static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum)
 
                 personalityValue += nameHash << 8;
                 fixedIV = partyData[i].iv * MAX_PER_STAT_IVS / 255;
-                CreateMon(&party[i], partyData[i].species, partyData[i].lvl, fixedIV, TRUE, personalityValue, OT_ID_RANDOM_NO_SHINY, 0);
+                CreateMon(&party[i], partyData[i].species, partyData[i].lvl, fixedIV, TRUE, personalityValue, OT_ID_TRAINER, trainerNum);
 
                 SetMonData(&party[i], MON_DATA_HELD_ITEM, &partyData[i].heldItem);
                 break;
@@ -1614,7 +1614,7 @@ static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum)
 
                 personalityValue += nameHash << 8;
                 fixedIV = partyData[i].iv * MAX_PER_STAT_IVS / 255;
-                CreateMon(&party[i], partyData[i].species, partyData[i].lvl, fixedIV, TRUE, personalityValue, OT_ID_RANDOM_NO_SHINY, 0);
+                CreateMon(&party[i], partyData[i].species, partyData[i].lvl, fixedIV, TRUE, personalityValue, OT_ID_TRAINER, trainerNum);
                 SetMonData(&party[i], MON_DATA_HELD_ITEM, &partyData[i].heldItem);
 
                 for (j = 0; j < MAX_MON_MOVES; j++)
@@ -2508,8 +2508,8 @@ void FaintClearSetData(void)
         *(i * 8 + gActiveBattler * 2 + (u8 *)(gBattleStruct->lastTakenMoveFrom) + 1) = 0;
     }
     gBattleResources->flags->flags[gActiveBattler] = 0;
-    gBattleMons[gActiveBattler].type1 = GetType1(gBattleMons[gActiveBattler].species, gBattleMons[gActiveBattler].personality);
-    gBattleMons[gActiveBattler].type2 = GetType2(gBattleMons[gActiveBattler].species, gBattleMons[gActiveBattler].personality);
+    gBattleMons[gActiveBattler].type1 = GetType1(gBattleMons[gActiveBattler].species, gBattleMons[gActiveBattler].variant);
+    gBattleMons[gActiveBattler].type2 = GetType2(gBattleMons[gActiveBattler].species, gBattleMons[gActiveBattler].variant);
 }
 
 static void BattleIntroGetMonsData(void)
@@ -2573,8 +2573,8 @@ static void BattleIntroDrawTrainersOrMonsSprites(void)
             for (i = 0; i < sizeof(struct BattlePokemon); i++)
                 ptr[i] = gBattleBufferB[gActiveBattler][4 + i];
 
-            gBattleMons[gActiveBattler].type1 = GetType1(gBattleMons[gActiveBattler].species, gBattleMons[gActiveBattler].personality);
-            gBattleMons[gActiveBattler].type2 = GetType2(gBattleMons[gActiveBattler].species, gBattleMons[gActiveBattler].personality);
+            gBattleMons[gActiveBattler].type1 = GetType1(gBattleMons[gActiveBattler].species, gBattleMons[gActiveBattler].variant);
+            gBattleMons[gActiveBattler].type2 = GetType2(gBattleMons[gActiveBattler].species, gBattleMons[gActiveBattler].variant);
             gBattleMons[gActiveBattler].ability = GetAbilityBySpecies(gBattleMons[gActiveBattler].species, gBattleMons[gActiveBattler].abilityNum);
             hpOnSwitchout = &gBattleStruct->hpOnSwitchout[GetBattlerSide(gActiveBattler)];
             *hpOnSwitchout = gBattleMons[gActiveBattler].hp;
