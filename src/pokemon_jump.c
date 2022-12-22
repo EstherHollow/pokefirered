@@ -151,6 +151,7 @@ struct PokemonJump_MonInfo
     u16 species;
     u32 otId;
     u32 personality;
+    u8 variant;
 };
 
 struct PokemonJump_Player
@@ -997,6 +998,7 @@ static void InitJumpMonInfo(struct PokemonJump_MonInfo *monInfo, struct Pokemon 
     monInfo->species = GetMonData(mon, MON_DATA_SPECIES);
     monInfo->otId = GetMonData(mon, MON_DATA_OT_ID);
     monInfo->personality = GetMonData(mon, MON_DATA_PERSONALITY);
+    monInfo->variant = GetMonData(mon, MON_DATA_VARIANT);
 }
 
 static void VBlankCB_PokemonJump(void)
@@ -2710,6 +2712,7 @@ struct MonInfoPacket
     u16 species;
     u32 personality;
     u32 otId;
+    u8 variant;
 };
 
 static void SendPacket_MonInfo(struct PokemonJump_MonInfo *monInfo)
@@ -2719,6 +2722,7 @@ static void SendPacket_MonInfo(struct PokemonJump_MonInfo *monInfo)
     packet.species = monInfo->species;
     packet.otId = monInfo->otId;
     packet.personality = monInfo->personality;
+    packet.variant = monInfo->variant;
     Rfu_SendPacket(&packet);
 }
 
@@ -2735,6 +2739,7 @@ static bool32 RecvPacket_MonInfo(int multiplayerId, struct PokemonJump_MonInfo *
         monInfo->species = packet.species;
         monInfo->otId = packet.otId;
         monInfo->personality = packet.personality;
+        monInfo->variant = packet.variant;
         return TRUE;
     }
 
@@ -4162,7 +4167,7 @@ static void CreateJumpMonSprite(struct PokemonJumpGfx *jumpGfx, struct PokemonJu
         spriteSheet.size = MON_PIC_SIZE;
         LoadSpriteSheet(&spriteSheet);
 
-        spritePalette.data = GetMonSpritePalFromPersonality(monInfo->species, monInfo->otId, monInfo->personality);
+        spritePalette.data = GetMonSpritePalFromVariant(monInfo->species, monInfo->variant);
         spritePalette.tag = multiplayerId;
         LoadCompressedSpritePalette(&spritePalette);
 

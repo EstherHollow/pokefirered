@@ -780,6 +780,7 @@ static u32 CopyPokedudeMonData(u8 monId, u8 *dst)
         battleMon.isEgg = GetMonData(mon, MON_DATA_IS_EGG);
         battleMon.abilityNum = GetMonData(mon, MON_DATA_ABILITY_NUM);
         battleMon.otId = GetMonData(mon, MON_DATA_OT_ID);
+        battleMon.variant = GetMonData(mon, MON_DATA_VARIANT);
         GetMonData(mon, MON_DATA_NICKNAME, nickname);
         StringCopy_Nickname(battleMon.nickname, nickname);
         GetMonData(mon, MON_DATA_OT_NAME, battleMon.otName);
