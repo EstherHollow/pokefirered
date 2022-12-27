@@ -151,7 +151,7 @@ struct PokemonJump_MonInfo
     u16 species;
     u32 otId;
     u32 personality;
-    u8 variant;
+    u16 variant;
 };
 
 struct PokemonJump_Player
@@ -2712,7 +2712,7 @@ struct MonInfoPacket
     u16 species;
     u32 personality;
     u32 otId;
-    u8 variant;
+    u16 variant;
 };
 
 static void SendPacket_MonInfo(struct PokemonJump_MonInfo *monInfo)

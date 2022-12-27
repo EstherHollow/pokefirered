@@ -2084,7 +2084,7 @@ static void BufferMonInfo(void)
     u16 gender;
     u16 heldItem;
     u32 otId;
-    u8 variant;
+    u16 variant;
 
     dexNum = SpeciesToPokedexNum(GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_SPECIES));
     if (dexNum == 0xffff)
@@ -4011,7 +4011,7 @@ static void PokeSum_CreateMonPicSprite(void)
     u16 spriteId;
     u16 species;
     u32 personality;
-    u8 variant;
+    u16 variant;
 
     sMonPicBounceState = AllocZeroed(sizeof(struct MonPicBounceState));
 

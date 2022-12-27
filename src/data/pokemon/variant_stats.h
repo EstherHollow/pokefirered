@@ -19,14 +19,14 @@ const struct VariantStats gVariantStats[][8] =
 {
         [SPECIES_NONE] = {0},
         [SPECIES_BULBASAUR] = {
-                [2] = VARIANT_ALTER_TYPE(TYPE_GRASS, TYPE_FIRE),
-                [3] = VARIANT_ALTER_TYPE(TYPE_GRASS, TYPE_GRASS),
-                [4] = VARIANT_ALTER_TYPE(TYPE_GRASS, TYPE_POISON),
-                [5] = VARIANT_ALTER_TYPE(TYPE_GRASS, TYPE_WATER),
+                [1] = VARIANT_ALTER_TYPE(TYPE_GRASS, TYPE_FIRE),
+                [2] = VARIANT_ALTER_TYPE(TYPE_GRASS, TYPE_GRASS),
+                [3] = VARIANT_ALTER_TYPE(TYPE_GRASS, TYPE_POISON),
+                [4] = VARIANT_ALTER_TYPE(TYPE_GRASS, TYPE_WATER),
         },
         [SPECIES_RATTATA] = {
-                [2] = VARIANT_ALTER_LEARNSET(1, MOVE_CONFUSION),
-                [3] = VARIANT_ALTER_LEARNSET(1, MOVE_EMBER),
-                [4] = VARIANT_ALTER_LEARNSET(1, MOVE_BUBBLE),
+                [0] = VARIANT_ALTER_LEARNSET(1, MOVE_CONFUSION),
+                [1] = VARIANT_ALTER_LEARNSET(1, MOVE_EMBER),
+                [2] = VARIANT_ALTER_LEARNSET(1, MOVE_BUBBLE),
         },
 };

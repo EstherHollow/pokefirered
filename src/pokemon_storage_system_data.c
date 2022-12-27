@@ -1057,7 +1057,7 @@ static void SetDisplayMonData(void *pokemon, u8 mode)
         gStorage->displayMonSpecies = GetBoxMonData(pokemon, MON_DATA_SPECIES_OR_EGG);
         if (gStorage->displayMonSpecies != SPECIES_NONE)
         {
-            u8 variant = GetBoxMonData(boxMon, MON_DATA_VARIANT);
+            u16 variant = GetBoxMonData(boxMon, MON_DATA_VARIANT);
             sanityIsBagEgg = GetBoxMonData(boxMon, MON_DATA_SANITY_IS_BAD_EGG);
             if (sanityIsBagEgg)
                 gStorage->displayMonIsEgg = TRUE;

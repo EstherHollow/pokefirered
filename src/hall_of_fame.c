@@ -35,7 +35,7 @@ struct HallofFameMon
     u32 personality;
     u16 species:9;
     u16 lvl:7;
-    u8 variant;
+    u16 variant;
     u8 nick[POKEMON_NAME_LENGTH];
 };
 

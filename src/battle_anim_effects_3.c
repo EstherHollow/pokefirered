@@ -3123,7 +3123,7 @@ void AnimTask_RolePlaySilhouette(u8 taskId)
 {
     bool8 isBackPic;
     u32 personality;
-    u8 variant;
+    u16 variant;
     u16 species;
     s16 xOffset;
     u32 priority;

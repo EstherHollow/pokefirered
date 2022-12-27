@@ -1395,6 +1395,7 @@ static const s8 sNatureStatTable[NUM_NATURES][NUM_NATURE_STATS] =
 #include "data/pokemon/level_up_learnsets.h"
 #include "data/pokemon/evolution.h"
 #include "data/pokemon/level_up_learnset_pointers.h"
+#include "data/pokemon/variants.h"
 
 static const s8 sPokeblockFlavorCompatibilityTable[NUM_NATURES * FLAVOR_COUNT] =
 {
@@ -1770,7 +1771,7 @@ void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, 
     u32 personality;
     u32 value;
     u16 checksum;
-    u8 variant;
+    u16 variant;
 
     ZeroBoxMonData(boxMon);
 
@@ -1840,9 +1841,9 @@ void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, 
     GetSpeciesName(speciesName, species);
     SetBoxMonData(boxMon, MON_DATA_NICKNAME, speciesName);
     if (otIdType == OT_ID_PLAYER)
-        variant = GetPlayerMonVariant(species);
+        variant = GeneratePlayerMonVariant(species);
     else
-        variant = GetTrainerMonVariant(species, value);
+        variant = GenerateTrainerMonVariant(species, value);
     SetBoxMonData(boxMon, MON_DATA_VARIANT, &variant);
     SetBoxMonData(boxMon, MON_DATA_LANGUAGE, &gGameLanguage);
     SetBoxMonData(boxMon, MON_DATA_OT_NAME, gSaveBlock2Ptr->playerName);
@@ -1895,33 +1896,6 @@ void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, 
     }
 
     GiveBoxMonInitialMoveset(boxMon);
-}
-
-u8 GetPlayerMonVariant(u16 species) {
-    return GetTrainerMonVariant(species, Random32());
-}
-
-u8 GetTrainerMonVariant(u16 species, u32 otId) {
-    switch (species) {
-    case SPECIES_BULBASAUR:
-    case SPECIES_IVYSAUR:
-    case SPECIES_VENUSAUR:
-    case SPECIES_CHARMANDER:
-    case SPECIES_CHARMELEON:
-    case SPECIES_CHARIZARD:
-    case SPECIES_SQUIRTLE:
-    case SPECIES_WARTORTLE:
-    case SPECIES_BLASTOISE:
-        return otId % 4 + 2;
-    case SPECIES_PIDGEY:
-    case SPECIES_PIDGEOTTO:
-    case SPECIES_PIDGEOT:
-    case SPECIES_RATTATA:
-    case SPECIES_RATICATE:
-        return otId % 3 + 2;
-    default:
-        return 0;
-    }
 }
 
 void CreateMonWithFlags(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u32 flags)
@@ -2341,7 +2315,7 @@ static void GiveMonInitialMoveset(struct Pokemon *mon)
 static void GiveBoxMonInitialMoveset(struct BoxPokemon *boxMon)
 {
     u16 species = GetBoxMonData(boxMon, MON_DATA_SPECIES, NULL);
-    u8 variant = GetBoxMonData(boxMon, MON_DATA_VARIANT, NULL);
+    u16 variant = GetBoxMonData(boxMon, MON_DATA_VARIANT, NULL);
     s32 level = GetLevelFromBoxMonExp(boxMon);
     s32 i;
     u16 learnset[24];
@@ -2369,7 +2343,7 @@ u16 MonTryLearningNewMove(struct Pokemon *mon, bool8 firstMove)
 {
     u32 retVal = MOVE_NONE;
     u16 species = GetMonData(mon, MON_DATA_SPECIES, NULL);
-    u8 variant = GetMonData(mon, MON_DATA_VARIANT, NULL);
+    u16 variant = GetMonData(mon, MON_DATA_VARIANT, NULL);
     u8 level = GetMonData(mon, MON_DATA_LEVEL, NULL);
     u16 learnset[24];
 
@@ -3081,9 +3055,6 @@ u32 GetBoxMonData(struct BoxPokemon *boxMon, s32 field, u8 *data)
     case MON_DATA_OT_ID:
         retVal = boxMon->otId;
         break;
-    case MON_DATA_VARIANT:
-        retVal = boxMon->variant;
-        break;
     case MON_DATA_NICKNAME:
     {
         if (boxMon->isBadEgg)
@@ -3159,6 +3130,9 @@ u32 GetBoxMonData(struct BoxPokemon *boxMon, s32 field, u8 *data)
         break;
     case MON_DATA_SPECIES:
         retVal = boxMon->isBadEgg ? SPECIES_EGG : substruct0->species;
+        break;
+    case MON_DATA_VARIANT:
+        retVal = GetBoxMonVariant(boxMon);
         break;
     case MON_DATA_HELD_ITEM:
         retVal = substruct0->heldItem;
@@ -3514,9 +3488,6 @@ void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
     case MON_DATA_OT_ID:
         SET32(boxMon->otId);
         break;
-    case MON_DATA_VARIANT:
-        SET8(boxMon->variant);
-        break;
     case MON_DATA_NICKNAME:
     {
         s32 i;
@@ -3561,6 +3532,9 @@ void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
             boxMon->hasSpecies = FALSE;
         break;
     }
+    case MON_DATA_VARIANT:
+        SET16(substruct0->variant);
+        break;
     case MON_DATA_HELD_ITEM:
         SET16(substruct0->heldItem);
         break;
@@ -5977,7 +5951,7 @@ const u32 *GetMonSpritePal(struct Pokemon *mon)
     return GetMonSpritePalStruct(mon)->data;
 }
 
-const u32 *GetMonSpritePalFromVariant(u16 species, u8 variant)
+const u32 *GetMonSpritePalFromVariant(u16 species, u16 variant)
 {
 	return GetMonSpritePalStructFromVariant(species, variant)->data;
 }
@@ -5985,11 +5959,11 @@ const u32 *GetMonSpritePalFromVariant(u16 species, u8 variant)
 const struct CompressedSpritePalette *GetMonSpritePalStruct(struct Pokemon *mon)
 {
     u16 species = GetMonData(mon, MON_DATA_SPECIES2, NULL);
-    u8 variant = GetMonData(mon, MON_DATA_VARIANT, NULL);
+    u16 variant = GetMonData(mon, MON_DATA_VARIANT, NULL);
     return GetMonSpritePalStructFromVariant(species, variant);
 }
 
-const struct CompressedSpritePalette *GetMonSpritePalStructFromVariant(u16 species, u8 variant)
+const struct CompressedSpritePalette *GetMonSpritePalStructFromVariant(u16 species, u16 variant)
 {
     return &gMonPaletteTable[species][variant];
 }
@@ -6510,4 +6484,43 @@ u8 *MonSpritesGfxManager_GetSpritePtr(u8 spriteNum)
             spriteNum = 0;
         return sMonSpritesGfxManager->spritePointers[spriteNum];
     }
+}
+
+u8 GeneratePlayerMonVariant(u16 species) {
+    return GenerateTrainerMonVariant(species, Random32());
+}
+
+u8 GenerateTrainerMonVariant(u16 species, u32 otId) {
+    switch (species) {
+    case SPECIES_BULBASAUR:
+    case SPECIES_IVYSAUR:
+    case SPECIES_VENUSAUR:
+    case SPECIES_CHARMANDER:
+    case SPECIES_CHARMELEON:
+    case SPECIES_CHARIZARD:
+    case SPECIES_SQUIRTLE:
+    case SPECIES_WARTORTLE:
+    case SPECIES_BLASTOISE:
+        return otId % 4 + 1;
+    case SPECIES_PIDGEY:
+    case SPECIES_PIDGEOTTO:
+    case SPECIES_PIDGEOT:
+    case SPECIES_RATTATA:
+    case SPECIES_RATICATE:
+        return otId % 3;
+    default:
+        return 0;
+    }
+}
+
+u16 GetBoxMonVariant(struct BoxPokemon *boxMon) {
+    u16 variant;
+    struct PokemonSubstruct0 *substruct0 = &(GetSubstruct(boxMon, boxMon->personality, 0)->type0);
+    struct PokemonSubstruct1 *substruct1 = &(GetSubstruct(boxMon, boxMon->personality, 1)->type1);
+    struct PokemonSubstruct2 *substruct2 = &(GetSubstruct(boxMon, boxMon->personality, 2)->type2);
+    struct PokemonSubstruct3 *substruct3 = &(GetSubstruct(boxMon, boxMon->personality, 3)->type3);
+
+    variant = substruct0->variant;
+
+    return variant;
 }

@@ -614,7 +614,7 @@ u8 CreateMonSprite_PicBox(u16 species, s16 x, s16 y, u8 subpriority)
         return spriteId;
 }
 
-static u8 CreateMonSprite_FieldMove(u16 species, u32 personality, u8 variant, s16 x, s16 y, u8 subpriority)
+static u8 CreateMonSprite_FieldMove(u16 species, u32 personality, u16 variant, s16 x, s16 y, u8 subpriority)
 {
     const struct CompressedSpritePalette * spritePalette = GetMonSpritePalStructFromVariant(species, variant);
     u16 spriteId = CreateMonPicSprite_HandleDeoxys(species, personality, variant, 1, x, y, 0, spritePalette->tag);
@@ -2558,7 +2558,7 @@ static void VBlankCB_ShowMonEffect_Indoors(void);
 static void AnimateIndoorShowMonBg(struct Task *task);
 static bool8 SlideIndoorBannerOnscreen(struct Task *task);
 static bool8 SlideIndoorBannerOffscreen(struct Task *task);
-static u8 InitFieldMoveMonSprite(u32 species, u32 personality, u8 variant);
+static u8 InitFieldMoveMonSprite(u32 species, u32 personality, u16 variant);
 static void SpriteCB_FieldMoveMonSlideOnscreen(struct Sprite *sprite);
 static void SpriteCB_FieldMoveMonWaitAfterCry(struct Sprite *sprite);
 static void SpriteCB_FieldMoveMonSlideOffscreen(struct Sprite *sprite);
@@ -2909,7 +2909,7 @@ static bool8 SlideIndoorBannerOffscreen(struct Task *task)
     return FALSE;
 }
 
-static u8 InitFieldMoveMonSprite(u32 species, u32 personality, u8 variant)
+static u8 InitFieldMoveMonSprite(u32 species, u32 personality, u16 variant)
 {
     bool16 playCry;
     u8 monSprite;
