@@ -10,7 +10,7 @@
 
 struct VariantStats
 {
-    u8 variantFlags;
+    u16 variantFlags;
     u8 baseHP;
     u8 baseAttack;
     u8 baseDefense;
@@ -31,10 +31,10 @@ extern const struct VariantStats gVariantStats[][MAX_VARIANTS_PER_SPECIES];
 //u8 GetBaseSpeed(u16 species);
 //u8 GetBaseSpAttack(u16 species);
 //u8 GetBaseSpDefense(u16 species);
-u8 GetType1(u16 species, u8 variant);
-u8 GetType2(u16 species, u8 variant);
+u8 GetType1(u16 species, u16 variant);
+u8 GetType2(u16 species, u16 variant);
 //u8 GetAbility1(u16 species);
 //u8 GetAbility2(u16 species);
-u8 GetLevelUpLearnset(u16 species, u8 variant, u16 *moves);
+u8 GetLevelUpLearnset(u16 species, u16 variant, u16 *moves);
 
 #endif // GUARD_POKEMON_STATS_H

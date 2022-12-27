@@ -320,7 +320,7 @@ void BattleLoadOpponentMonSpriteGfx(struct Pokemon *mon, u8 battlerId)
 {
     u32 monsPersonality, currentPersonality;
     u16 species;
-    u8 variant;
+    u16 variant;
     u8 position;
     u16 paletteOffset;
     const void *lzPaletteData;
@@ -370,7 +370,7 @@ void BattleLoadPlayerMonSpriteGfx(struct Pokemon *mon, u8 battlerId)
 {
     u32 monsPersonality, currentPersonality;
     u16 species;
-    u8 variant;
+    u16 variant;
     u8 position;
     u16 paletteOffset;
     const void *lzPaletteData;
@@ -656,7 +656,7 @@ void HandleSpeciesGfxDataChange(u8 battlerAtk, u8 battlerDef, u8 transformType)
 {
     u16 paletteOffset, targetSpecies;
     u32 personalityValue;
-    u8 variant;
+    u16 variant;
     u8 position;
     const u32 *lzPaletteData;
     void *buffer;

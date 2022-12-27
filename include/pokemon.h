@@ -8,7 +8,8 @@
 
 struct PokemonSubstruct0
 {
-    u16 species;
+    u16 species:11;
+    u16 variant:5;
     u16 heldItem;
     u32 experience;
     u8 ppBonuses;
@@ -95,7 +96,7 @@ struct BoxPokemon
     u8 isBadEgg:1;
     u8 hasSpecies:1;
     u8 isEgg:1;
-    u8 variant:5;
+    u8 unused:5;
     u8 otName[PLAYER_NAME_LENGTH];
     u8 markings;
     u16 checksum;
@@ -196,7 +197,7 @@ struct BattlePokemon
     /*0x4C*/ u32 status1;
     /*0x50*/ u32 status2;
     /*0x54*/ u32 otId;
-    /*0x58*/ u8 variant;
+    /*0x58*/ u16 variant;
 };
 
 struct BaseStats
@@ -442,9 +443,9 @@ void PlayBattleBGM(void);
 void PlayMapChosenOrBattleBGM(u16 songId);
 
 const u32 *GetMonSpritePal(struct Pokemon *mon);
-const u32 *GetMonSpritePalFromVariant(u16 species, u8 variant);
+const u32 *GetMonSpritePalFromVariant(u16 species, u16 variant);
 const struct CompressedSpritePalette *GetMonSpritePalStruct(struct Pokemon *mon);
-const struct CompressedSpritePalette *GetMonSpritePalStructFromVariant(u16 species, u8 variant);
+const struct CompressedSpritePalette *GetMonSpritePalStructFromVariant(u16 species, u16 variant);
 
 bool32 IsHMMove2(u16 move);
 bool8 IsPokeSpriteNotFlipped(u16 species);
@@ -470,7 +471,8 @@ struct OakSpeechNidoranFStruct *OakSpeechNidoranFSetup(u8 battlePosition, bool8 
 void OakSpeechNidoranFFreeResources(void);
 void *OakSpeechNidoranFGetBuffer(u8 bufferId);
 
-u8 GetPlayerMonVariant(u16 species);
-u8 GetTrainerMonVariant(u16 species, u32 otId);
+u8 GeneratePlayerMonVariant(u16 species);
+u8 GenerateTrainerMonVariant(u16 species, u32 otId);
+u16 GetBoxMonVariant(struct BoxPokemon *boxMon);
 
 #endif // GUARD_POKEMON_H

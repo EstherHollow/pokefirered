@@ -74,7 +74,7 @@ static bool16 DecompressPic_HandleDeoxys(u16 species, u32 personality, bool8 isF
     return DecompressPic(species, personality, isFrontPic, dest, isTrainer, FALSE);
 }
 
-void LoadPicPaletteByTagOrSlot(u16 species, u8 variant, u8 paletteSlot, u16 paletteTag, bool8 isTrainer)
+void LoadPicPaletteByTagOrSlot(u16 species, u16 variant, u8 paletteSlot, u16 paletteTag, bool8 isTrainer)
 {
     if (!isTrainer)
     {
@@ -104,7 +104,7 @@ void LoadPicPaletteByTagOrSlot(u16 species, u8 variant, u8 paletteSlot, u16 pale
     }
 }
 
-void LoadPicPaletteBySlot(u16 species, u8 variant, u8 paletteSlot, bool8 isTrainer)
+void LoadPicPaletteBySlot(u16 species, u16 variant, u8 paletteSlot, bool8 isTrainer)
 {
     if (!isTrainer)
         LoadCompressedPalette(GetMonSpritePalFromVariant(species, variant), paletteSlot * 0x10, 0x20);
@@ -120,7 +120,7 @@ void AssignSpriteAnimsTable(bool8 isTrainer)
         sCreatingSpriteTemplate.anims = gTrainerFrontAnimsPtrTable[0];
 }
 
-u16 CreatePicSprite(u16 species, u32 personality, u8 variant, bool8 isFrontPic, s16 x, s16 y, u8 paletteSlot, u16 paletteTag, bool8 isTrainer, bool8 ignoreDeoxys)
+u16 CreatePicSprite(u16 species, u32 personality, u16 variant, bool8 isFrontPic, s16 x, s16 y, u8 paletteSlot, u16 paletteTag, bool8 isTrainer, bool8 ignoreDeoxys)
 {
     u8 i;
     u8 *framePics;
@@ -174,7 +174,7 @@ u16 CreatePicSprite(u16 species, u32 personality, u8 variant, bool8 isFrontPic, 
     return spriteId;
 }
 
-u16 CreatePicSprite_HandleDeoxys(u16 species, u32 personality, u8 variant, bool8 isFrontPic, s16 x, s16 y, u8 paletteSlot, u16 paletteTag, bool8 isTrainer)
+u16 CreatePicSprite_HandleDeoxys(u16 species, u32 personality, u16 variant, bool8 isFrontPic, s16 x, s16 y, u8 paletteSlot, u16 paletteTag, bool8 isTrainer)
 {
     return CreatePicSprite(species, personality, variant, isFrontPic, x, y, paletteSlot, paletteTag, isTrainer, FALSE);
 }
@@ -204,7 +204,7 @@ u16 FreeAndDestroyPicSpriteInternal(u16 spriteId)
     return 0;
 }
 
-static u16 LoadPicSpriteInWindow(u16 species, u32 personality, u8 variant, bool8 isFrontPic, u8 paletteSlot, u8 windowId, bool8 isTrainer)
+static u16 LoadPicSpriteInWindow(u16 species, u32 personality, u16 variant, bool8 isFrontPic, u8 paletteSlot, u8 windowId, bool8 isTrainer)
 {
     if (DecompressPic_HandleDeoxys(species, personality, isFrontPic, (u8 *)GetWindowAttribute(windowId, WINDOW_TILE_DATA), FALSE))
         return 0xFFFF;
@@ -213,7 +213,7 @@ static u16 LoadPicSpriteInWindow(u16 species, u32 personality, u8 variant, bool8
     return 0;
 }
 
-u16 CreateTrainerCardSprite(u16 species, u32 personality, u8 variant, bool8 isFrontPic, u16 destX, u16 destY, u8 paletteSlot, u8 windowId, bool8 isTrainer)
+u16 CreateTrainerCardSprite(u16 species, u32 personality, u16 variant, bool8 isFrontPic, u16 destX, u16 destY, u8 paletteSlot, u8 windowId, bool8 isTrainer)
 {
     u8 *framePics;
 
@@ -228,12 +228,12 @@ u16 CreateTrainerCardSprite(u16 species, u32 personality, u8 variant, bool8 isFr
     return 0xFFFF;
 }
 
-u16 CreateMonPicSprite(u16 species, u32 personality, u8 variant, bool8 isFrontPic, s16 x, s16 y, u8 paletteSlot, u16 paletteTag, bool8 ignoreDeoxys)
+u16 CreateMonPicSprite(u16 species, u32 personality, u16 variant, bool8 isFrontPic, s16 x, s16 y, u8 paletteSlot, u16 paletteTag, bool8 ignoreDeoxys)
 {
     return CreatePicSprite(species, personality, variant, isFrontPic, x, y, paletteSlot, paletteTag, FALSE, ignoreDeoxys);
 }
 
-u16 CreateMonPicSprite_HandleDeoxys(u16 species, u32 personality, u8 variant, bool8 isFrontPic, s16 x, s16 y, u8 paletteSlot, u16 paletteTag)
+u16 CreateMonPicSprite_HandleDeoxys(u16 species, u32 personality, u16 variant, bool8 isFrontPic, s16 x, s16 y, u8 paletteSlot, u16 paletteTag)
 {
     return CreateMonPicSprite(species, personality, variant, isFrontPic, x, y, paletteSlot, paletteTag, FALSE);
 }
@@ -243,12 +243,12 @@ u16 FreeAndDestroyMonPicSprite(u16 spriteId)
     return FreeAndDestroyPicSpriteInternal(spriteId);
 }
 
-u16 LoadMonPicInWindow(u16 species, u32 personality, u8 variant, bool8 isFrontPic, u8 paletteSlot, u8 windowId)
+u16 LoadMonPicInWindow(u16 species, u32 personality, u16 variant, bool8 isFrontPic, u8 paletteSlot, u8 windowId)
 {
     return CreateTrainerCardSprite(species, personality, variant, isFrontPic, 0, 0, paletteSlot, windowId, FALSE);
 }
 
-u16 CreateTrainerCardMonIconSprite(u16 species, u32 personality, u8 variant, bool8 isFrontPic, u16 destX, u16 destY, u8 paletteSlot, u8 windowId)
+u16 CreateTrainerCardMonIconSprite(u16 species, u32 personality, u16 variant, bool8 isFrontPic, u16 destX, u16 destY, u8 paletteSlot, u8 windowId)
 {
     return CreateTrainerCardSprite(species, personality, variant, isFrontPic, destX, destY, paletteSlot, windowId, FALSE);
 }
