@@ -888,22 +888,9 @@ static void LoadTilesetPalette(struct Tileset const *tileset, u16 destOffset, u1
 
     if (tileset)
     {
-        if (tileset->isSecondary == FALSE)
-        {
-            LoadPalette(&black, destOffset, 2);
-            LoadPalette(tileset->palettes[0] + 1, destOffset + 1, size - 2);
-            ApplyGlobalTintToPaletteEntries(destOffset + 1, (size - 2) >> 1);
-        }
-        else if (tileset->isSecondary == TRUE)
-        {
-            LoadPalette(tileset->palettes[NUM_PALS_IN_PRIMARY], destOffset, size);
-            ApplyGlobalTintToPaletteEntries(destOffset, size >> 1);
-        }
-        else
-        {
-            LoadCompressedPalette((const u32 *)tileset->palettes, destOffset, size);
-            ApplyGlobalTintToPaletteEntries(destOffset, size >> 1);
-        }
+        LoadPalette(&black, destOffset, 2);
+        LoadPalette(tileset->palettes[0] + 1, destOffset + 1, size - 2);
+        ApplyGlobalTintToPaletteEntries(destOffset + 1, (size - 2) >> 1);
     }
 }
 
@@ -922,14 +909,16 @@ void CopySecondaryTilesetToVramUsingHeap(const struct MapLayout *mapLayout)
     CopyTilesetToVramUsingHeap(mapLayout->secondaryTileset, NUM_TILES_TOTAL - NUM_TILES_IN_PRIMARY, NUM_TILES_IN_PRIMARY);
 }
 
-static void LoadPrimaryTilesetPalette(const struct MapLayout *mapLayout)
-{
-    LoadTilesetPalette(mapLayout->primaryTileset, 0, NUM_PALS_IN_PRIMARY * 16 * 2);
-}
-
 void LoadSecondaryTilesetPalette(const struct MapLayout *mapLayout)
 {
-    LoadTilesetPalette(mapLayout->secondaryTileset, NUM_PALS_IN_PRIMARY * 16, (NUM_PALS_TOTAL - NUM_PALS_IN_PRIMARY) * 16 * 2);
+    u16 destOffset = NUM_PALS_IN_PRIMARY * 16;
+    u16 size = (NUM_PALS_TOTAL - NUM_PALS_IN_PRIMARY) * 16 * 2;
+
+    if (mapLayout->secondaryTileset)
+    {
+        LoadPalette(mapLayout->secondaryTileset->palettes[NUM_PALS_IN_PRIMARY], destOffset, size);
+        ApplyGlobalTintToPaletteEntries(destOffset, size >> 1);
+    }
 }
 
 void CopyMapTilesetsToVram(struct MapLayout const *mapLayout)
@@ -945,7 +934,6 @@ void LoadMapTilesetPalettes(struct MapLayout const *mapLayout)
 {
     if (mapLayout)
     {
-        LoadPrimaryTilesetPalette(mapLayout);
-        LoadSecondaryTilesetPalette(mapLayout);
+        LoadTilesetPalette(mapLayout->secondaryTileset, 0, NUM_PALS_TOTAL * 16 * 2);
     }
 }
