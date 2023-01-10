@@ -11,12 +11,12 @@
 struct VariantStats
 {
     u16 variantFlags;
-    u8 baseHP;
-    u8 baseAttack;
-    u8 baseDefense;
-    u8 baseSpeed;
-    u8 baseSpAttack;
-    u8 baseSpDefense;
+    u8 hp;
+    u8 attack;
+    u8 defense;
+    u8 speed;
+    u8 spAttack;
+    u8 spDefense;
     u8 type1;
     u8 type2;
     u8 ability;
@@ -25,12 +25,12 @@ struct VariantStats
 
 extern const struct VariantStats gVariantStats[][MAX_VARIANTS_PER_SPECIES];
 
-//u8 GetBaseHP(u16 species);
-//u8 GetBaseAttack(u16 species);
-//u8 GetBaseDefense(u16 species);
-//u8 GetBaseSpeed(u16 species);
-//u8 GetBaseSpAttack(u16 species);
-//u8 GetBaseSpDefense(u16 species);
+u8 GetBaseHP(u16 species, u16 variant);
+u8 GetBaseAttack(u16 species, u16 variant);
+u8 GetBaseDefense(u16 species, u16 variant);
+u8 GetBaseSpeed(u16 species, u16 variant);
+u8 GetBaseSpAttack(u16 species, u16 variant);
+u8 GetBaseSpDefense(u16 species, u16 variant);
 u8 GetType1(u16 species, u16 variant);
 u8 GetType2(u16 species, u16 variant);
 //u8 GetAbility1(u16 species);
