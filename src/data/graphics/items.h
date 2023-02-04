@@ -596,6 +596,7 @@ const u32 gFile_graphics_items_icon_palettes_ground_tm_hm_palette[] = INCBIN_U32
 const u32 gFile_graphics_items_icon_palettes_ghost_tm_hm_palette[] = INCBIN_U32("graphics/items/icon_palettes/ghost_tm_hm.gbapal.lz");
 const u32 gFile_graphics_items_icon_palettes_rock_tm_hm_palette[] = INCBIN_U32("graphics/items/icon_palettes/rock_tm_hm.gbapal.lz");
 const u32 gFile_graphics_items_icon_palettes_flying_tm_hm_palette[] = INCBIN_U32("graphics/items/icon_palettes/flying_tm_hm.gbapal.lz");
+const u32 gFile_graphics_items_icon_palettes_fairy_tm_hm_palette[] = INCBIN_U32("graphics/items/icon_palettes/fairy_tm_hm.gbapal.lz");
 
 const u32 gFile_graphics_items_icons_oaks_parcel_sheet[] = INCBIN_U32("graphics/items/icons/oaks_parcel.4bpp.lz");
 const u32 gFile_graphics_items_icon_palettes_oaks_parcel_palette[] = INCBIN_U32("graphics/items/icon_palettes/oaks_parcel.gbapal.lz");
