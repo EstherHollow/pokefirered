@@ -409,7 +409,8 @@ static const u16 sTMSpritePaletteOffsetByType[NUMBER_OF_MON_TYPES] = {
     [TYPE_PSYCHIC]  = 0x0d0,
     [TYPE_STEEL]    = 0x0e0,
     [TYPE_DARK]     = 0x0f0,
-    [TYPE_DRAGON]   = 0x100
+    [TYPE_DRAGON]   = 0x100,
+    [TYPE_FAIRY]    = 0x110
 };
 
 void InitTMCase(u8 type, void (* exitCallback)(void), bool8 allowSelectClose)
@@ -1529,10 +1530,10 @@ static void PrintTitle(void)
 
 static void DrawMoveInfoLabels(void)
 {
-    BlitMoveInfoIcon(WIN_MOVE_INFO_LABELS, 19, 0, 0);
-    BlitMoveInfoIcon(WIN_MOVE_INFO_LABELS, 20, 0, 12);
-    BlitMoveInfoIcon(WIN_MOVE_INFO_LABELS, 21, 0, 24);
-    BlitMoveInfoIcon(WIN_MOVE_INFO_LABELS, 22, 0, 36);
+    BlitMoveInfoIcon(WIN_MOVE_INFO_LABELS, 20, 0, 0);
+    BlitMoveInfoIcon(WIN_MOVE_INFO_LABELS, 21, 0, 12);
+    BlitMoveInfoIcon(WIN_MOVE_INFO_LABELS, 22, 0, 24);
+    BlitMoveInfoIcon(WIN_MOVE_INFO_LABELS, 23, 0, 36);
     CopyWindowToVram(WIN_MOVE_INFO_LABELS, COPYWIN_GFX);
 }
 
@@ -1729,7 +1730,7 @@ static void LoadDiscTypePalettes(void)
 
     sTMSpritePaletteBuffer = Alloc(NUM_DISC_COLORS * sizeof(u16));
     LZDecompressWram(gTMCaseDiscTypes1_Pal, sTMSpritePaletteBuffer); // Decompress the first 16
-    LZDecompressWram(gTMCaseDiscTypes2_Pal, sTMSpritePaletteBuffer + 0x100); // Decompress the rest (Only 17 total, this is just Dragon type)
+    LZDecompressWram(gTMCaseDiscTypes2_Pal, sTMSpritePaletteBuffer + 0x100); // Decompress the rest (Only 18 total, this is just Dragon/Fairy type)
     spritePalette.data = sTMSpritePaletteBuffer + NUM_DISC_COLORS;
     spritePalette.tag = TAG_DISC;
     LoadSpritePalette(&spritePalette);
