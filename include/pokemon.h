@@ -345,8 +345,11 @@ void ZeroBoxMonData(struct BoxPokemon *boxMon);
 void ZeroMonData(struct Pokemon *mon);
 void ZeroPlayerPartyMons(void);
 void ZeroEnemyPartyMons(void);
-void CreateMon(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 hasFixedPersonality, u32 fixedPersonality, u8 otIdType, u32 fixedOtId);
-void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, u8 hasFixedPersonality, u32 fixedPersonality, u8 otIdType, u32 fixedOtId);
+u32 GetPlayerId(void);
+void CreatePlayerMon(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 hasFixedPersonality, u32 fixedPersonality);
+void CreateTrainerMon(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 hasFixedPersonality, u32 fixedPersonality, u16 trainerId, u8 partySlot);
+void CreateMon(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 hasFixedPersonality, u32 fixedPersonality, u32 otId, u16 variant);
+void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, u8 hasFixedPersonality, u32 fixedPersonality, u32 otId, u16 variant);
 void CreateMonWithFlags(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u32 flags);
 void CreateMonWithNature(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 nature);
 void CreateMonWithGenderNatureLetter(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 gender, u8 nature, u8 unownLetter);
@@ -471,8 +474,9 @@ struct OakSpeechNidoranFStruct *OakSpeechNidoranFSetup(u8 battlePosition, bool8 
 void OakSpeechNidoranFFreeResources(void);
 void *OakSpeechNidoranFGetBuffer(u8 bufferId);
 
-u8 GeneratePlayerMonVariant(u16 species);
-u8 GenerateTrainerMonVariant(u16 species, u32 otId);
+u16 ConsolidateRivalId(u16 trainerId);
+u8 GenerateMonVariant(u16 species);
+u8 GenerateSeededMonVariant(u16 species, u32 variantSeed);
 u16 GetBoxMonVariant(struct BoxPokemon *boxMon);
 
 #endif // GUARD_POKEMON_H

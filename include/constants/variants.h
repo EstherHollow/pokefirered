@@ -3,6 +3,10 @@
 
 // For potential future use
 
+#define VARIANT_DEFAULT 0
+#define VARIANT_UNDETERMINED 9
+#define VARIANT_DETERMINED 10
+
 #define VARIANT_BULBASAUR_ORIGINAL  0
 #define VARIANT_BULBASAUR_RED       1
 #define VARIANT_BULBASAUR_GREEN     2

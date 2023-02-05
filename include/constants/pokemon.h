@@ -196,10 +196,6 @@
 
 #define MAX_LEVEL 100
 
-#define OT_ID_PLAYER 0
-#define OT_ID_TRAINER 1
-#define OT_ID_OTHER 2
-
 #define MON_GIVEN_TO_PARTY      0x0
 #define MON_GIVEN_TO_PC         0x1
 #define MON_CANT_GIVE           0x2

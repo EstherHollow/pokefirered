@@ -46,7 +46,8 @@
 
 struct InGameTrade {
     /*0x00*/ u8 nickname[POKEMON_NAME_LENGTH + 1];
-    /*0x0C*/ u16 species;
+    /*0x0C*/ u16 species:11;
+             u16 variant:5;
     /*0x0E*/ u8 ivs[NUM_STATS];
     /*0x14*/ u8 abilityNum;
     /*0x18*/ u32 otId;
@@ -2436,7 +2437,7 @@ static void CreateInGameTradePokemonInternal(u8 playerSlot, u8 inGameTradeIdx)
     u8 metLocation = METLOC_IN_GAME_TRADE;
     struct Pokemon * tradeMon = &gEnemyParty[0];
     u8 mailNum;
-    CreateMon(tradeMon, inGameTrade->species, level, 32, TRUE, inGameTrade->personality, TRUE, inGameTrade->otId);
+    CreateMon(tradeMon, inGameTrade->species, level, 32, TRUE, inGameTrade->personality, inGameTrade->otId, inGameTrade->variant);
     SetMonData(tradeMon, MON_DATA_HP_IV, &inGameTrade->ivs[0]);
     SetMonData(tradeMon, MON_DATA_ATK_IV, &inGameTrade->ivs[1]);
     SetMonData(tradeMon, MON_DATA_DEF_IV, &inGameTrade->ivs[2]);

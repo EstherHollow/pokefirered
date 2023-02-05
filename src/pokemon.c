@@ -1738,24 +1738,46 @@ void ZeroEnemyPartyMons(void)
         ZeroMonData(&gEnemyParty[i]);
 }
 
-void CreateMon(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 hasFixedPersonality, u32 fixedPersonality, u8 otIdType, u32 otIdValue)
+u32 GetPlayerId(void)
+{
+    return gSaveBlock2Ptr->playerTrainerId[0]
+        | (gSaveBlock2Ptr->playerTrainerId[1] << 8)
+        | (gSaveBlock2Ptr->playerTrainerId[2] << 16)
+        | (gSaveBlock2Ptr->playerTrainerId[3] << 24);
+}
+
+void CreatePlayerMon(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 hasFixedPersonality, u32 fixedPersonality)
+{
+    u32 otId = GetPlayerId();
+    CreateMon(mon, species, level, fixedIV, hasFixedPersonality, fixedPersonality, otId, VARIANT_UNDETERMINED);
+}
+
+void CreateTrainerMon(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 hasFixedPersonality, u32 fixedPersonality, u16 trainerId, u8 partySlot)
+{
+    u32 otId;
+    trainerId = ConsolidateRivalId(trainerId);
+    otId = (GetPlayerId() * 29) + (trainerId * 31);
+    CreateMon(mon, species, level, fixedIV, hasFixedPersonality, fixedPersonality, otId, VARIANT_DETERMINED + partySlot);
+}
+
+void CreateMon(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 hasFixedPersonality, u32 fixedPersonality, u32 otId, u16 variant)
 {
     u32 arg;
     ZeroMonData(mon);
-    CreateBoxMon(&mon->box, species, level, fixedIV, hasFixedPersonality, fixedPersonality, otIdType, otIdValue);
+    CreateBoxMon(&mon->box, species, level, fixedIV, hasFixedPersonality, fixedPersonality, otId, variant);
     SetMonData(mon, MON_DATA_LEVEL, &level);
     arg = 255;
     SetMonData(mon, MON_DATA_MAIL, &arg);
     CalculateMonStats(mon);
 }
 
-void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, u8 hasFixedPersonality, u32 fixedPersonality, u8 otIdType, u32 otIdValue)
+void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, u8 hasFixedPersonality, u32 fixedPersonality, u32 otId, u16 variant)
 {
     u8 speciesName[POKEMON_NAME_LENGTH + 1];
     u32 personality;
     u32 value;
     u16 checksum;
-    u16 variant;
+    u32 variantSeed;
 
     ZeroBoxMonData(boxMon);
 
@@ -1766,57 +1788,7 @@ void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, 
 
     SetBoxMonData(boxMon, MON_DATA_PERSONALITY, &personality);
 
-    if (otIdType == OT_ID_OTHER) {
-        value = otIdValue;
-        SetBoxMonData(boxMon, MON_DATA_OT_ID, &value);
-    }
-    else if (otIdType == OT_ID_TRAINER) {
-        switch (otIdValue) {
-        case TRAINER_RIVAL_OAKS_LAB_SQUIRTLE:
-        case TRAINER_RIVAL_OAKS_LAB_BULBASAUR:
-        case TRAINER_RIVAL_OAKS_LAB_CHARMANDER:
-        case TRAINER_RIVAL_ROUTE22_EARLY_SQUIRTLE:
-        case TRAINER_RIVAL_ROUTE22_EARLY_BULBASAUR:
-        case TRAINER_RIVAL_ROUTE22_EARLY_CHARMANDER:
-        case TRAINER_RIVAL_CERULEAN_SQUIRTLE:
-        case TRAINER_RIVAL_CERULEAN_BULBASAUR:
-        case TRAINER_RIVAL_CERULEAN_CHARMANDER:
-        case TRAINER_RIVAL_SS_ANNE_SQUIRTLE:
-        case TRAINER_RIVAL_SS_ANNE_BULBASAUR:
-        case TRAINER_RIVAL_SS_ANNE_CHARMANDER:
-        case TRAINER_RIVAL_POKENON_TOWER_SQUIRTLE:
-        case TRAINER_RIVAL_POKENON_TOWER_BULBASAUR:
-        case TRAINER_RIVAL_POKENON_TOWER_CHARMANDER:
-        case TRAINER_RIVAL_SILPH_SQUIRTLE:
-        case TRAINER_RIVAL_SILPH_BULBASAUR:
-        case TRAINER_RIVAL_SILPH_CHARMANDER:
-        case TRAINER_RIVAL_ROUTE22_LATE_SQUIRTLE:
-        case TRAINER_RIVAL_ROUTE22_LATE_BULBASAUR:
-        case TRAINER_RIVAL_ROUTE22_LATE_CHARMANDER:
-        case TRAINER_CHAMPION_FIRST_SQUIRTLE:
-        case TRAINER_CHAMPION_FIRST_BULBASAUR:
-        case TRAINER_CHAMPION_FIRST_CHARMANDER:
-        case TRAINER_CHAMPION_REMATCH_SQUIRTLE:
-        case TRAINER_CHAMPION_REMATCH_BULBASAUR:
-        case TRAINER_CHAMPION_REMATCH_CHARMANDER:
-            otIdValue = 0xFFFFFFFF;
-            break;
-        }
-
-        value = gSaveBlock2Ptr->playerTrainerId[0]
-              | (gSaveBlock2Ptr->playerTrainerId[1] << 8)
-              | (gSaveBlock2Ptr->playerTrainerId[2] << 16)
-              | (gSaveBlock2Ptr->playerTrainerId[3] << 24);
-        value ^= otIdValue;
-        SetBoxMonData(boxMon, MON_DATA_OT_ID, &value);
-    }
-    else {
-        value = gSaveBlock2Ptr->playerTrainerId[0]
-              | (gSaveBlock2Ptr->playerTrainerId[1] << 8)
-              | (gSaveBlock2Ptr->playerTrainerId[2] << 16)
-              | (gSaveBlock2Ptr->playerTrainerId[3] << 24);
-        SetBoxMonData(boxMon, MON_DATA_OT_ID, &value);
-    }
+    SetBoxMonData(boxMon, MON_DATA_OT_ID, &otId);
 
     checksum = CalculateBoxMonChecksum(boxMon);
     SetBoxMonData(boxMon, MON_DATA_CHECKSUM, &checksum);
@@ -1824,10 +1796,13 @@ void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, 
 
     GetSpeciesName(speciesName, species);
     SetBoxMonData(boxMon, MON_DATA_NICKNAME, speciesName);
-    if (otIdType == OT_ID_PLAYER)
-        variant = GeneratePlayerMonVariant(species);
-    else
-        variant = GenerateTrainerMonVariant(species, value);
+    if (variant == VARIANT_UNDETERMINED) {
+        variant = GenerateMonVariant(species);
+    }
+    else if (variant >= VARIANT_DETERMINED) {
+        variantSeed = (otId * 29) + (variant * 31);
+        variant = GenerateSeededMonVariant(species, variantSeed);
+    }
     SetBoxMonData(boxMon, MON_DATA_VARIANT, &variant);
     SetBoxMonData(boxMon, MON_DATA_LANGUAGE, &gGameLanguage);
     SetBoxMonData(boxMon, MON_DATA_OT_NAME, gSaveBlock2Ptr->playerName);
@@ -1887,11 +1862,11 @@ void CreateMonWithFlags(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, 
     if (flags & MON_FLAG_IS_STARTER)
     {
         // Nothing different
-        CreateMon(mon, species, level, fixedIV, 0, 0, OT_ID_PLAYER, 0);
+        CreatePlayerMon(mon, species, level, fixedIV, 0, 0);
     }
     else
     {
-        CreateMon(mon, species, level, fixedIV, 0, 0, OT_ID_PLAYER, 0);
+        CreatePlayerMon(mon, species, level, fixedIV, 0, 0);
     }
 }
 
@@ -1905,7 +1880,7 @@ void CreateMonWithNature(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV,
     }
     while (nature != GetNatureFromPersonality(personality));
 
-    CreateMon(mon, species, level, fixedIV, 1, personality, OT_ID_PLAYER, 0);
+    CreatePlayerMon(mon, species, level, fixedIV, 1, personality);
 }
 
 void CreateMonWithGenderNatureLetter(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 gender, u8 nature, u8 unownLetter)
@@ -1935,7 +1910,7 @@ void CreateMonWithGenderNatureLetter(struct Pokemon *mon, u16 species, u8 level,
             || gender != GetGenderFromSpeciesAndPersonality(species, personality));
     }
 
-    CreateMon(mon, species, level, fixedIV, 1, personality, OT_ID_PLAYER, 0);
+    CreatePlayerMon(mon, species, level, fixedIV, 1, personality);
 }
 
 // Used to create the Old Man's Weedle?
@@ -1950,19 +1925,19 @@ void CreateMaleMon(struct Pokemon *mon, u16 species, u8 level)
         personality = Random32();
     }
     while (GetGenderFromSpeciesAndPersonality(species, personality) != MON_MALE);
-    CreateMon(mon, species, level, 32, 1, personality, OT_ID_OTHER, otId);
+    CreateMon(mon, species, level, 32, 1, personality, otId, VARIANT_DEFAULT);
 }
 
 void CreateMonWithIVsPersonality(struct Pokemon *mon, u16 species, u8 level, u32 ivs, u32 personality)
 {
-    CreateMon(mon, species, level, 0, 1, personality, OT_ID_PLAYER, 0);
+    CreatePlayerMon(mon, species, level, 0, 1, personality);
     SetMonData(mon, MON_DATA_IVS, &ivs);
     CalculateMonStats(mon);
 }
 
 static void CreateMonWithIVsOTID(struct Pokemon *mon, u16 species, u8 level, u8 *ivs, u32 otId)
 {
-    CreateMon(mon, species, level, 0, 0, 0, OT_ID_OTHER, otId);
+    CreateMon(mon, species, level, 0, 0, 0, otId, VARIANT_UNDETERMINED);
     SetMonData(mon, MON_DATA_HP_IV, &ivs[0]);
     SetMonData(mon, MON_DATA_ATK_IV, &ivs[1]);
     SetMonData(mon, MON_DATA_DEF_IV, &ivs[2]);
@@ -1979,7 +1954,7 @@ void CreateMonWithEVSpread(struct Pokemon *mon, u16 species, u8 level, u8 fixedI
     u16 evAmount;
     u8 evsBits;
 
-    CreateMon(mon, species, level, fixedIV, 0, 0, 0, 0);
+    CreatePlayerMon(mon, species, level, fixedIV, 0, 0);
 
     evsBits = evSpread;
 
@@ -2009,7 +1984,7 @@ void CreateBattleTowerMon(struct Pokemon *mon, struct BattleTowerPokemon *src)
     s32 i;
     u8 value;
 
-    CreateMon(mon, src->species, src->level, 0, 1, src->personality, 1, src->otId);
+    CreateMon(mon, src->species, src->level, 0, 1, src->personality, src->otId, VARIANT_DEFAULT);
 
     for (i = 0; i < 4; i++)
         SetMonMoveSlot(mon, src->moves[i], i);
@@ -2055,11 +2030,11 @@ void CreateBattleTowerMon(struct Pokemon *mon, struct BattleTowerPokemon *src)
     CalculateMonStats(mon);
 }
 
-static void CreateEventLegalMon(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 hasFixedPersonality, u32 fixedPersonality, u8 otIdType, u32 fixedOtId)
+static void CreateEventLegalMon(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 hasFixedPersonality, u32 fixedPersonality)
 {
     bool32 isEventLegal = TRUE;
 
-    CreateMon(mon, species, level, fixedIV, hasFixedPersonality, fixedPersonality, otIdType, fixedOtId);
+    CreatePlayerMon(mon, species, level, fixedIV, hasFixedPersonality, fixedPersonality);
     SetMonData(mon, MON_DATA_EVENT_LEGAL, &isEventLegal);
 }
 
@@ -3850,8 +3825,8 @@ static void CreateSecretBaseEnemyParty(struct SecretBaseRecord *secretBaseRecord
                 15,
                 1,
                 gBattleResources->secretBase->party.personality[i],
-                2,
-                0);
+                0,
+                VARIANT_UNDETERMINED);
 
             SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM, &gBattleResources->secretBase->party.heldItems[i]);
 
@@ -6102,7 +6077,7 @@ void CreateEventLegalEnemyMon(void)
     s32 itemId = gSpecialVar_0x8006;
 
     ZeroEnemyPartyMons();
-    CreateEventLegalMon(&gEnemyParty[0], species, level, 32, 0, 0, 0, 0);
+    CreateEventLegalMon(&gEnemyParty[0], species, level, 32, 0, 0);
     if (itemId)
     {
         u8 heldItem[2];
@@ -6330,11 +6305,46 @@ void *OakSpeechNidoranFGetBuffer(u8 bufferId)
     }
 }
 
-u8 GeneratePlayerMonVariant(u16 species) {
-    return GenerateTrainerMonVariant(species, Random32());
+u16 ConsolidateRivalId(u16 trainerId) {
+    switch (trainerId) {
+    case TRAINER_RIVAL_OAKS_LAB_SQUIRTLE:
+    case TRAINER_RIVAL_OAKS_LAB_BULBASAUR:
+    case TRAINER_RIVAL_OAKS_LAB_CHARMANDER:
+    case TRAINER_RIVAL_ROUTE22_EARLY_SQUIRTLE:
+    case TRAINER_RIVAL_ROUTE22_EARLY_BULBASAUR:
+    case TRAINER_RIVAL_ROUTE22_EARLY_CHARMANDER:
+    case TRAINER_RIVAL_CERULEAN_SQUIRTLE:
+    case TRAINER_RIVAL_CERULEAN_BULBASAUR:
+    case TRAINER_RIVAL_CERULEAN_CHARMANDER:
+    case TRAINER_RIVAL_SS_ANNE_SQUIRTLE:
+    case TRAINER_RIVAL_SS_ANNE_BULBASAUR:
+    case TRAINER_RIVAL_SS_ANNE_CHARMANDER:
+    case TRAINER_RIVAL_POKENON_TOWER_SQUIRTLE:
+    case TRAINER_RIVAL_POKENON_TOWER_BULBASAUR:
+    case TRAINER_RIVAL_POKENON_TOWER_CHARMANDER:
+    case TRAINER_RIVAL_SILPH_SQUIRTLE:
+    case TRAINER_RIVAL_SILPH_BULBASAUR:
+    case TRAINER_RIVAL_SILPH_CHARMANDER:
+    case TRAINER_RIVAL_ROUTE22_LATE_SQUIRTLE:
+    case TRAINER_RIVAL_ROUTE22_LATE_BULBASAUR:
+    case TRAINER_RIVAL_ROUTE22_LATE_CHARMANDER:
+    case TRAINER_CHAMPION_FIRST_SQUIRTLE:
+    case TRAINER_CHAMPION_FIRST_BULBASAUR:
+    case TRAINER_CHAMPION_FIRST_CHARMANDER:
+    case TRAINER_CHAMPION_REMATCH_SQUIRTLE:
+    case TRAINER_CHAMPION_REMATCH_BULBASAUR:
+    case TRAINER_CHAMPION_REMATCH_CHARMANDER:
+        return TRAINER_RIVAL_OAKS_LAB_SQUIRTLE;
+    default:
+        return trainerId;
+    }
 }
 
-u8 GenerateTrainerMonVariant(u16 species, u32 otId) {
+u8 GenerateMonVariant(u16 species) {
+    return GenerateSeededMonVariant(species, Random32());
+}
+
+u8 GenerateSeededMonVariant(u16 species, u32 variantSeed) {
     switch (species) {
     case SPECIES_BULBASAUR:
     case SPECIES_IVYSAUR:
@@ -6345,13 +6355,13 @@ u8 GenerateTrainerMonVariant(u16 species, u32 otId) {
     case SPECIES_SQUIRTLE:
     case SPECIES_WARTORTLE:
     case SPECIES_BLASTOISE:
-        return otId % 4 + 1;
+        return variantSeed % 4 + 1;
     case SPECIES_PIDGEY:
     case SPECIES_PIDGEOTTO:
     case SPECIES_PIDGEOT:
     case SPECIES_RATTATA:
     case SPECIES_RATICATE:
-        return otId % 3;
+        return variantSeed % 3;
     default:
         return 0;
     }
