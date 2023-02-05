@@ -849,7 +849,7 @@ static void CB2_CreateTradeMenu(void)
 
         for (i = 0; i < PARTY_SIZE; i++)
         {
-            CreateMon(&gEnemyParty[i], SPECIES_NONE, 0, USE_RANDOM_IVS, FALSE, 0, OT_ID_PLAYER, 0);
+            CreatePlayerMon(&gEnemyParty[i], SPECIES_NONE, 0, USE_RANDOM_IVS, FALSE, 0);
         }
 
         PrintTradeMessage(MSG_STANDBY);

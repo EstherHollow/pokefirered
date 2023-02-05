@@ -1581,7 +1581,7 @@ static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum)
 
                 personalityValue += nameHash << 8;
                 fixedIV = partyData[i].iv * MAX_PER_STAT_IVS / 255;
-                CreateMon(&party[i], partyData[i].species, partyData[i].lvl, fixedIV, TRUE, personalityValue, OT_ID_TRAINER, trainerNum);
+                CreateTrainerMon(&party[i], partyData[i].species, partyData[i].lvl, fixedIV, TRUE, personalityValue, trainerNum, i);
                 break;
             }
             case F_TRAINER_PARTY_CUSTOM_MOVESET:
@@ -1593,7 +1593,7 @@ static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum)
 
                 personalityValue += nameHash << 8;
                 fixedIV = partyData[i].iv * MAX_PER_STAT_IVS / 255;
-                CreateMon(&party[i], partyData[i].species, partyData[i].lvl, fixedIV, TRUE, personalityValue, OT_ID_TRAINER, trainerNum);
+                CreateTrainerMon(&party[i], partyData[i].species, partyData[i].lvl, fixedIV, TRUE, personalityValue, trainerNum, i);
 
                 for (j = 0; j < MAX_MON_MOVES; j++)
                 {
@@ -1611,7 +1611,7 @@ static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum)
 
                 personalityValue += nameHash << 8;
                 fixedIV = partyData[i].iv * MAX_PER_STAT_IVS / 255;
-                CreateMon(&party[i], partyData[i].species, partyData[i].lvl, fixedIV, TRUE, personalityValue, OT_ID_TRAINER, trainerNum);
+                CreateTrainerMon(&party[i], partyData[i].species, partyData[i].lvl, fixedIV, TRUE, personalityValue, trainerNum, i);
 
                 SetMonData(&party[i], MON_DATA_HELD_ITEM, &partyData[i].heldItem);
                 break;
@@ -1625,7 +1625,7 @@ static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum)
 
                 personalityValue += nameHash << 8;
                 fixedIV = partyData[i].iv * MAX_PER_STAT_IVS / 255;
-                CreateMon(&party[i], partyData[i].species, partyData[i].lvl, fixedIV, TRUE, personalityValue, OT_ID_TRAINER, trainerNum);
+                CreateTrainerMon(&party[i], partyData[i].species, partyData[i].lvl, fixedIV, TRUE, personalityValue, trainerNum, i);
                 SetMonData(&party[i], MON_DATA_HELD_ITEM, &partyData[i].heldItem);
 
                 for (j = 0; j < MAX_MON_MOVES; j++)
