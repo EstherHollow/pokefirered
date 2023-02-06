@@ -1765,35 +1765,35 @@ u32 GetPlayerId(void)
 void CreatePlayerMon(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 hasFixedPersonality, u32 fixedPersonality)
 {
     u32 otId = GetPlayerId();
-    CreateMon(mon, species, level, fixedIV, hasFixedPersonality, fixedPersonality, otId, VARIANT_UNDETERMINED);
+    u16 variant = VARIANT_RANDOM;
+    u32 variantSeed = Random32();
+    CreateMon(mon, species, level, fixedIV, hasFixedPersonality, fixedPersonality, otId, variant, variantSeed);
 }
 
-void CreateTrainerMon(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 hasFixedPersonality, u32 fixedPersonality, u16 trainerId, u8 partySlot)
+void CreateTrainerMon(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 hasFixedPersonality, u32 fixedPersonality, u16 trainerId, u8 partySlot, u16 variant)
 {
-    u32 otId;
-    trainerId = ConsolidateRivalId(trainerId);
-    otId = (GetPlayerId() * 29) + (trainerId * 31);
-    CreateMon(mon, species, level, fixedIV, hasFixedPersonality, fixedPersonality, otId, VARIANT_DETERMINED + partySlot);
+    u32 otId = (GetPlayerId() * 29) + (trainerId * 31);
+    u32 variantSeed = (otId * 29) + (partySlot * 31);
+    CreateMon(mon, species, level, fixedIV, hasFixedPersonality, fixedPersonality, otId, variant, variantSeed);
 }
 
-void CreateMon(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 hasFixedPersonality, u32 fixedPersonality, u32 otId, u16 variant)
+void CreateMon(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 hasFixedPersonality, u32 fixedPersonality, u32 otId, u16 variant, u32 variantSeed)
 {
     u32 arg;
     ZeroMonData(mon);
-    CreateBoxMon(&mon->box, species, level, fixedIV, hasFixedPersonality, fixedPersonality, otId, variant);
+    CreateBoxMon(&mon->box, species, level, fixedIV, hasFixedPersonality, fixedPersonality, otId, variant, variantSeed);
     SetMonData(mon, MON_DATA_LEVEL, &level);
     arg = MAIL_NONE;
     SetMonData(mon, MON_DATA_MAIL, &arg);
     CalculateMonStats(mon);
 }
 
-void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, u8 hasFixedPersonality, u32 fixedPersonality, u32 otId, u16 variant)
+void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, u8 hasFixedPersonality, u32 fixedPersonality, u32 otId, u16 variant, u32 variantSeed)
 {
     u8 speciesName[POKEMON_NAME_LENGTH + 1];
     u32 personality;
     u32 value;
     u16 checksum;
-    u32 variantSeed;
 
     ZeroBoxMonData(boxMon);
 
@@ -1812,12 +1812,8 @@ void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, 
 
     GetSpeciesName(speciesName, species);
     SetBoxMonData(boxMon, MON_DATA_NICKNAME, speciesName);
-    if (variant == VARIANT_UNDETERMINED) {
-        variant = GenerateMonVariant(species);
-    }
-    else if (variant >= VARIANT_DETERMINED) {
-        variantSeed = (otId * 29) + (variant * 31);
-        variant = GenerateSeededMonVariant(species, variantSeed);
+    if (variant == VARIANT_RANDOM) {
+        variant = GenerateMonVariant(species, variantSeed);
     }
     SetBoxMonData(boxMon, MON_DATA_VARIANT, &variant);
     SetBoxMonData(boxMon, MON_DATA_LANGUAGE, &gGameLanguage);
@@ -1941,7 +1937,7 @@ void CreateMaleMon(struct Pokemon *mon, u16 species, u8 level)
         personality = Random32();
     }
     while (GetGenderFromSpeciesAndPersonality(species, personality) != MON_MALE);
-    CreateMon(mon, species, level, USE_RANDOM_IVS, TRUE, personality, otId, VARIANT_DEFAULT);
+    CreateMon(mon, species, level, USE_RANDOM_IVS, TRUE, personality, otId, VARIANT_DEFAULT, 0);
 }
 
 void CreateMonWithIVsPersonality(struct Pokemon *mon, u16 species, u8 level, u32 ivs, u32 personality)
@@ -1953,7 +1949,7 @@ void CreateMonWithIVsPersonality(struct Pokemon *mon, u16 species, u8 level, u32
 
 static void CreateMonWithIVsOTID(struct Pokemon *mon, u16 species, u8 level, u8 *ivs, u32 otId)
 {
-    CreateMon(mon, species, level, 0, FALSE, 0, otId, VARIANT_UNDETERMINED);
+    CreateMon(mon, species, level, 0, FALSE, 0, otId, VARIANT_RANDOM, Random32());
     SetMonData(mon, MON_DATA_HP_IV, &ivs[STAT_HP]);
     SetMonData(mon, MON_DATA_ATK_IV, &ivs[STAT_ATK]);
     SetMonData(mon, MON_DATA_DEF_IV, &ivs[STAT_DEF]);
@@ -2000,7 +1996,7 @@ void CreateBattleTowerMon(struct Pokemon *mon, struct BattleTowerPokemon *src)
     s32 i;
     u8 value;
 
-    CreateMon(mon, src->species, src->level, 0, TRUE, src->personality, src->otId, VARIANT_DEFAULT);
+    CreateMon(mon, src->species, src->level, 0, TRUE, src->personality, src->otId, VARIANT_DEFAULT, 0);
 
     for (i = 0; i < MAX_MON_MOVES; i++)
         SetMonMoveSlot(mon, src->moves[i], i);
@@ -3850,7 +3846,8 @@ static void CreateSecretBaseEnemyParty(struct SecretBaseRecord *secretBaseRecord
                 TRUE,
                 gBattleResources->secretBase->party.personality[i],
                 0,
-                VARIANT_UNDETERMINED);
+                VARIANT_RANDOM,
+                Random32());
 
             SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM, &gBattleResources->secretBase->party.heldItems[i]);
 
@@ -6461,7 +6458,7 @@ u8 *MonSpritesGfxManager_GetSpritePtr(u8 spriteNum)
     }
 }
 
-u16 ConsolidateRivalId(u16 trainerId) {
+bool8 IsTrainerRival(u16 trainerId) {
     switch (trainerId) {
     case TRAINER_RIVAL_OAKS_LAB_SQUIRTLE:
     case TRAINER_RIVAL_OAKS_LAB_BULBASAUR:
@@ -6490,17 +6487,13 @@ u16 ConsolidateRivalId(u16 trainerId) {
     case TRAINER_CHAMPION_REMATCH_SQUIRTLE:
     case TRAINER_CHAMPION_REMATCH_BULBASAUR:
     case TRAINER_CHAMPION_REMATCH_CHARMANDER:
-        return TRAINER_RIVAL_OAKS_LAB_SQUIRTLE;
+        return TRUE;
     default:
-        return trainerId;
+        return FALSE;
     }
 }
 
-u8 GenerateMonVariant(u16 species) {
-    return GenerateSeededMonVariant(species, Random32());
-}
-
-u8 GenerateSeededMonVariant(u16 species, u32 variantSeed) {
+u8 GenerateMonVariant(u16 species, u32 variantSeed) {
     switch (species) {
     case SPECIES_BULBASAUR:
     case SPECIES_IVYSAUR:
