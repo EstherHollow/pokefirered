@@ -290,6 +290,12 @@
 
 #define EVOS_PER_MON 5
 
+#define STATIC_IV 23
+#define EXP_MODIFIER 5
+
+#define PARTY_SIZE 6
+#define BOX_NAME_LENGTH 8
+
 #define EVO_MODE_NORMAL     0
 #define EVO_MODE_TRADE      1
 #define EVO_MODE_ITEM_USE   2

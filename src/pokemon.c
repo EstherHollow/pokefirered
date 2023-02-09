@@ -1840,7 +1840,7 @@ void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, 
     }
     else
     {
-        u32 iv = 23; // 0x10111 BABY
+        u32 iv = STATIC_IV;
         SetBoxMonData(boxMon, MON_DATA_HP_IV, &iv);
         SetBoxMonData(boxMon, MON_DATA_ATK_IV, &iv);
         SetBoxMonData(boxMon, MON_DATA_DEF_IV, &iv);
