@@ -224,6 +224,9 @@
 #define MAX_TOTAL_EVS 510
 #define EV_ITEM_RAISE_LIMIT 100
 
+#define STATIC_IV 23
+#define EXP_MODIFIER 5
+
 #define PARTY_SIZE 6
 #define BOX_NAME_LENGTH 8
 

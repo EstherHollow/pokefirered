@@ -3117,6 +3117,7 @@ static void Cmd_getexp(void)
     u8 holdEffect;
     s32 sentIn;
     u16 *exp = &gBattleStruct->expValue;
+    u8 levelDiff;
 
     gBattlerFainted = GetBattlerForBattleScript(gBattlescriptCurrInstr[1]);
     sentIn = gSentPokesToOpponent[(gBattlerFainted & 2) >> 1];
@@ -3161,9 +3162,9 @@ static void Cmd_getexp(void)
                     holdEffect = ItemId_GetHoldEffect(item);
             }
 
-            calculatedExp = gBaseStats[gBattleMons[gBattlerFainted].species].expYield * gBattleMons[gBattlerFainted].level / 7;
+            calculatedExp = gBaseStats[gBattleMons[gBattlerFainted].species].expYield * gBattleMons[gBattlerFainted].level / EXP_MODIFIER;
 
-            *exp = SAFE_DIV(calculatedExp, viaSentIn * 2 + totalMons);
+            *exp = SAFE_DIV(calculatedExp, viaSentIn + totalMons);
             if (*exp == 0)
                 *exp = 1;
 
@@ -3182,6 +3183,11 @@ static void Cmd_getexp(void)
             else
                 holdEffect = ItemId_GetHoldEffect(item);
 
+            if (GetMonData(&gPlayerParty[gBattleStruct->expGetterMonId], MON_DATA_LEVEL) > gBattleMons[gBattlerFainted].level)
+                levelDiff = GetMonData(&gPlayerParty[gBattleStruct->expGetterMonId], MON_DATA_LEVEL) - gBattleMons[gBattlerFainted].level;
+            else
+                levelDiff = 0;
+
             if (GetMonData(&gPlayerParty[gBattleStruct->expGetterMonId], MON_DATA_SPECIES) == SPECIES_NONE)
             {
                 *(&gBattleStruct->sentInPokes) >>= 1;
@@ -3189,6 +3195,12 @@ static void Cmd_getexp(void)
                 gBattleMoveDamage = 0; // used for exp
             }
             else if (GetMonData(&gPlayerParty[gBattleStruct->expGetterMonId], MON_DATA_LEVEL) == MAX_LEVEL)
+            {
+                *(&gBattleStruct->sentInPokes) >>= 1;
+                gBattleScripting.getexpState = 5;
+                gBattleMoveDamage = 0; // used for exp
+            }
+            else if (levelDiff >= 5)
             {
                 *(&gBattleStruct->sentInPokes) >>= 1;
                 gBattleScripting.getexpState = 5;
@@ -3207,7 +3219,7 @@ static void Cmd_getexp(void)
                 if (GetMonData(&gPlayerParty[gBattleStruct->expGetterMonId], MON_DATA_HP))
                 {
                     if (gBattleStruct->sentInPokes & 1)
-                        gBattleMoveDamage = *exp * 3;
+                        gBattleMoveDamage = *exp * 2;
                     else
                         gBattleMoveDamage = *exp;
 
@@ -3215,8 +3227,7 @@ static void Cmd_getexp(void)
                         gBattleMoveDamage = (gBattleMoveDamage * 150) / 100;
                     if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
                         gBattleMoveDamage = (gBattleMoveDamage * 150) / 100;
-                    if (IsTradedMon(&gPlayerParty[gBattleStruct->expGetterMonId])
-                     && !(gBattleTypeFlags & BATTLE_TYPE_POKEDUDE))
+                    if (IsTradedMon(&gPlayerParty[gBattleStruct->expGetterMonId]) && !(gBattleTypeFlags & BATTLE_TYPE_POKEDUDE))
                     {
                         gBattleMoveDamage = (gBattleMoveDamage * 150) / 100;
                         i = STRINGID_ABOOSTED;
@@ -3225,6 +3236,8 @@ static void Cmd_getexp(void)
                     {
                         i = STRINGID_EMPTYSTRING4;
                     }
+                    if (levelDiff > 0)
+                        gBattleMoveDamage = (gBattleMoveDamage * 20 * (5 - levelDiff)) / 100;
 
                     // get exp getter battlerId
                     if (gBattleTypeFlags & BATTLE_TYPE_DOUBLE)
