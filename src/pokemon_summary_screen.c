@@ -2106,8 +2106,8 @@ static void BufferMonInfo(void)
     }
 
     variant = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_VARIANT);
-    sMonSummaryScreen->monTypes[0] = GetType1(dexNum, variant);
-    sMonSummaryScreen->monTypes[1] = GetType2(dexNum, variant);
+    sMonSummaryScreen->monTypes[0] = GetVariantType1(dexNum, variant);
+    sMonSummaryScreen->monTypes[1] = GetVariantType2(dexNum, variant);
 
     GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_NICKNAME, tempStr);
     StringCopyN_Multibyte(sMonSummaryScreen->summary.nicknameStrBuf, tempStr, POKEMON_NAME_LENGTH);

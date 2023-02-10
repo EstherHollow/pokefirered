@@ -2519,8 +2519,8 @@ void FaintClearSetData(void)
         *(i * 8 + gActiveBattler * 2 + (u8 *)(gBattleStruct->lastTakenMoveFrom) + 1) = 0;
     }
     gBattleResources->flags->flags[gActiveBattler] = 0;
-    gBattleMons[gActiveBattler].type1 = GetType1(gBattleMons[gActiveBattler].species, gBattleMons[gActiveBattler].variant);
-    gBattleMons[gActiveBattler].type2 = GetType2(gBattleMons[gActiveBattler].species, gBattleMons[gActiveBattler].variant);
+    gBattleMons[gActiveBattler].type1 = GetVariantType1(gBattleMons[gActiveBattler].species, gBattleMons[gActiveBattler].variant);
+    gBattleMons[gActiveBattler].type2 = GetVariantType2(gBattleMons[gActiveBattler].species, gBattleMons[gActiveBattler].variant);
 }
 
 static void BattleIntroGetMonsData(void)
@@ -2584,8 +2584,8 @@ static void BattleIntroDrawTrainersOrMonsSprites(void)
             for (i = 0; i < sizeof(struct BattlePokemon); i++)
                 ptr[i] = gBattleBufferB[gActiveBattler][4 + i];
 
-            gBattleMons[gActiveBattler].type1 = GetType1(gBattleMons[gActiveBattler].species, gBattleMons[gActiveBattler].variant);
-            gBattleMons[gActiveBattler].type2 = GetType2(gBattleMons[gActiveBattler].species, gBattleMons[gActiveBattler].variant);
+            gBattleMons[gActiveBattler].type1 = GetVariantType1(gBattleMons[gActiveBattler].species, gBattleMons[gActiveBattler].variant);
+            gBattleMons[gActiveBattler].type2 = GetVariantType2(gBattleMons[gActiveBattler].species, gBattleMons[gActiveBattler].variant);
             gBattleMons[gActiveBattler].ability = GetAbilityBySpecies(gBattleMons[gActiveBattler].species, gBattleMons[gActiveBattler].abilityNum);
             hpOnSwitchout = &gBattleStruct->hpOnSwitchout[GetBattlerSide(gActiveBattler)];
             *hpOnSwitchout = gBattleMons[gActiveBattler].hp;

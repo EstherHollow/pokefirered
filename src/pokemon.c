@@ -2100,9 +2100,9 @@ static u16 CalculateBoxMonChecksum(struct BoxPokemon *boxMon)
     return checksum;
 }
 
-#define CALC_STAT(base, iv, ev, statIndex, field)               \
+#define CALC_STAT(stat, iv, ev, statIndex, field)               \
 {                                                               \
-    u8 baseStat = gSpeciesInfo[species].base;                   \
+    u8 baseStat = GetVariant##stat(species, variant);           \
     s32 n = (((2 * baseStat + iv + ev / 4) * level) / 100) + 5; \
     u8 nature = GetNature(mon);                                 \
     n = ModifyStatByNature(nature, n, statIndex);               \
@@ -2126,6 +2126,7 @@ void CalculateMonStats(struct Pokemon *mon)
     s32 spDefenseIV = GetMonData(mon, MON_DATA_SPDEF_IV, NULL);
     s32 spDefenseEV = GetMonData(mon, MON_DATA_SPDEF_EV, NULL);
     u16 species = GetMonData(mon, MON_DATA_SPECIES, NULL);
+    u16 variant = GetMonData(mon, MON_DATA_VARIANT, NULL);
     s32 level = GetLevelFromMonExp(mon);
     s32 newMaxHP;
 
@@ -2137,7 +2138,7 @@ void CalculateMonStats(struct Pokemon *mon)
     }
     else
     {
-        s32 n = 2 * gSpeciesInfo[species].baseHP + hpIV;
+        s32 n = 2 * GetVariantHP(species, variant) + hpIV;
         newMaxHP = (((n + hpEV / 4) * level) / 100) + level + 10;
     }
 
@@ -2147,11 +2148,11 @@ void CalculateMonStats(struct Pokemon *mon)
 
     SetMonData(mon, MON_DATA_MAX_HP, &newMaxHP);
 
-    CALC_STAT(baseAttack, attackIV, attackEV, STAT_ATK, MON_DATA_ATK)
-    CALC_STAT(baseDefense, defenseIV, defenseEV, STAT_DEF, MON_DATA_DEF)
-    CALC_STAT(baseSpeed, speedIV, speedEV, STAT_SPEED, MON_DATA_SPEED)
-    CALC_STAT(baseSpAttack, spAttackIV, spAttackEV, STAT_SPATK, MON_DATA_SPATK)
-    CALC_STAT(baseSpDefense, spDefenseIV, spDefenseEV, STAT_SPDEF, MON_DATA_SPDEF)
+    CALC_STAT(Attack, attackIV, attackEV, STAT_ATK, MON_DATA_ATK)
+    CALC_STAT(Defense, defenseIV, defenseEV, STAT_DEF, MON_DATA_DEF)
+    CALC_STAT(Speed, speedIV, speedEV, STAT_SPEED, MON_DATA_SPEED)
+    CALC_STAT(SpAttack, spAttackIV, spAttackEV, STAT_SPATK, MON_DATA_SPATK)
+    CALC_STAT(SpDefense, spDefenseIV, spDefenseEV, STAT_SPDEF, MON_DATA_SPDEF)
 
     if (species == SPECIES_SHEDINJA)
     {
@@ -2280,7 +2281,7 @@ static void GiveBoxMonInitialMoveset(struct BoxPokemon *boxMon)
     s32 i;
     u16 learnset[24];
 
-    GetLevelUpLearnset(species, variant, learnset);
+    GetVariantLearnset(species, variant, learnset);
 
     for (i = 0; learnset[i] != LEVEL_UP_END; i++)
     {
@@ -2307,7 +2308,7 @@ u16 MonTryLearningNewMove(struct Pokemon *mon, bool8 firstMove)
     u8 level = GetMonData(mon, MON_DATA_LEVEL, NULL);
     u16 learnset[24];
 
-    GetLevelUpLearnset(species, variant, learnset);
+    GetVariantLearnset(species, variant, learnset);
 
     // since you can learn more than one move per level
     // the game needs to know whether you decided to
@@ -3964,8 +3965,8 @@ static void CopyPlayerPartyMonToBattleData(u8 battlerId, u8 partyIndex)
     gBattleMons[battlerId].abilityNum = GetMonData(&gPlayerParty[partyIndex], MON_DATA_ABILITY_NUM, NULL);
     gBattleMons[battlerId].otId = GetMonData(&gPlayerParty[partyIndex], MON_DATA_OT_ID, NULL);
     gBattleMons[battlerId].variant = GetMonData(&gPlayerParty[partyIndex], MON_DATA_VARIANT, NULL);
-    gBattleMons[battlerId].type1 = GetType1(gBattleMons[battlerId].species, gBattleMons[battlerId].variant);
-    gBattleMons[battlerId].type2 = GetType2(gBattleMons[battlerId].species, gBattleMons[battlerId].variant);
+    gBattleMons[battlerId].type1 = GetVariantType1(gBattleMons[battlerId].species, gBattleMons[battlerId].variant);
+    gBattleMons[battlerId].type2 = GetVariantType2(gBattleMons[battlerId].species, gBattleMons[battlerId].variant);
     gBattleMons[battlerId].ability = GetAbilityBySpecies(gBattleMons[battlerId].species, gBattleMons[battlerId].abilityNum);
     GetMonData(&gPlayerParty[partyIndex], MON_DATA_NICKNAME, nickname);
     StringCopy_Nickname(gBattleMons[battlerId].nickname, nickname);
@@ -6493,7 +6494,7 @@ u8 GenerateMonVariant(u16 species, u32 variantSeed) {
     case SPECIES_SQUIRTLE:
     case SPECIES_WARTORTLE:
     case SPECIES_BLASTOISE:
-        return variantSeed % 4 + 1;
+        return variantSeed % (sPokemonNumVariants[species] - 1) + 1;
     case SPECIES_PIDGEY:
     case SPECIES_PIDGEOTTO:
     case SPECIES_PIDGEOT:

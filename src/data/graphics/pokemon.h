@@ -4,11 +4,11 @@ const u8 gMonIcon_Bulbasaur[] = INCBIN_U8("graphics/pokemon/001_bulbasaur/icon.4
 const u8 gMonFootprint_Bulbasaur[] = INCBIN_U8("graphics/pokemon/001_bulbasaur/footprint.1bpp");
 const u32 gMonPalettes_Bulbasaur[8][16] =
 {
-        INCBIN_U32("graphics/pokemon/001_bulbasaur/normal.gbapal.lz"),
-		INCBIN_U32("graphics/pokemon/001_bulbasaur/red.gbapal.lz"),
-		INCBIN_U32("graphics/pokemon/001_bulbasaur/green.gbapal.lz"),
-		INCBIN_U32("graphics/pokemon/001_bulbasaur/yellow.gbapal.lz"),
-		INCBIN_U32("graphics/pokemon/001_bulbasaur/pink.gbapal.lz"),
+        [VARIANT_BULBASAUR_ORIGINAL] = INCBIN_U32("graphics/pokemon/001_bulbasaur/normal.gbapal.lz"),
+        [VARIANT_BULBASAUR_RED] = INCBIN_U32("graphics/pokemon/001_bulbasaur/red.gbapal.lz"),
+        [VARIANT_BULBASAUR_GREEN] = INCBIN_U32("graphics/pokemon/001_bulbasaur/green.gbapal.lz"),
+        [VARIANT_BULBASAUR_BLUE] = INCBIN_U32("graphics/pokemon/001_bulbasaur/blue.gbapal.lz"),
+        [VARIANT_BULBASAUR_PINK] = INCBIN_U32("graphics/pokemon/001_bulbasaur/pink.gbapal.lz"),
 };
 
 const u32 gMonFrontPic_Ivysaur[] = INCBIN_U32("graphics/pokemon/002_ivysaur/front.4bpp.lz");
@@ -18,10 +18,7 @@ const u8 gMonFootprint_Ivysaur[] = INCBIN_U8("graphics/pokemon/002_ivysaur/footp
 const u32 gMonPalettes_Ivysaur[8][16] =
 {
 		INCBIN_U32("graphics/pokemon/002_ivysaur/normal.gbapal.lz"),
-        INCBIN_U32("graphics/pokemon/002_ivysaur/red.gbapal.lz"),
-        INCBIN_U32("graphics/pokemon/002_ivysaur/green.gbapal.lz"),
-        INCBIN_U32("graphics/pokemon/002_ivysaur/yellow.gbapal.lz"),
-        INCBIN_U32("graphics/pokemon/002_ivysaur/pink.gbapal.lz"),
+        INCBIN_U32("graphics/pokemon/002_ivysaur/shiny.gbapal.lz"),
 };
 
 const u32 gMonFrontPic_Venusaur[] = INCBIN_U32("graphics/pokemon/003_venusaur/front.4bpp.lz");
@@ -31,10 +28,7 @@ const u8 gMonFootprint_Venusaur[] = INCBIN_U8("graphics/pokemon/003_venusaur/foo
 const u32 gMonPalettes_Venusaur[8][16] =
 {
 		INCBIN_U32("graphics/pokemon/003_venusaur/normal.gbapal.lz"),
-        INCBIN_U32("graphics/pokemon/003_venusaur/red.gbapal.lz"),
-        INCBIN_U32("graphics/pokemon/003_venusaur/green.gbapal.lz"),
-        INCBIN_U32("graphics/pokemon/003_venusaur/yellow.gbapal.lz"),
-        INCBIN_U32("graphics/pokemon/003_venusaur/pink.gbapal.lz"),
+        INCBIN_U32("graphics/pokemon/003_venusaur/shiny.gbapal.lz"),
 };
 
 const u32 gMonFrontPic_Charmander[] = INCBIN_U32("graphics/pokemon/004_charmander/front.4bpp.lz");
@@ -43,11 +37,11 @@ const u8 gMonIcon_Charmander[] = INCBIN_U8("graphics/pokemon/004_charmander/icon
 const u8 gMonFootprint_Charmander[] = INCBIN_U8("graphics/pokemon/004_charmander/footprint.1bpp");
 const u32 gMonPalettes_Charmander[8][16] =
 {
-		INCBIN_U32("graphics/pokemon/004_charmander/normal.gbapal.lz"),
-        INCBIN_U32("graphics/pokemon/004_charmander/red.gbapal.lz"),
-        INCBIN_U32("graphics/pokemon/004_charmander/green.gbapal.lz"),
-        INCBIN_U32("graphics/pokemon/004_charmander/pink.gbapal.lz"),
-        INCBIN_U32("graphics/pokemon/004_charmander/black.gbapal.lz"),
+		[VARIANT_CHARMANDER_ORIGINAL] = INCBIN_U32("graphics/pokemon/004_charmander/normal.gbapal.lz"),
+        [VARIANT_CHARMANDER_RED] = INCBIN_U32("graphics/pokemon/004_charmander/red.gbapal.lz"),
+        [VARIANT_CHARMANDER_GREEN] = INCBIN_U32("graphics/pokemon/004_charmander/green.gbapal.lz"),
+        [VARIANT_CHARMANDER_BLUE] = INCBIN_U32("graphics/pokemon/004_charmander/blue.gbapal.lz"),
+        [VARIANT_CHARMANDER_WHITE] = INCBIN_U32("graphics/pokemon/004_charmander/white.gbapal.lz"),
 };
 
 const u32 gMonFrontPic_Charmeleon[] = INCBIN_U32("graphics/pokemon/005_charmeleon/front.4bpp.lz");
@@ -57,10 +51,7 @@ const u8 gMonFootprint_Charmeleon[] = INCBIN_U8("graphics/pokemon/005_charmeleon
 const u32 gMonPalettes_Charmeleon[8][16] =
 {
 		INCBIN_U32("graphics/pokemon/005_charmeleon/normal.gbapal.lz"),
-        INCBIN_U32("graphics/pokemon/005_charmeleon/red.gbapal.lz"),
-        INCBIN_U32("graphics/pokemon/005_charmeleon/green.gbapal.lz"),
-        INCBIN_U32("graphics/pokemon/005_charmeleon/pink.gbapal.lz"),
-        INCBIN_U32("graphics/pokemon/005_charmeleon/black.gbapal.lz"),
+        INCBIN_U32("graphics/pokemon/005_charmeleon/shiny.gbapal.lz"),
 };
 
 const u32 gMonFrontPic_Charizard[] = INCBIN_U32("graphics/pokemon/006_charizard/front.4bpp.lz");
@@ -70,10 +61,7 @@ const u8 gMonFootprint_Charizard[] = INCBIN_U8("graphics/pokemon/006_charizard/f
 const u32 gMonPalettes_Charizard[8][16] =
 {
 		INCBIN_U32("graphics/pokemon/006_charizard/normal.gbapal.lz"),
-        INCBIN_U32("graphics/pokemon/006_charizard/red.gbapal.lz"),
-        INCBIN_U32("graphics/pokemon/006_charizard/green.gbapal.lz"),
-        INCBIN_U32("graphics/pokemon/006_charizard/pink.gbapal.lz"),
-        INCBIN_U32("graphics/pokemon/006_charizard/black.gbapal.lz"),
+        INCBIN_U32("graphics/pokemon/006_charizard/shiny.gbapal.lz"),
 };
 
 const u32 gMonFrontPic_Squirtle[] = INCBIN_U32("graphics/pokemon/007_squirtle/front.4bpp.lz");
@@ -82,11 +70,11 @@ const u8 gMonIcon_Squirtle[] = INCBIN_U8("graphics/pokemon/007_squirtle/icon.4bp
 const u8 gMonFootprint_Squirtle[] = INCBIN_U8("graphics/pokemon/007_squirtle/footprint.1bpp");
 const u32 gMonPalettes_Squirtle[8][16] =
 {
-		INCBIN_U32("graphics/pokemon/007_squirtle/normal.gbapal.lz"),
-        INCBIN_U32("graphics/pokemon/007_squirtle/red.gbapal.lz"),
-        INCBIN_U32("graphics/pokemon/007_squirtle/green.gbapal.lz"),
-        INCBIN_U32("graphics/pokemon/007_squirtle/blue.gbapal.lz"),
-        INCBIN_U32("graphics/pokemon/007_squirtle/pink.gbapal.lz"),
+		[VARIANT_SQUIRTLE_ORIGINAL] = INCBIN_U32("graphics/pokemon/007_squirtle/normal.gbapal.lz"),
+		[VARIANT_SQUIRTLE_RED] = INCBIN_U32("graphics/pokemon/007_squirtle/red.gbapal.lz"),
+		[VARIANT_SQUIRTLE_GREEN] = INCBIN_U32("graphics/pokemon/007_squirtle/green.gbapal.lz"),
+		[VARIANT_SQUIRTLE_BLUE] = INCBIN_U32("graphics/pokemon/007_squirtle/blue.gbapal.lz"),
+		[VARIANT_SQUIRTLE_PINK] = INCBIN_U32("graphics/pokemon/007_squirtle/pink.gbapal.lz"),
 };
 
 const u32 gMonFrontPic_Wartortle[] = INCBIN_U32("graphics/pokemon/008_wartortle/front.4bpp.lz");
@@ -96,10 +84,7 @@ const u8 gMonFootprint_Wartortle[] = INCBIN_U8("graphics/pokemon/008_wartortle/f
 const u32 gMonPalettes_Wartortle[8][16] =
 {
 		INCBIN_U32("graphics/pokemon/008_wartortle/normal.gbapal.lz"),
-        INCBIN_U32("graphics/pokemon/008_wartortle/red.gbapal.lz"),
-        INCBIN_U32("graphics/pokemon/008_wartortle/green.gbapal.lz"),
-        INCBIN_U32("graphics/pokemon/008_wartortle/blue.gbapal.lz"),
-        INCBIN_U32("graphics/pokemon/008_wartortle/pink.gbapal.lz"),
+        INCBIN_U32("graphics/pokemon/008_wartortle/shiny.gbapal.lz"),
 };
 
 const u32 gMonFrontPic_Blastoise[] = INCBIN_U32("graphics/pokemon/009_blastoise/front.4bpp.lz");
@@ -109,10 +94,7 @@ const u8 gMonFootprint_Blastoise[] = INCBIN_U8("graphics/pokemon/009_blastoise/f
 const u32 gMonPalettes_Blastoise[8][16] =
 {
 		INCBIN_U32("graphics/pokemon/009_blastoise/normal.gbapal.lz"),
-        INCBIN_U32("graphics/pokemon/009_blastoise/red.gbapal.lz"),
-        INCBIN_U32("graphics/pokemon/009_blastoise/green.gbapal.lz"),
-        INCBIN_U32("graphics/pokemon/009_blastoise/blue.gbapal.lz"),
-        INCBIN_U32("graphics/pokemon/009_blastoise/pink.gbapal.lz"),
+        INCBIN_U32("graphics/pokemon/009_blastoise/shiny.gbapal.lz"),
 };
 
 const u32 gMonFrontPic_Caterpie[] = INCBIN_U32("graphics/pokemon/010_caterpie/front.4bpp.lz");
