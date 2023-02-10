@@ -3,20 +3,23 @@
 
 #include "global.h"
 
+#define VARIANT_FLAG_NONE       0
 #define VARIANT_FLAG_STATS      1
 #define VARIANT_FLAG_TYPE       2
 #define VARIANT_FLAG_ABILITY    4
 #define VARIANT_FLAG_LEARNSET   8
 
+#define MAINTAIN_BST            0xFF
+
 struct VariantStats
 {
-    u16 variantFlags;
-    u8 hp;
-    u8 attack;
-    u8 defense;
-    u8 speed;
-    u8 spAttack;
-    u8 spDefense;
+    u8 variantFlags;
+    u8 hpMod;
+    u8 attackMod;
+    u8 defenseMod;
+    u8 speedMod;
+    u8 spAttackMod;
+    u8 spDefenseMod;
     u8 type1;
     u8 type2;
     u8 ability;
@@ -25,16 +28,22 @@ struct VariantStats
 
 extern const struct VariantStats gVariantStats[][MAX_VARIANTS_PER_SPECIES];
 
-u8 GetBaseHP(u16 species, u16 variant);
-u8 GetBaseAttack(u16 species, u16 variant);
-u8 GetBaseDefense(u16 species, u16 variant);
-u8 GetBaseSpeed(u16 species, u16 variant);
-u8 GetBaseSpAttack(u16 species, u16 variant);
-u8 GetBaseSpDefense(u16 species, u16 variant);
-u8 GetType1(u16 species, u16 variant);
-u8 GetType2(u16 species, u16 variant);
-//u8 GetAbility1(u16 species);
-//u8 GetAbility2(u16 species);
-u8 GetLevelUpLearnset(u16 species, u16 variant, u16 *moves);
+u8 GetBaseHP(u16 species);
+u8 GetBaseAttack(u16 species);
+u8 GetBaseDefense(u16 species);
+u8 GetBaseSpeed(u16 species);
+u8 GetBaseSpAttack(u16 species);
+u8 GetBaseSpDefense(u16 species);
+
+u8 GetVariantHP(u16 species, u16 variant);
+u8 GetVariantAttack(u16 species, u16 variant);
+u8 GetVariantDefense(u16 species, u16 variant);
+u8 GetVariantSpeed(u16 species, u16 variant);
+u8 GetVariantSpAttack(u16 species, u16 variant);
+u8 GetVariantSpDefense(u16 species, u16 variant);
+u8 GetVariantType1(u16 species, u16 variant);
+u8 GetVariantType2(u16 species, u16 variant);
+//u8 GetVariantAbility(u16 species);
+u8 GetVariantLearnset(u16 species, u16 variant, u16 *moves);
 
 #endif // GUARD_POKEMON_STATS_H

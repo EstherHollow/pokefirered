@@ -4475,8 +4475,8 @@ static void Cmd_switchindataupdate(void)
     for (i = 0; i < sizeof(struct BattlePokemon); i++)
         monData[i] = gBattleBufferB[gActiveBattler][4 + i];
 
-    gBattleMons[gActiveBattler].type1 = GetType1(gBattleMons[gActiveBattler].species, gBattleMons[gActiveBattler].variant);
-    gBattleMons[gActiveBattler].type2 = GetType2(gBattleMons[gActiveBattler].species, gBattleMons[gActiveBattler].variant);
+    gBattleMons[gActiveBattler].type1 = GetVariantType1(gBattleMons[gActiveBattler].species, gBattleMons[gActiveBattler].variant);
+    gBattleMons[gActiveBattler].type2 = GetVariantType2(gBattleMons[gActiveBattler].species, gBattleMons[gActiveBattler].variant);
     gBattleMons[gActiveBattler].ability = GetAbilityBySpecies(gBattleMons[gActiveBattler].species, gBattleMons[gActiveBattler].abilityNum);
 
     // check knocked off item
