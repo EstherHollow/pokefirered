@@ -7,8 +7,8 @@
 
 struct PokemonSubstruct0
 {
-    u16 species:11;
-    u16 variant:5;
+    u16 species;
+    u16 variant;
     u16 heldItem;
     u32 experience;
     u8 ppBonuses;

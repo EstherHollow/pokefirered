@@ -72,16 +72,16 @@ struct TrainerMonNoItemDefaultMoves
 {
     u16 iv;
     u8 lvl;
-    u16 species:11;
-    u16 variant:5;
+    u16 species;
+    u16 variant;
 };
 
 struct TrainerMonItemDefaultMoves
 {
     u16 iv;
     u8 lvl;
-    u16 species:11;
-    u16 variant:5;
+    u16 species;
+    u16 variant;
     u16 heldItem;
 };
 
@@ -89,8 +89,8 @@ struct TrainerMonNoItemCustomMoves
 {
     u16 iv;
     u8 lvl;
-    u16 species:11;
-    u16 variant:5;
+    u16 species;
+    u16 variant;
     u16 moves[MAX_MON_MOVES];
 };
 
@@ -98,8 +98,8 @@ struct TrainerMonItemCustomMoves
 {
     u16 iv;
     u8 lvl;
-    u16 species:11;
-    u16 variant:5;
+    u16 species;
+    u16 variant;
     u16 heldItem;
     u16 moves[MAX_MON_MOVES];
 };

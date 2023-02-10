@@ -55,19 +55,19 @@ enum {
 
 struct InGameTrade {
     /*0x00*/ u8 nickname[POKEMON_NAME_LENGTH + 1];
-    /*0x0C*/ u16 species:11;
-             u16 variant:5;
-    /*0x0E*/ u8 ivs[NUM_STATS];
-    /*0x14*/ u8 abilityNum;
-    /*0x18*/ u32 otId;
-    /*0x1C*/ u8 conditions[CONTEST_CATEGORIES_COUNT];
-    /*0x24*/ u32 personality;
-    /*0x28*/ u16 heldItem;
-    /*0x2A*/ u8 mailNum;
-    /*0x2B*/ u8 otName[11];
-    /*0x36*/ u8 otGender;
-    /*0x37*/ u8 sheen;
-    /*0x38*/ u16 requestedSpecies;
+    /*0x0C*/ u16 species;
+    /*0x0E*/ u16 variant;
+    /*0x10*/ u8 ivs[NUM_STATS];
+    /*0x16*/ u8 abilityNum;
+    /*0x1A*/ u32 otId;
+    /*0x1E*/ u8 conditions[CONTEST_CATEGORIES_COUNT];
+    /*0x26*/ u32 personality;
+    /*0x2A*/ u16 heldItem;
+    /*0x2C*/ u8 mailNum;
+    /*0x2D*/ u8 otName[11];
+    /*0x38*/ u8 otGender;
+    /*0x39*/ u8 sheen;
+    /*0x3A*/ u16 requestedSpecies;
 };
 
 struct {
