@@ -909,18 +909,6 @@ void CopySecondaryTilesetToVramUsingHeap(const struct MapLayout *mapLayout)
     CopyTilesetToVramUsingHeap(mapLayout->secondaryTileset, NUM_TILES_TOTAL - NUM_TILES_IN_PRIMARY, NUM_TILES_IN_PRIMARY);
 }
 
-void LoadSecondaryTilesetPalette(const struct MapLayout *mapLayout)
-{
-    u16 destOffset = NUM_PALS_IN_PRIMARY * 16;
-    u16 size = (NUM_PALS_TOTAL - NUM_PALS_IN_PRIMARY) * 16 * 2;
-
-    if (mapLayout->secondaryTileset)
-    {
-        LoadPalette(mapLayout->secondaryTileset->palettes[NUM_PALS_IN_PRIMARY], destOffset, size);
-        ApplyGlobalTintToPaletteEntries(destOffset, size >> 1);
-    }
-}
-
 void CopyMapTilesetsToVram(struct MapLayout const *mapLayout)
 {
     if (mapLayout)
