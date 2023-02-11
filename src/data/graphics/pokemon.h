@@ -2847,7 +2847,6 @@ const u8 gMonFootprint_Surskit[] = INCBIN_U8("graphics/pokemon/283_surskit/footp
 const u32 gMonPalettes_Surskit[8][16] =
 {
 		INCBIN_U32("graphics/pokemon/283_surskit/normal.gbapal.lz"),
-		INCBIN_U32("graphics/pokemon/283_surskit/shiny.gbapal.lz"),
 };
 
 const u32 gMonFrontPic_Masquerain[] = INCBIN_U32("graphics/pokemon/284_masquerain/front.4bpp.lz");
@@ -2857,7 +2856,6 @@ const u8 gMonFootprint_Masquerain[] = INCBIN_U8("graphics/pokemon/284_masquerain
 const u32 gMonPalettes_Masquerain[8][16] =
 {
 		INCBIN_U32("graphics/pokemon/284_masquerain/normal.gbapal.lz"),
-		INCBIN_U32("graphics/pokemon/284_masquerain/shiny.gbapal.lz"),
 };
 
 const u32 gMonFrontPic_Shroomish[] = INCBIN_U32("graphics/pokemon/285_shroomish/front.4bpp.lz");
