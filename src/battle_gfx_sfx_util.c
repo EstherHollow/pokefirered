@@ -323,8 +323,7 @@ void BattleLoadOpponentMonSpriteGfx(struct Pokemon *mon, u8 battlerId)
     u16 variant;
     u8 position;
     u16 paletteOffset;
-    const void *lzPaletteData;
-    void *buffer;
+    const u16 *lzPaletteData;
 
     monsPersonality = GetMonData(mon, MON_DATA_PERSONALITY);
     if (gBattleSpritesDataPtr->battlerData[battlerId].transformSpecies == SPECIES_NONE)
@@ -347,15 +346,12 @@ void BattleLoadOpponentMonSpriteGfx(struct Pokemon *mon, u8 battlerId)
         lzPaletteData = GetMonSpritePal(mon);
     else
         lzPaletteData = GetMonSpritePalFromVariant(species, variant);
-    buffer = AllocZeroed(0x400);
-    LZDecompressWram(lzPaletteData, buffer);
-    LoadPalette(buffer, paletteOffset, 0x20);
-    LoadPalette(buffer, 0x80 + battlerId * 16, 0x20);
-    Free(buffer);
+    LoadPalette(lzPaletteData, paletteOffset, 0x20);
+    LoadPalette(lzPaletteData, 0x80 + battlerId * 16, 0x20);
     if (species == SPECIES_CASTFORM)
     {
         paletteOffset = 0x100 + battlerId * 16;
-        LZDecompressWram(lzPaletteData, gBattleStruct->castformPalette[0]);
+        CpuCopy16(lzPaletteData, gBattleStruct->castformPalette[0], 0x20);
         LoadPalette(gBattleStruct->castformPalette[gBattleMonForms[battlerId]], paletteOffset, 0x20);
     }
     // transform's pink color
@@ -373,8 +369,7 @@ void BattleLoadPlayerMonSpriteGfx(struct Pokemon *mon, u8 battlerId)
     u16 variant;
     u8 position;
     u16 paletteOffset;
-    const void *lzPaletteData;
-    void *buffer;
+    const u16 *lzPaletteData;
 
     monsPersonality = GetMonData(mon, MON_DATA_PERSONALITY);
     if (gBattleSpritesDataPtr->battlerData[battlerId].transformSpecies == SPECIES_NONE)
@@ -402,15 +397,12 @@ void BattleLoadPlayerMonSpriteGfx(struct Pokemon *mon, u8 battlerId)
         lzPaletteData = GetMonSpritePal(mon);
     else
         lzPaletteData = GetMonSpritePalFromVariant(species, variant);
-    buffer = AllocZeroed(0x400);
-    LZDecompressWram(lzPaletteData, buffer);
-    LoadPalette(buffer, paletteOffset, 0x20);
-    LoadPalette(buffer, 0x80 + battlerId * 16, 0x20);
-    Free(buffer);
+    LoadPalette(lzPaletteData, paletteOffset, 0x20);
+    LoadPalette(lzPaletteData, 0x80 + battlerId * 16, 0x20);
     if (species == SPECIES_CASTFORM)
     {
         paletteOffset = 0x100 + battlerId * 16;
-        LZDecompressWram(lzPaletteData, gBattleStruct->castformPalette[0]);
+        CpuCopy16(lzPaletteData, gBattleStruct->castformPalette[0], 0x20);
         LoadPalette(gBattleStruct->castformPalette[gBattleMonForms[battlerId]], paletteOffset, 0x20);
     }
     // transform's pink color
@@ -658,8 +650,7 @@ void HandleSpeciesGfxDataChange(u8 battlerAtk, u8 battlerDef, u8 transformType)
     u32 personalityValue;
     u16 variant;
     u8 position;
-    const u32 *lzPaletteData;
-    void *buffer;
+    const u16 *lzPaletteData;
 
     if (transformType == 255) // Ghost unveiled with Silph Scope
     {
@@ -679,10 +670,7 @@ void HandleSpeciesGfxDataChange(u8 battlerAtk, u8 battlerDef, u8 transformType)
         DmaCopy32(3, src, dst, 0x800);
         paletteOffset = 0x100 + battlerAtk * 16;
         lzPaletteData = GetMonSpritePalFromVariant(targetSpecies, variant);
-        buffer = AllocZeroed(0x400);
-        LZDecompressWram(lzPaletteData, buffer);
-        LoadPalette(buffer, paletteOffset, 32);
-        Free(buffer);
+        LoadPalette(lzPaletteData, paletteOffset, 32);
         gSprites[gBattlerSpriteIds[battlerAtk]].y = GetBattlerSpriteDefault_Y(battlerAtk);
         StartSpriteAnim(&gSprites[gBattlerSpriteIds[battlerAtk]], gBattleMonForms[battlerAtk]);
         SetMonData(&gEnemyParty[gBattlerPartyIndexes[battlerAtk]], MON_DATA_NICKNAME, gSpeciesNames[targetSpecies]);
@@ -737,13 +725,10 @@ void HandleSpeciesGfxDataChange(u8 battlerAtk, u8 battlerDef, u8 transformType)
         DmaCopy32(3, src, dst, 0x800);
         paletteOffset = 0x100 + battlerAtk * 16;
         lzPaletteData = GetMonSpritePalFromVariant(targetSpecies, variant);
-        buffer = AllocZeroed(0x400);
-        LZDecompressWram(lzPaletteData, buffer);
-        LoadPalette(buffer, paletteOffset, 32);
-        Free(buffer);
+        LoadPalette(lzPaletteData, paletteOffset, 32);
         if (targetSpecies == SPECIES_CASTFORM)
         {
-            LZDecompressWram(lzPaletteData, gBattleStruct->castformPalette[0]);
+            CpuCopy16(lzPaletteData, gBattleStruct->castformPalette[0], 0x20);
             LoadPalette(gBattleStruct->castformPalette[0] + gBattleMonForms[battlerDef] * 16, paletteOffset, 32);
         }
         BlendPalette(paletteOffset, 16, 6, RGB_WHITE);

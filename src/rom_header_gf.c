@@ -14,7 +14,7 @@ struct GFRomHeader
     u8 gameName[32];
     const struct CompressedSpriteSheet * monFrontPics;
     const struct CompressedSpriteSheet * monBackPics;
-    const struct CompressedSpritePalette (* monPokemonPalettes)[];
+    const struct SpritePalette (* monPokemonPalettes)[];
     const u8 *const * monIcons;
     const u8 * monIconPaletteIds;
     const struct SpritePalette * monIconPalettes;

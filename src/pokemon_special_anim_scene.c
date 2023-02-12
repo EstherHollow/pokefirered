@@ -23,7 +23,7 @@ static void ItemSpriteZoom_UpdateYPos(struct Sprite *sprite, u8 closeness);
 static void StartMonWiggleAnim(struct PokemonSpecialAnimScene * scene, u8 frameLen, u8 niter, u8 amplitude);
 static void StopMonWiggleAnim(struct PokemonSpecialAnimScene * scene);
 static void SpriteCallback_MonSpriteWiggle(struct Sprite *sprite);
-static void LoadMonSpriteGraphics(u16 *tilees, u16 *palette);
+static void LoadMonSpriteGraphics(u16 *tiles, const u16 *palette);
 static struct Sprite *PSA_CreateItemIconObject(u16 itemId);
 static u16 GetBlendColorByItemId(u16 itemId);
 static void Task_ItemUseOnMonAnim(u8 taskId);
@@ -645,12 +645,12 @@ void PSA_CreateMonSpriteAtCloseness(u8 closeness)
 {
     struct PokemonSpecialAnimScene * scene = PSA_GetSceneWork();
     struct Pokemon * pokemon = PSA_GetPokemon();
+    const u16 *palette;
     u16 species = GetMonData(pokemon, MON_DATA_SPECIES);
     u32 personality = GetMonData(pokemon, MON_DATA_PERSONALITY);
     u8 r1 = Menu2_GetMonSpriteAnchorCoord(species, personality, 2);
     void *r6;
     void *r9;
-    void *r4;
     u8 spriteId;
 
     if (r1 != 0xFF)
@@ -666,12 +666,11 @@ void PSA_CreateMonSpriteAtCloseness(u8 closeness)
 
     r6 = Alloc(0x2000);
     r9 = Alloc(0x2000);
-    r4 = Alloc(0x100);
-    if (r6 != NULL && r9 != NULL && r4 != NULL)
+    if (r6 != NULL && r9 != NULL)
     {
         HandleLoadSpecialPokePic(&gMonFrontPicTable[species], r6, species, personality);
-        LZ77UnCompWram(GetMonSpritePal(pokemon), r4);
-        LoadMonSpriteGraphics(r6, r4);
+        palette = GetMonSpritePal(pokemon);
+        LoadMonSpriteGraphics(r6, palette);
         spriteId = CreateSprite(&sSpriteTemplate_MonSprite, 120, scene->monSpriteY1, 4);
         if (spriteId != MAX_SPRITES)
         {
@@ -684,7 +683,6 @@ void PSA_CreateMonSpriteAtCloseness(u8 closeness)
     }
     if (r6 != NULL) Free(r6);
     if (r9 != NULL) Free(r9);
-    if (r4 != NULL) Free(r4);
 }
 
 #define tState          data[0]
@@ -836,7 +834,7 @@ static void SpriteCallback_MonSpriteWiggle(struct Sprite *sprite)
     }
 }
 
-static void LoadMonSpriteGraphics(u16 *tiles, u16 *palette)
+static void LoadMonSpriteGraphics(u16 *tiles, const u16 *palette)
 {
     struct SpriteSheet spriteSheet;
     struct SpritePalette spritePalette;

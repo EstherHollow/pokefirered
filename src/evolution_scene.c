@@ -213,7 +213,7 @@ void EvolutionScene(struct Pokemon* mon, u16 postEvoSpecies, bool8 canStopEvo, u
     u16 currSpecies;
     u32 personality;
     u16 variant;
-    const struct CompressedSpritePalette* pokePal;
+    const struct SpritePalette* pokePal;
     u8 id;
 
     SetHBlankCallback(NULL);
@@ -265,7 +265,7 @@ void EvolutionScene(struct Pokemon* mon, u16 postEvoSpecies, bool8 canStopEvo, u
                              gMonSpritesGfxPtr->sprites[B_POSITION_OPPONENT_LEFT],
                              currSpecies);
     pokePal = GetMonSpritePalStructFromVariant(currSpecies, variant);
-    LoadCompressedPalette(pokePal->data, 0x110, 0x20);
+    LoadPalette(pokePal->data, 0x110, 0x20);
 
     SetMultiuseSpriteTemplateToPokemon(currSpecies, B_POSITION_OPPONENT_LEFT);
     gMultiuseSpriteTemplate.affineAnims = gDummySpriteAffineAnimTable;
@@ -280,7 +280,7 @@ void EvolutionScene(struct Pokemon* mon, u16 postEvoSpecies, bool8 canStopEvo, u
                              gMonSpritesGfxPtr->sprites[B_POSITION_OPPONENT_RIGHT],
                              postEvoSpecies);
     pokePal = GetMonSpritePalStructFromVariant(postEvoSpecies, variant);
-    LoadCompressedPalette(pokePal->data, 0x120, 0x20);
+    LoadPalette(pokePal->data, 0x120, 0x20);
 
     SetMultiuseSpriteTemplateToPokemon(postEvoSpecies, B_POSITION_OPPONENT_RIGHT);
     gMultiuseSpriteTemplate.affineAnims = gDummySpriteAffineAnimTable;
@@ -314,7 +314,7 @@ void EvolutionScene(struct Pokemon* mon, u16 postEvoSpecies, bool8 canStopEvo, u
 static void CB2_EvolutionSceneLoadGraphics(void)
 {
     u8 id;
-    const struct CompressedSpritePalette* pokePal;
+    const struct SpritePalette* pokePal;
     u16 postEvoSpecies;
     u32 personality;
     u16 variant;
@@ -360,7 +360,7 @@ static void CB2_EvolutionSceneLoadGraphics(void)
                              postEvoSpecies);
     pokePal = GetMonSpritePalStructFromVariant(postEvoSpecies, variant);
 
-    LoadCompressedPalette(pokePal->data, 0x120, 0x20);
+    LoadPalette(pokePal->data, 0x120, 0x20);
 
     SetMultiuseSpriteTemplateToPokemon(postEvoSpecies, B_POSITION_OPPONENT_RIGHT);
     gMultiuseSpriteTemplate.affineAnims = gDummySpriteAffineAnimTable;
@@ -424,14 +424,14 @@ static void CB2_TradeEvolutionSceneLoadGraphics(void)
         break;
     case 4:
         {
-            const struct CompressedSpritePalette* pokePal;
+            const struct SpritePalette* pokePal;
             u16 variant = GetMonData(mon, MON_DATA_VARIANT);
             u32 personality = GetMonData(mon, MON_DATA_PERSONALITY);
             DecompressPicFromTable(&gMonFrontPicTable[postEvoSpecies],
                                      gMonSpritesGfxPtr->sprites[B_POSITION_OPPONENT_RIGHT],
                                      postEvoSpecies);
             pokePal = GetMonSpritePalStructFromVariant(postEvoSpecies, variant);
-            LoadCompressedPalette(pokePal->data, 0x120, 0x20);
+            LoadPalette(pokePal->data, 0x120, 0x20);
             gMain.state++;
         }
         break;
@@ -475,7 +475,7 @@ void TradeEvolutionScene(struct Pokemon* mon, u16 postEvoSpecies, u8 preEvoSprit
     u16 currSpecies;
     u32 personality;
     u16 variant;
-    const struct CompressedSpritePalette* pokePal;
+    const struct SpritePalette* pokePal;
     u8 id;
 
     GetMonData(mon, MON_DATA_NICKNAME, name);
@@ -497,7 +497,7 @@ void TradeEvolutionScene(struct Pokemon* mon, u16 postEvoSpecies, u8 preEvoSprit
                             postEvoSpecies);
 
     pokePal = GetMonSpritePalStructFromVariant(postEvoSpecies, variant);
-    LoadCompressedPalette(pokePal->data, 0x120, 0x20);
+    LoadPalette(pokePal->data, 0x120, 0x20);
 
     SetMultiuseSpriteTemplateToPokemon(postEvoSpecies, B_POSITION_OPPONENT_LEFT);
     gMultiuseSpriteTemplate.affineAnims = gDummySpriteAffineAnimTable;

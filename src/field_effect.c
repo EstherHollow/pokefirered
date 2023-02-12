@@ -29,7 +29,7 @@
 #include "constants/songs.h"
 #include "constants/sound.h"
 
-extern struct CompressedSpritePalette gMonPaletteTable[][8]; // Intentionally declared (incorrectly) without const in order to match
+extern struct SpritePalette gMonPaletteTable[][8];
 extern const struct CompressedSpritePalette gTrainerFrontPicPaletteTable[];
 extern const struct CompressedSpriteSheet gTrainerFrontPicTable[];
 
@@ -616,7 +616,7 @@ u8 CreateMonSprite_PicBox(u16 species, s16 x, s16 y, u8 subpriority)
 
 static u8 CreateMonSprite_FieldMove(u16 species, u32 personality, u16 variant, s16 x, s16 y, u8 subpriority)
 {
-    const struct CompressedSpritePalette * spritePalette = GetMonSpritePalStructFromVariant(species, variant);
+    const struct SpritePalette * spritePalette = GetMonSpritePalStructFromVariant(species, variant);
     u16 spriteId = CreateMonPicSprite_HandleDeoxys(species, personality, variant, 1, x, y, 0, spritePalette->tag);
     PreservePaletteInWeather(IndexOfSpritePaletteTag(spritePalette->tag) + 0x10);
     if (spriteId == 0xFFFF)

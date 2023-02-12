@@ -445,10 +445,10 @@ void ClearBattleMonForms(void);
 void PlayBattleBGM(void);
 void PlayMapChosenOrBattleBGM(u16 songId);
 
-const u32 *GetMonSpritePal(struct Pokemon *mon);
-const u32 *GetMonSpritePalFromVariant(u16 species, u16 variant);
-const struct CompressedSpritePalette *GetMonSpritePalStruct(struct Pokemon *mon);
-const struct CompressedSpritePalette *GetMonSpritePalStructFromVariant(u16 species, u16 variant);
+const u16 *GetMonSpritePal(struct Pokemon *mon);
+const u16 *GetMonSpritePalFromVariant(u16 species, u16 variant);
+const struct SpritePalette *GetMonSpritePalStruct(struct Pokemon *mon);
+const struct SpritePalette *GetMonSpritePalStructFromVariant(u16 species, u16 variant);
 
 bool32 IsHMMove2(u16 move);
 bool8 IsPokeSpriteNotFlipped(u16 species);

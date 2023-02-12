@@ -81,12 +81,12 @@ void LoadPicPaletteByTagOrSlot(u16 species, u16 variant, u8 paletteSlot, u16 pal
         if (paletteTag == TAG_NONE)
         {
             sCreatingSpriteTemplate.paletteTag = TAG_NONE;
-            LoadCompressedPalette(GetMonSpritePalFromVariant(species, variant), 0x100 + paletteSlot * 0x10, 0x20);
+            LoadPalette(GetMonSpritePalFromVariant(species, variant), 0x100 + paletteSlot * 0x10, 0x20);
         }
         else
         {
             sCreatingSpriteTemplate.paletteTag = paletteTag;
-            LoadCompressedSpritePalette(GetMonSpritePalStructFromVariant(species, variant));
+            LoadSpritePalette(GetMonSpritePalStructFromVariant(species, variant));
         }
     }
     else
@@ -107,7 +107,7 @@ void LoadPicPaletteByTagOrSlot(u16 species, u16 variant, u8 paletteSlot, u16 pal
 void LoadPicPaletteBySlot(u16 species, u16 variant, u8 paletteSlot, bool8 isTrainer)
 {
     if (!isTrainer)
-        LoadCompressedPalette(GetMonSpritePalFromVariant(species, variant), paletteSlot * 0x10, 0x20);
+        LoadPalette(GetMonSpritePalFromVariant(species, variant), paletteSlot * 0x10, 0x20);
     else
         LoadCompressedPalette(gTrainerFrontPicPaletteTable[species].data, paletteSlot * 0x10, 0x20);
 }
