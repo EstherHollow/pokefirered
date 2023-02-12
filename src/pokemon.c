@@ -5908,24 +5908,24 @@ void PlayMapChosenOrBattleBGM(u16 songId)
         PlayNewMapMusic(GetBattleBGM());
 }
 
-const u32 *GetMonSpritePal(struct Pokemon *mon)
+const u16 *GetMonSpritePal(struct Pokemon *mon)
 {
     return GetMonSpritePalStruct(mon)->data;
 }
 
-const u32 *GetMonSpritePalFromVariant(u16 species, u16 variant)
+const u16 *GetMonSpritePalFromVariant(u16 species, u16 variant)
 {
 	return GetMonSpritePalStructFromVariant(species, variant)->data;
 }
 
-const struct CompressedSpritePalette *GetMonSpritePalStruct(struct Pokemon *mon)
+const struct SpritePalette *GetMonSpritePalStruct(struct Pokemon *mon)
 {
     u16 species = GetMonData(mon, MON_DATA_SPECIES2, NULL);
     u16 variant = GetMonData(mon, MON_DATA_VARIANT, NULL);
     return GetMonSpritePalStructFromVariant(species, variant);
 }
 
-const struct CompressedSpritePalette *GetMonSpritePalStructFromVariant(u16 species, u16 variant)
+const struct SpritePalette *GetMonSpritePalStructFromVariant(u16 species, u16 variant)
 {
     return &gMonPaletteTable[species][variant];
 }
