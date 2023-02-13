@@ -5,6 +5,15 @@
 #include "sprite.h"
 #include "constants/pokemon.h"
 
+struct PokemonVariant
+{
+    u16 pattern:4;
+    u16 color1:3;
+    u16 color2:3;
+    u16 color3:3;
+    u16 color4:3;
+};
+
 struct PokemonSubstruct0
 {
     u16 species;
@@ -434,6 +443,5 @@ u8 *MonSpritesGfxManager_GetSpritePtr(u8 bufferId);
 
 bool8 IsTrainerRival(u16 trainerId);
 u8 GenerateMonVariant(u16 species, u32 variantSeed);
-u16 GetBoxMonVariant(struct BoxPokemon *boxMon);
 
 #endif // GUARD_POKEMON_H

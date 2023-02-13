@@ -3093,7 +3093,7 @@ u32 GetBoxMonData(struct BoxPokemon *boxMon, s32 field, u8 *data)
         retVal = boxMon->isBadEgg ? SPECIES_EGG : substruct0->species;
         break;
     case MON_DATA_VARIANT:
-        retVal = GetBoxMonVariant(boxMon);
+        retVal = substruct0->variant;
         break;
     case MON_DATA_HELD_ITEM:
         retVal = substruct0->heldItem;
@@ -6504,16 +6504,4 @@ u8 GenerateMonVariant(u16 species, u32 variantSeed) {
     default:
         return 0;
     }
-}
-
-u16 GetBoxMonVariant(struct BoxPokemon *boxMon) {
-    u16 variant;
-    struct PokemonSubstruct0 *substruct0 = &(GetSubstruct(boxMon, boxMon->personality, 0)->type0);
-    struct PokemonSubstruct1 *substruct1 = &(GetSubstruct(boxMon, boxMon->personality, 1)->type1);
-    struct PokemonSubstruct2 *substruct2 = &(GetSubstruct(boxMon, boxMon->personality, 2)->type2);
-    struct PokemonSubstruct3 *substruct3 = &(GetSubstruct(boxMon, boxMon->personality, 3)->type3);
-
-    variant = substruct0->variant;
-
-    return variant;
 }
