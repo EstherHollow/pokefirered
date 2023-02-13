@@ -40,6 +40,7 @@
 #include "string_util.h"
 
 #ifndef NDEBUG
+#if (PRETTY_PRINT_HANDLER != PRETTY_PRINT_OFF)
 
 struct mini_buff 
 {
@@ -97,7 +98,7 @@ static s32 _putsAscii(char *s, s32 len, void *buf)
 
     if (!buf) 
         return len;
-    
+
     b = buf;
     p0 = b->buffer;
 
@@ -120,7 +121,7 @@ static s32 _putsEncoded(char *s, s32 len, void *buf)
 
     if (!buf) 
         return len;
-    
+
     b = buf;
     p0 = b->buffer;
 
@@ -137,9 +138,9 @@ static s32 _putsEncoded(char *s, s32 len, void *buf)
 
 static s32 mini_strlen(const char *s)
 {
-	s32 len = 0;
-	while (s[len] != '\0') len++;
-	return len;
+    s32 len = 0;
+    while (s[len] != '\0') len++;
+    return len;
 }
 
 static s32 mini_itoa(s32 value, u32 radix, s32 uppercase, bool32 unsig, char *buffer)
@@ -350,4 +351,5 @@ end:
     return n;
 }
 
+#endif
 #endif
