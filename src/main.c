@@ -146,7 +146,13 @@ void AgbMain()
 
     SetNotInSaveFailedScreen();
 
+#ifndef NDEBUG
+#if (LOG_HANDLER == LOG_HANDLER_MGBA_PRINT)
+    (void) MgbaOpen();
+#elif (LOG_HANDLER == LOG_HANDLER_AGB_PRINT)
     AGBPrintInit();
+#endif
+#endif
 
 #if REVISION == 1
     if (gFlashMemoryPresent != TRUE)
