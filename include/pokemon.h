@@ -412,14 +412,6 @@ void ClearBattleMonForms(void);
 void PlayBattleBGM(void);
 void PlayMapChosenOrBattleBGM(u16 songId);
 
-extern struct SpritePalette dynamicPalette;
-extern u16 dynamicPaletteData[16];
-
-const u16 *GetMonSpritePal(struct Pokemon *mon);
-const u16 *GetMonSpritePalFromVariant(u16 species, u16 variant);
-const struct SpritePalette *GetMonSpritePalStruct(struct Pokemon *mon);
-const struct SpritePalette *GetMonSpritePalStructFromVariant(u16 species, u16 variant);
-
 bool32 IsHMMove2(u16 move);
 bool8 IsMonSpriteNotFlipped(u16 species);
 s8 GetFlavorRelationByPersonality(u32 personality, u8 flavor);
@@ -446,5 +438,13 @@ u8 *MonSpritesGfxManager_GetSpritePtr(u8 bufferId);
 
 bool8 IsTrainerRival(u16 trainerId);
 u8 GenerateMonVariant(u16 species, u32 variantSeed);
+
+extern struct SpritePalette dynamicPalette;
+extern u16 dynamicPaletteData[16];
+
+const u16 *GetMonSpritePal(struct Pokemon *mon);
+const u16 *GetMonSpritePalFromVariant(u16 species, u16 variant);
+const struct SpritePalette *GetMonSpritePalStruct(struct Pokemon *mon);
+const struct SpritePalette *GetMonSpritePalStructFromVariant(u16 species, u16 variant);
 
 #endif // GUARD_POKEMON_H
