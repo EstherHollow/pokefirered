@@ -5908,28 +5908,6 @@ void PlayMapChosenOrBattleBGM(u16 songId)
         PlayNewMapMusic(GetBattleBGM());
 }
 
-const u16 *GetMonSpritePal(struct Pokemon *mon)
-{
-    return GetMonSpritePalStruct(mon)->data;
-}
-
-const u16 *GetMonSpritePalFromVariant(u16 species, u16 variant)
-{
-	return GetMonSpritePalStructFromVariant(species, variant)->data;
-}
-
-const struct SpritePalette *GetMonSpritePalStruct(struct Pokemon *mon)
-{
-    u16 species = GetMonData(mon, MON_DATA_SPECIES2, NULL);
-    u16 variant = GetMonData(mon, MON_DATA_VARIANT, NULL);
-    return GetMonSpritePalStructFromVariant(species, variant);
-}
-
-const struct SpritePalette *GetMonSpritePalStructFromVariant(u16 species, u16 variant)
-{
-    return &gMonPaletteTable[species][variant];
-}
-
 bool32 IsHMMove2(u16 move)
 {
     int i = 0;
@@ -6484,24 +6462,114 @@ bool8 IsTrainerRival(u16 trainerId) {
 }
 
 u8 GenerateMonVariant(u16 species, u32 variantSeed) {
+    u16 colorSeed1 =  (variantSeed & 0x0000003F);
+    u16 colorSeed2 =  (variantSeed & 0x00000FC0) >> 6;
+    u16 colorSeed3 =  (variantSeed & 0x0003F000) >> 12;
+    u16 colorSeed4 =  (variantSeed & 0x00FC0000) >> 18;
+    u16 patternSeed = (variantSeed & 0xFF000000) >> 24;
+
+    u16 colors[4] = {0, 0, 0, 0};
+    u16 pattern = 0;
+
     switch (species) {
     case SPECIES_BULBASAUR:
-    case SPECIES_IVYSAUR:
-    case SPECIES_VENUSAUR:
+        colors[VARIANT_PARTS_BULBASAUR_SKIN] = colorSeed1 % (sPokemonNumVariants[species] - 1) + 1;
+        colors[VARIANT_PARTS_BULBASAUR_BULB] = colorSeed2 % (sPokemonNumVariants[species] - 1) + 1;
+        colors[VARIANT_PARTS_BULBASAUR_MOUTH] = colors[VARIANT_PARTS_BULBASAUR_BULB];
+        break;
     case SPECIES_CHARMANDER:
-    case SPECIES_CHARMELEON:
-    case SPECIES_CHARIZARD:
+        colors[VARIANT_PARTS_CHARMANDER_SKIN] = colorSeed1 % (sPokemonNumVariants[species] - 1) + 1;
+        colors[VARIANT_PARTS_CHARMANDER_FLAME] = colorSeed2 % (sPokemonNumVariants[species] - 1) + 1;
+        colors[VARIANT_PARTS_CHARMANDER_EYES] = colorSeed3 % (sPokemonNumVariants[species] - 1) + 1;
+        break;
     case SPECIES_SQUIRTLE:
-    case SPECIES_WARTORTLE:
-    case SPECIES_BLASTOISE:
-        return variantSeed % (sPokemonNumVariants[species] - 1) + 1;
-    case SPECIES_PIDGEY:
-    case SPECIES_PIDGEOTTO:
-    case SPECIES_PIDGEOT:
-    case SPECIES_RATTATA:
-    case SPECIES_RATICATE:
-        return variantSeed % 3;
-    default:
-        return 0;
+        colors[VARIANT_PARTS_SQUIRTLE_SKIN] = colorSeed1 % (sPokemonNumVariants[species] - 1) + 1;
+        colors[VARIANT_PARTS_SQUIRTLE_SHELL] = colorSeed2 % (sPokemonNumVariants[species] - 1) + 1;
+        colors[VARIANT_PARTS_SQUIRTLE_MOUTH] = colors[VARIANT_PARTS_SQUIRTLE_SHELL];
+        break;
     }
+
+    return (colors[0]) | (colors[1] << 3) | (colors[2] << 6) | (colors[3] << 9) | (pattern << 12);
+}
+
+const u16 *GetMonSpritePal(struct Pokemon *mon) {
+    return GetMonSpritePalStruct(mon)->data;
+}
+
+const u16 *GetMonSpritePalFromVariant(u16 species, u16 variant) {
+    return GetMonSpritePalStructFromVariant(species, variant)->data;
+}
+
+const struct SpritePalette *GetMonSpritePalStruct(struct Pokemon *mon) {
+    u16 species = GetMonData(mon, MON_DATA_SPECIES2, NULL);
+    u16 variant = GetMonData(mon, MON_DATA_VARIANT, NULL);
+    return GetMonSpritePalStructFromVariant(species, variant);
+}
+
+EWRAM_DATA struct SpritePalette dynamicPalette = {0};
+EWRAM_DATA u16 dynamicPaletteData[16] = {0};
+
+const struct SpritePalette *GetMonSpritePalStructFromVariant(u16 species, u16 variant) {
+//    DebugPrintf("variant: %d", variant);
+
+    if (species == SPECIES_BULBASAUR || species == SPECIES_CHARMANDER || species == SPECIES_SQUIRTLE) {
+        u8 paletteIndexes[4] = {
+                (variant & 0x0007),
+                (variant & 0x0038) >> 3,
+                (variant & 0x01C0) >> 6,
+                (variant & 0x0E00) >> 9,
+        };
+
+        const u16 buffer[16] = {
+                gMonPaletteTable[species][paletteIndexes[sPokemonVariantParts[species][0]]].data[0],
+                gMonPaletteTable[species][paletteIndexes[sPokemonVariantParts[species][1]]].data[1],
+                gMonPaletteTable[species][paletteIndexes[sPokemonVariantParts[species][2]]].data[2],
+                gMonPaletteTable[species][paletteIndexes[sPokemonVariantParts[species][3]]].data[3],
+                gMonPaletteTable[species][paletteIndexes[sPokemonVariantParts[species][4]]].data[4],
+                gMonPaletteTable[species][paletteIndexes[sPokemonVariantParts[species][5]]].data[5],
+                gMonPaletteTable[species][paletteIndexes[sPokemonVariantParts[species][6]]].data[6],
+                gMonPaletteTable[species][paletteIndexes[sPokemonVariantParts[species][7]]].data[7],
+                gMonPaletteTable[species][paletteIndexes[sPokemonVariantParts[species][8]]].data[8],
+                gMonPaletteTable[species][paletteIndexes[sPokemonVariantParts[species][9]]].data[9],
+                gMonPaletteTable[species][paletteIndexes[sPokemonVariantParts[species][10]]].data[10],
+                gMonPaletteTable[species][paletteIndexes[sPokemonVariantParts[species][11]]].data[11],
+                gMonPaletteTable[species][paletteIndexes[sPokemonVariantParts[species][12]]].data[12],
+                gMonPaletteTable[species][paletteIndexes[sPokemonVariantParts[species][13]]].data[13],
+                gMonPaletteTable[species][paletteIndexes[sPokemonVariantParts[species][14]]].data[14],
+                gMonPaletteTable[species][paletteIndexes[sPokemonVariantParts[species][15]]].data[15],
+        };
+
+        struct SpritePalette dynamicPaletteBuffer = {
+                .data = buffer,
+                .tag = species,
+        };
+
+//        DebugPrintf("paletteIndexes[0]: %d", paletteIndexes[0]);
+//        DebugPrintf("paletteIndexes[1]: %d", paletteIndexes[1]);
+//        DebugPrintf("paletteIndexes[2]: %d", paletteIndexes[2]);
+//        DebugPrintf("paletteIndexes[3]: %d", paletteIndexes[3]);
+//
+//        DebugPrintf("buffer[0]: 0x%x", buffer[0]);
+//        DebugPrintf("buffer[1]: 0x%x", buffer[1]);
+//        DebugPrintf("buffer[2]: 0x%x", buffer[2]);
+//        DebugPrintf("buffer[3]: 0x%x", buffer[3]);
+//        DebugPrintf("buffer[4]: 0x%x", buffer[4]);
+//        DebugPrintf("buffer[5]: 0x%x", buffer[5]);
+//        DebugPrintf("buffer[6]: 0x%x", buffer[6]);
+//        DebugPrintf("buffer[7]: 0x%x", buffer[7]);
+//        DebugPrintf("buffer[8]: 0x%x", buffer[8]);
+//        DebugPrintf("buffer[9]: 0x%x", buffer[9]);
+//        DebugPrintf("buffer[10]: 0x%x", buffer[10]);
+//        DebugPrintf("buffer[11]: 0x%x", buffer[11]);
+//        DebugPrintf("buffer[12]: 0x%x", buffer[12]);
+//        DebugPrintf("buffer[13]: 0x%x", buffer[13]);
+//        DebugPrintf("buffer[14]: 0x%x", buffer[14]);
+//        DebugPrintf("buffer[15]: 0x%x", buffer[15]);
+
+        dynamicPalette = dynamicPaletteBuffer;
+
+        return &dynamicPalette;
+    }
+
+    return &gMonPaletteTable[species][variant];
 }

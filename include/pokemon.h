@@ -412,6 +412,9 @@ void ClearBattleMonForms(void);
 void PlayBattleBGM(void);
 void PlayMapChosenOrBattleBGM(u16 songId);
 
+extern struct SpritePalette dynamicPalette;
+extern u16 dynamicPaletteData[16];
+
 const u16 *GetMonSpritePal(struct Pokemon *mon);
 const u16 *GetMonSpritePalFromVariant(u16 species, u16 variant);
 const struct SpritePalette *GetMonSpritePalStruct(struct Pokemon *mon);

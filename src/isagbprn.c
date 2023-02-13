@@ -1,7 +1,7 @@
 #include <stdarg.h>
 #include <stdio.h>
-#include "config.h"
 #include "gba/gba.h"
+#include "config.h"
 #include "malloc.h"
 #include "mini_printf.h"
 
@@ -39,8 +39,8 @@ void AGBPrintFlush1Block(void);
 
 void AGBPrintInit(void)
 {
-    struct AGBPrintStruct *pPrint = (struct AGBPrintStruct *)AGB_PRINT_STRUCT_ADDR;
-    u16 *pWSCNT = (u16 *)REG_ADDR_WAITCNT;
+    volatile struct AGBPrintStruct *pPrint = (struct AGBPrintStruct *)AGB_PRINT_STRUCT_ADDR;
+    vu16 *pWSCNT = &REG_WAITCNT;
     u16 *pProtect = (u16 *)AGB_PRINT_PROTECT_ADDR;
     u16 nOldWSCNT = *pWSCNT;
     *pWSCNT = WSCNT_DATA;
@@ -66,9 +66,9 @@ static void AGBPutcInternal(const char cChr)
 
 void AGBPutc(const char cChr)
 {
-    u16 *pWSCNT = (u16 *)REG_ADDR_WAITCNT;
+    vu16 *pWSCNT = &REG_WAITCNT;
     u16 nOldWSCNT = *pWSCNT;
-    struct AGBPrintStruct *pPrint;
+    volatile struct AGBPrintStruct *pPrint;
     *pWSCNT = WSCNT_DATA;
     AGBPutcInternal(cChr);
     *pWSCNT = nOldWSCNT;
@@ -79,8 +79,8 @@ void AGBPutc(const char cChr)
 
 void AGBPrint(const char *pBuf)
 {
-    struct AGBPrintStruct *pPrint = (struct AGBPrintStruct *)AGB_PRINT_STRUCT_ADDR;
-    u16 *pWSCNT = (u16 *)REG_ADDR_WAITCNT;
+    volatile struct AGBPrintStruct *pPrint = (struct AGBPrintStruct *)AGB_PRINT_STRUCT_ADDR;
+    vu16 *pWSCNT = &REG_WAITCNT;
     u16 nOldWSCNT = *pWSCNT;
     *pWSCNT = WSCNT_DATA;
     while (*pBuf)
@@ -112,9 +112,9 @@ void AGBPrintf(const char *pBuf, ...)
 static void AGBPrintTransferDataInternal(u32 bAllData)
 {
     LPFN_PRINT_FLUSH lpfnFuncFlush;
-    u16 *pIME;
+    vu16 *pIME;
     u16 nIME;
-    u16 *pWSCNT;
+    vu16 *pWSCNT;
     u16 nOldWSCNT;
     u16 *pProtect;
     volatile struct AGBPrintStruct *pPrint;
@@ -122,9 +122,9 @@ static void AGBPrintTransferDataInternal(u32 bAllData)
     pProtect = (u16 *)AGB_PRINT_PROTECT_ADDR;
     pPrint = (struct AGBPrintStruct *)AGB_PRINT_STRUCT_ADDR;
     lpfnFuncFlush = (LPFN_PRINT_FLUSH)AGB_PRINT_FLUSH_ADDR;
-    pIME = (u16 *)REG_ADDR_IME;
+    pIME = &REG_IME;
     nIME = *pIME;
-    pWSCNT = (u16 *)REG_ADDR_WAITCNT;
+    pWSCNT = &REG_WAITCNT;
     nOldWSCNT = *pWSCNT;
     *pIME = nIME & ~1;
     *pWSCNT = WSCNT_DATA;
@@ -261,4 +261,63 @@ void MgbaAssert(const char *pFile, s32 nLine, const char *pExpression, bool32 nS
 }
 #endif
 
+void NoCashGBAAssert(const char *pFile, s32 nLine, const char *pExpression, bool32 nStopProgram)
+{
+    if (nStopProgram)
+    {
+        NoCashGBAPrintf("ASSERTION FAILED  FILE=[%s] LINE=[%d]  EXP=[%s]", pFile, nLine, pExpression);
+        asm(".hword 0xEFFF");
+    }
+    else
+    {
+        NoCashGBAPrintf("WARING FILE=[%s] LINE=[%d]  EXP=[%s]", pFile, nLine, pExpression);
+    }
+}
+#endif
+
+// mgba print functions
+#if (LOG_HANDLER == LOG_HANDLER_MGBA_PRINT)
+#define MGBA_REG_DEBUG_MAX (256)
+
+bool32 MgbaOpen(void)
+{
+    *REG_DEBUG_ENABLE = 0xC0DE;
+    return *REG_DEBUG_ENABLE == 0x1DEA;
+}
+
+void MgbaClose(void)
+{
+    *REG_DEBUG_ENABLE = 0;
+}
+
+void MgbaPrintf(s32 level, const char* ptr, ...)
+{
+    va_list args;
+
+    level &= 0x7;
+    va_start(args, ptr);
+    #if (PRETTY_PRINT_HANDLER == PRETTY_PRINT_MINI_PRINTF)
+    mini_vsnprintf(REG_DEBUG_STRING, MGBA_REG_DEBUG_MAX, ptr, args);
+    #elif (PRETTY_PRINT_HANDLER == PRETTY_PRINT_LIBC)
+    vsnprintf(REG_DEBUG_STRING, MGBA_REG_DEBUG_MAX, ptr, args);
+    #else
+    #error "unspecified pretty printing handler."
+    #endif
+    va_end(args);
+    *REG_DEBUG_FLAGS = level | 0x100;
+}
+
+void MgbaAssert(const char *pFile, s32 nLine, const char *pExpression, bool32 nStopProgram)
+{
+    if (nStopProgram)
+    {
+        MgbaPrintf(MGBA_LOG_ERROR, "ASSERTION FAILED  FILE=[%s] LINE=[%d]  EXP=[%s]", pFile, nLine, pExpression);
+        asm(".hword 0xEFFF");
+    }
+    else
+    {
+        MgbaPrintf(MGBA_LOG_WARN, "WARING FILE=[%s] LINE=[%d]  EXP=[%s]", pFile, nLine, pExpression);
+    }
+}
+#endif
 #endif
