@@ -63,6 +63,7 @@ prefabs.json
 *.js
 *.sym
 /.project
+.pydevproject
 *.ss1
 *.ss2
 *.ss3
