@@ -1,0 +1,66 @@
+////////////////////////////////////////////////////////////////////////
+// DO NOT MODIFY! This file is auto-generated from data/variants.json //
+////////////////////////////////////////////////////////////////////////
+
+static const u16 sPokemonNumVariants[NUM_SPECIES] = {
+        NUM_VARIANT_BULBASAUR,
+        NUM_VARIANT_CHARMANDER,
+        NUM_VARIANT_SQUIRTLE,
+};
+
+static const u8 sPokemonVariantParts[NUM_SPECIES][16] = {
+        [SPECIES_BULBASAUR] = {
+                [0] = VARIANT_PART_ANY,
+                [1] = VARIANT_PART_BULBASAUR_MOUTH,
+                [2] = VARIANT_PART_BULBASAUR_BODY,
+                [3] = VARIANT_PART_BULBASAUR_BODY,
+                [4] = VARIANT_PART_BULBASAUR_BODY,
+                [5] = VARIANT_PART_BULBASAUR_BODY,
+                [6] = VARIANT_PART_BULBASAUR_MOUTH,
+                [7] = VARIANT_PART_BULBASAUR_MOUTH,
+                [8] = VARIANT_PART_BULBASAUR_MOUTH,
+                [9] = VARIANT_PART_BULBASAUR_MOUTH,
+                [10] = VARIANT_PART_BULBASAUR_BODY,
+                [11] = VARIANT_PART_BULBASAUR_BULB,
+                [12] = VARIANT_PART_BULBASAUR_BULB,
+                [13] = VARIANT_PART_BULBASAUR_BULB,
+                [14] = VARIANT_PART_BULBASAUR_BULB,
+                [15] = VARIANT_PART_ANY,
+        },
+        [SPECIES_CHARMANDER] = {
+                [0] = VARIANT_PART_ANY,
+                [1] = VARIANT_PART_CHARMANDER_BODY,
+                [2] = VARIANT_PART_CHARMANDER_BODY,
+                [3] = VARIANT_PART_CHARMANDER_EYES,
+                [4] = VARIANT_PART_CHARMANDER_BODY,
+                [5] = VARIANT_PART_CHARMANDER_BODY,
+                [6] = VARIANT_PART_CHARMANDER_BODY,
+                [7] = VARIANT_PART_CHARMANDER_FLAME,
+                [8] = VARIANT_PART_CHARMANDER_FLAME,
+                [9] = VARIANT_PART_CHARMANDER_BODY,
+                [10] = VARIANT_PART_CHARMANDER_BODY,
+                [11] = VARIANT_PART_CHARMANDER_BODY,
+                [12] = VARIANT_PART_CHARMANDER_BODY,
+                [13] = VARIANT_PART_CHARMANDER_EYES,
+                [14] = VARIANT_PART_CHARMANDER_EYES,
+                [15] = VARIANT_PART_CHARMANDER_EYES,
+        },
+        [SPECIES_SQUIRTLE] = {
+                [0] = VARIANT_PART_ANY,
+                [1] = VARIANT_PART_SQUIRTLE_SHELL,
+                [2] = VARIANT_PART_SQUIRTLE_SHELL,
+                [3] = VARIANT_PART_SQUIRTLE_SHELL,
+                [4] = VARIANT_PART_SQUIRTLE_SHELL,
+                [5] = VARIANT_PART_SQUIRTLE_SHELL,
+                [6] = VARIANT_PART_SQUIRTLE_SHELL,
+                [7] = VARIANT_PART_SQUIRTLE_SHELL,
+                [8] = VARIANT_PART_SQUIRTLE_SHELL,
+                [9] = VARIANT_PART_SQUIRTLE_SHELL,
+                [10] = VARIANT_PART_SQUIRTLE_MOUTH,
+                [11] = VARIANT_PART_SQUIRTLE_BODY,
+                [12] = VARIANT_PART_SQUIRTLE_BODY,
+                [13] = VARIANT_PART_SQUIRTLE_BODY,
+                [14] = VARIANT_PART_SQUIRTLE_BODY,
+                [15] = VARIANT_PART_SQUIRTLE_BODY,
+        },
+};

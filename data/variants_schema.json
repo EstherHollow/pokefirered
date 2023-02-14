@@ -1,0 +1,66 @@
+{
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "type": "object",
+    "default": {},
+    "title": "Root Schema",
+    "required": [
+        "variant_counts_label",
+        "variant_parts_label",
+        "variant_data"
+    ],
+    "properties": {
+        "variant_counts_label": {
+            "type": "string"
+        },
+        "variant_parts_label": {
+            "type": "string"
+        },
+        "variant_data": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "species",
+                    "variants",
+                    "parts"
+                ],
+                "properties": {
+                    "species": {
+                        "type": "string"
+                    },
+                    "variants": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "minItems": 1,
+                        "uniqueItems": true
+                    },
+                    "parts": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "name",
+                                "palette"
+                            ],
+                            "properties": {
+                                "name": {
+                                    "type": "string"
+                                },
+                                "palette": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "integer"
+                                    }
+                                }
+                            }
+                        },
+                        "minItems": 1,
+                        "uniqueItems": true
+                    }
+                }
+            }
+        }
+    }
+}

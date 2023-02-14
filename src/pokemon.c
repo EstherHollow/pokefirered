@@ -1392,7 +1392,7 @@ static const s8 sNatureStatTable[][5] =
 #include "data/pokemon/level_up_learnsets.h"
 #include "data/pokemon/evolution.h"
 #include "data/pokemon/level_up_learnset_pointers.h"
-#include "data/pokemon/variants.h"
+#include "data/pokemon/variant_tables.h"
 
 static const s8 sPokeblockFlavorCompatibilityTable[] =
 {
@@ -6317,19 +6317,19 @@ u8 GenerateMonVariant(u16 species, u32 variantSeed) {
 
     switch (species) {
     case SPECIES_BULBASAUR:
-        colors[VARIANT_PARTS_BULBASAUR_SKIN] = colorSeed1 % (sPokemonNumVariants[species] - 1) + 1;
-        colors[VARIANT_PARTS_BULBASAUR_BULB] = colorSeed2 % (sPokemonNumVariants[species] - 1) + 1;
-        colors[VARIANT_PARTS_BULBASAUR_MOUTH] = colors[VARIANT_PARTS_BULBASAUR_BULB];
+        colors[VARIANT_PART_BULBASAUR_BODY] = colorSeed1 % (sPokemonNumVariants[species] - 1) + 1;
+        colors[VARIANT_PART_BULBASAUR_BULB] = colorSeed2 % (sPokemonNumVariants[species] - 1) + 1;
+        colors[VARIANT_PART_BULBASAUR_MOUTH] = colors[VARIANT_PART_BULBASAUR_BULB];
         break;
     case SPECIES_CHARMANDER:
-        colors[VARIANT_PARTS_CHARMANDER_SKIN] = colorSeed1 % (sPokemonNumVariants[species] - 1) + 1;
-        colors[VARIANT_PARTS_CHARMANDER_FLAME] = colorSeed2 % (sPokemonNumVariants[species] - 1) + 1;
-        colors[VARIANT_PARTS_CHARMANDER_EYES] = colorSeed3 % (sPokemonNumVariants[species] - 1) + 1;
+        colors[VARIANT_PART_CHARMANDER_BODY] = colorSeed1 % (sPokemonNumVariants[species] - 1) + 1;
+        colors[VARIANT_PART_CHARMANDER_FLAME] = colorSeed2 % (sPokemonNumVariants[species] - 1) + 1;
+        colors[VARIANT_PART_CHARMANDER_EYES] = colorSeed3 % (sPokemonNumVariants[species] - 1) + 1;
         break;
     case SPECIES_SQUIRTLE:
-        colors[VARIANT_PARTS_SQUIRTLE_SKIN] = colorSeed1 % (sPokemonNumVariants[species] - 1) + 1;
-        colors[VARIANT_PARTS_SQUIRTLE_SHELL] = colorSeed2 % (sPokemonNumVariants[species] - 1) + 1;
-        colors[VARIANT_PARTS_SQUIRTLE_MOUTH] = colors[VARIANT_PARTS_SQUIRTLE_SHELL];
+        colors[VARIANT_PART_SQUIRTLE_BODY] = colorSeed1 % (sPokemonNumVariants[species] - 1) + 1;
+        colors[VARIANT_PART_SQUIRTLE_SHELL] = colorSeed2 % (sPokemonNumVariants[species] - 1) + 1;
+        colors[VARIANT_PART_SQUIRTLE_MOUTH] = colors[VARIANT_PART_SQUIRTLE_SHELL];
         break;
     }
 

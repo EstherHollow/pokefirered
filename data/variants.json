@@ -1,0 +1,79 @@
+{
+    "$schema": "./variants_schema.json",
+    "variant_counts_label": "sPokemonNumVariants",
+    "variant_parts_label": "sPokemonVariantParts",
+    "variant_data": [
+        {
+            "species": "bulbasaur",
+            "variants": [
+                "original",
+                "red",
+                "green",
+                "blue",
+                "pink"
+            ],
+            "parts": [
+                {
+                    "name": "body",
+                    "palette": [2, 3, 4, 5, 10]
+                },
+                {
+                    "name": "bulb",
+                    "palette": [11, 12, 13, 14]
+                },
+                {
+                    "name": "mouth",
+                    "palette": [1, 6, 7, 8, 9]
+                }
+            ]
+        },
+        {
+            "species": "charmander",
+            "variants": [
+                "original",
+                "red",
+                "green",
+                "blue",
+                "white"
+            ],
+            "parts": [
+                {
+                    "name": "body",
+                    "palette": [1, 2, 4, 5, 6, 9, 10, 11, 12]
+                },
+                {
+                    "name": "flame",
+                    "palette": [7, 8]
+                },
+                {
+                    "name": "eyes",
+                    "palette": [3, 13, 14, 15]
+                }
+            ]
+        },
+        {
+            "species": "squirtle",
+            "variants": [
+                "original",
+                "red",
+                "green",
+                "blue",
+                "pink"
+            ],
+            "parts": [
+                {
+                    "name": "body",
+                    "palette": [11, 12, 13, 14, 15]
+                },
+                {
+                    "name": "shell",
+                    "palette": [1, 2, 3, 4, 5, 6, 7, 8, 9]
+                },
+                {
+                    "name": "mouth",
+                    "palette": [10]
+                }
+            ]
+        }
+    ]
+}
