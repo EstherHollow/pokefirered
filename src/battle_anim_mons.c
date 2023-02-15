@@ -1954,13 +1954,13 @@ u8 CreateAdditionalMonSpriteForMoveAnim(u16 species, bool8 isBackpic, u8 templat
     {
         LoadPalette(GetMonSpritePalFromVariant(species, variant), (palette * 0x10) + 0x100, 0x20);
         if (ignoreDeoxys == TRUE || ShouldIgnoreDeoxysForm(DEOXYS_CHECK_BATTLE_ANIM, battlerId) == TRUE || gBattleSpritesDataPtr->battlerData[battlerId].transformSpecies != 0)
-            LoadSpecialPokePic_DontHandleDeoxys(&gMonFrontPicTable[species],
+            LoadSpecialPokePic_DontHandleDeoxys(&gMonFrontPicTable[species][0],
                                                 gMonSpritesGfxPtr->multiUseBuffer,
                                                 species,
                                                 personality,
                                                 TRUE);
         else
-            LoadSpecialPokePic(&gMonFrontPicTable[species],
+            LoadSpecialPokePic(&gMonFrontPicTable[species][0],
                                gMonSpritesGfxPtr->multiUseBuffer,
                                species,
                                personality,
@@ -1970,13 +1970,13 @@ u8 CreateAdditionalMonSpriteForMoveAnim(u16 species, bool8 isBackpic, u8 templat
     {
         LoadPalette(GetMonSpritePalFromVariant(species, variant), (palette * 0x10) + 0x100, 0x20);
         if (ignoreDeoxys == TRUE || ShouldIgnoreDeoxysForm(DEOXYS_CHECK_BATTLE_ANIM, battlerId) == TRUE || gBattleSpritesDataPtr->battlerData[battlerId].transformSpecies != 0)
-            LoadSpecialPokePic_DontHandleDeoxys(&gMonBackPicTable[species],
+            LoadSpecialPokePic_DontHandleDeoxys(&gMonBackPicTable[species][0],
                                                 gMonSpritesGfxPtr->multiUseBuffer,
                                                 species,
                                                 personality,
                                                 FALSE);
         else
-            LoadSpecialPokePic(&gMonBackPicTable[species],
+            LoadSpecialPokePic(&gMonBackPicTable[species][0],
                                gMonSpritesGfxPtr->multiUseBuffer,
                                species,
                                personality,

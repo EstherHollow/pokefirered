@@ -338,7 +338,7 @@ void BattleLoadOpponentMonSpriteGfx(struct Pokemon *mon, u8 battlerId)
     }
     variant = GetMonData(mon, MON_DATA_VARIANT);
     position = GetBattlerPosition(battlerId);
-    HandleLoadSpecialPokePic_DontHandleDeoxys(&gMonFrontPicTable[species],
+    HandleLoadSpecialPokePic_DontHandleDeoxys(&gMonFrontPicTable[species][0],
                                               gMonSpritesGfxPtr->sprites[position],
                                               species, currentPersonality);
     paletteOffset = 0x100 + battlerId * 16;
@@ -385,11 +385,11 @@ void BattleLoadPlayerMonSpriteGfx(struct Pokemon *mon, u8 battlerId)
     variant = GetMonData(mon, MON_DATA_VARIANT);
     position = GetBattlerPosition(battlerId);
     if (ShouldIgnoreDeoxysForm(DEOXYS_CHECK_BATTLE_SPRITE, battlerId) == TRUE || gBattleSpritesDataPtr->battlerData[battlerId].transformSpecies != SPECIES_NONE)
-        HandleLoadSpecialPokePic_DontHandleDeoxys(&gMonBackPicTable[species],
+        HandleLoadSpecialPokePic_DontHandleDeoxys(&gMonBackPicTable[species][0],
                                                   gMonSpritesGfxPtr->sprites[position],
                                                   species, currentPersonality);
     else
-        HandleLoadSpecialPokePic(&gMonBackPicTable[species],
+        HandleLoadSpecialPokePic(&gMonBackPicTable[species][0],
                                 gMonSpritesGfxPtr->sprites[position],
                                 species, currentPersonality);
     paletteOffset = 0x100 + battlerId * 16;
@@ -661,7 +661,7 @@ void HandleSpeciesGfxDataChange(u8 battlerAtk, u8 battlerDef, u8 transformType)
         targetSpecies = GetMonData(&gEnemyParty[gBattlerPartyIndexes[battlerAtk]], MON_DATA_SPECIES);
         personalityValue = GetMonData(&gEnemyParty[gBattlerPartyIndexes[battlerAtk]], MON_DATA_PERSONALITY);
         variant = GetMonData(&gEnemyParty[gBattlerPartyIndexes[battlerAtk]], MON_DATA_VARIANT);
-        HandleLoadSpecialPokePic_DontHandleDeoxys(&gMonFrontPicTable[targetSpecies],
+        HandleLoadSpecialPokePic_DontHandleDeoxys(&gMonFrontPicTable[targetSpecies][0],
                                                   gMonSpritesGfxPtr->sprites[position],
                                                   targetSpecies,
                                                   personalityValue);
@@ -705,7 +705,7 @@ void HandleSpeciesGfxDataChange(u8 battlerAtk, u8 battlerDef, u8 transformType)
             personalityValue = GetMonData(&gPlayerParty[gBattlerPartyIndexes[battlerAtk]], MON_DATA_PERSONALITY);
             variant = GetMonData(&gPlayerParty[gBattlerPartyIndexes[battlerAtk]], MON_DATA_VARIANT);
 
-            HandleLoadSpecialPokePic_DontHandleDeoxys(&gMonBackPicTable[targetSpecies],
+            HandleLoadSpecialPokePic_DontHandleDeoxys(&gMonBackPicTable[targetSpecies][0],
                                                       gMonSpritesGfxPtr->sprites[position],
                                                       targetSpecies,
                                                       gTransformedPersonalities[battlerAtk]);
@@ -715,7 +715,7 @@ void HandleSpeciesGfxDataChange(u8 battlerAtk, u8 battlerDef, u8 transformType)
             personalityValue = GetMonData(&gEnemyParty[gBattlerPartyIndexes[battlerAtk]], MON_DATA_PERSONALITY);
             variant = GetMonData(&gEnemyParty[gBattlerPartyIndexes[battlerAtk]], MON_DATA_VARIANT);
 
-            HandleLoadSpecialPokePic_DontHandleDeoxys(&gMonFrontPicTable[targetSpecies],
+            HandleLoadSpecialPokePic_DontHandleDeoxys(&gMonFrontPicTable[targetSpecies][0],
                                                       gMonSpritesGfxPtr->sprites[position],
                                                       targetSpecies,
                                                       gTransformedPersonalities[battlerAtk]);

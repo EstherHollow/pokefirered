@@ -4157,7 +4157,7 @@ static void CreateJumpMonSprite(struct PokemonJumpGfx *jumpGfx, struct PokemonJu
     if (buffer && unusedBuffer)
     {
         HandleLoadSpecialPokePic(
-            &gMonFrontPicTable[monInfo->species],
+            &gMonFrontPicTable[monInfo->species][0],
             buffer,
             monInfo->species,
             monInfo->personality);

@@ -3,7 +3,7 @@
 
 #include "global.h"
 
-#define SPECIES_TAG_INCREMENT 500
+#define SPECIES_TAG_INCREMENT 500 // A little more than the # of pokemon (387)
 #define TRAINER_ENCOUNTER_MUSIC(trainer)((gTrainers[trainer].encounterMusic_gender & 0x7F))
 
 struct MonCoords
@@ -24,9 +24,9 @@ extern const u8 gMoveNames[][MOVE_NAME_LENGTH + 1];
 extern const u8 gTrainerClassNames[][13];
 
 extern const struct MonCoords gMonFrontPicCoords[];
-extern const struct CompressedSpriteSheet gMonFrontPicTable[];
+extern const struct CompressedSpriteSheet gMonFrontPicTable[][MAX_PATTERNS_PER_SPECIES];
 extern const struct MonCoords gMonBackPicCoords[];
-extern const struct CompressedSpriteSheet gMonBackPicTable[];
+extern const struct CompressedSpriteSheet gMonBackPicTable[][MAX_PATTERNS_PER_SPECIES];
 extern const struct SpritePalette gMonPaletteTable[][MAX_VARIANTS_PER_SPECIES];
 extern const union AnimCmd *const *const gTrainerFrontAnimsPtrTable[];
 extern const struct MonCoords gTrainerFrontPicCoords[];

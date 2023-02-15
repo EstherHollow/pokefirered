@@ -277,7 +277,7 @@ const union AnimCmd *const gAnims_MonPic[] =
     sAnim_MonPic_3,
 };
 
-#define SPECIES_SPRITE(species, sprite) [SPECIES_##species] = {sprite, 0x800, SPECIES_##species}
+#define SPECIES_SPRITE(species, index, sprite) {sprite, 0x800, SPECIES_##species + (SPECIES_TAG_INCREMENT * index)}
 #define SPECIES_PAL(species, index, pal) {pal, SPECIES_##species + (SPECIES_TAG_INCREMENT * index)}
 
 #define TRAINER_SPRITE(trainerPic, sprite, size) [TRAINER_PIC_##trainerPic] = {sprite, size, TRAINER_PIC_##trainerPic}
