@@ -26,7 +26,7 @@ struct VariantStats
     u16 learnset[4];
 };
 
-extern const struct VariantStats gVariantStats[][MAX_VARIANTS_PER_SPECIES];
+extern const struct VariantStats gVariantStats[][8];
 
 u8 GetBaseHP(u16 species);
 u8 GetBaseAttack(u16 species);
