@@ -1700,7 +1700,7 @@ bool8 DaycareMonReceivedMail(void)
     return BufferDayCareMonReceivedMail(&gSaveBlock1Ptr->daycare, gSpecialVar_0x8004);
 }
 
-extern const struct CompressedSpriteSheet gMonFrontPicTable[];
+extern const struct CompressedSpriteSheet gMonFrontPicTable[][4];
 
 static u8 EggHatchCreateMonSprite(u8 a0, u8 switchID, u8 pokeID, u16 *speciesLoc)
 {
@@ -1724,7 +1724,7 @@ static u8 EggHatchCreateMonSprite(u8 a0, u8 switchID, u8 pokeID, u16 *speciesLoc
     {
         u16 species = GetMonData(mon, MON_DATA_SPECIES);
         u32 pid = GetMonData(mon, MON_DATA_PERSONALITY);
-        HandleLoadSpecialPokePic(&gMonFrontPicTable[species], gMonSpritesGfxPtr->sprites[(a0 * 2) + 1], species, pid);
+        HandleLoadSpecialPokePic(&gMonFrontPicTable[species][0], gMonSpritesGfxPtr->sprites[(a0 * 2) + 1], species, pid);
         LoadSpritePalette(GetMonSpritePalStruct(mon));
         *speciesLoc = species;
     }

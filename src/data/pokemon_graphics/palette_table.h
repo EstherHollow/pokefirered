@@ -1,5 +1,4 @@
-const struct SpritePalette gMonPaletteTable[][8] =
-{
+const struct SpritePalette gMonPaletteTable[][8] = {
     [SPECIES_NONE] = {
         SPECIES_PAL(NONE, 0, gMonPalette_CircledQuestionMark),
         SPECIES_PAL(NONE, 1, gMonShinyPalette_CircledQuestionMark),

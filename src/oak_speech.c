@@ -1876,7 +1876,7 @@ static void CreateNidoranFSprite(u8 taskId)
 {
     u8 spriteId;
 
-    DecompressPicFromTable(&gMonFrontPicTable[SPECIES_NIDORAN_F], MonSpritesGfxManager_GetSpritePtr(0), SPECIES_NIDORAN_F);
+    DecompressPicFromTable(&gMonFrontPicTable[SPECIES_NIDORAN_F][0], MonSpritesGfxManager_GetSpritePtr(0), SPECIES_NIDORAN_F);
     LoadSpritePalette(&gMonPaletteTable[SPECIES_NIDORAN_F][0]);
     SetMultiuseSpriteTemplateToPokemon(SPECIES_NIDORAN_F, 0);
     spriteId = CreateSprite(&gMultiuseSpriteTemplate, 96, 96, 1);
