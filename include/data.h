@@ -24,10 +24,10 @@ extern const u8 gMoveNames[][MOVE_NAME_LENGTH + 1];
 extern const u8 gTrainerClassNames[][13];
 
 extern const struct MonCoords gMonFrontPicCoords[];
-extern const struct CompressedSpriteSheet gMonFrontPicTable[][MAX_PATTERNS_PER_SPECIES];
+extern const struct CompressedSpriteSheet gMonFrontPicTable[][4];
 extern const struct MonCoords gMonBackPicCoords[];
-extern const struct CompressedSpriteSheet gMonBackPicTable[][MAX_PATTERNS_PER_SPECIES];
-extern const struct SpritePalette gMonPaletteTable[][MAX_VARIANTS_PER_SPECIES];
+extern const struct CompressedSpriteSheet gMonBackPicTable[][4];
+extern const struct SpritePalette gMonPaletteTable[][8];
 extern const union AnimCmd *const *const gTrainerFrontAnimsPtrTable[];
 extern const struct MonCoords gTrainerFrontPicCoords[];
 extern const struct CompressedSpriteSheet gTrainerFrontPicTable[];
