@@ -20,9 +20,14 @@
             "items": {
                 "type": "object",
                 "required": [
+                    "index",
                     "species"
                 ],
                 "properties": {
+                    "index": {
+                        "type": "integer",
+                        "minimum": 1
+                    },
                     "species": {
                         "type": "string"
                     },

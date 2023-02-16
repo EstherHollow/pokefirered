@@ -53,10 +53,13 @@ def write_variant_constants(file, json_data):
             write(f"#define PALETTE_{species_name.upper()}_{palette_name.upper()} {i}")
         write(f"#define NUM_PALETTES_{species_name.upper()} {len(palettes)}")
         write("")
-        subpalettes = species["subpalettes"]
-        for i, subpalette in enumerate(subpalettes):
-            subpalette_name = subpalette["name"]
-            write(f"#define SUBPALETTE_{species_name.upper()}_{subpalette_name.upper()} {i}")
+        try:
+            subpalettes = species["subpalettes"]
+            for i, subpalette in enumerate(subpalettes):
+                subpalette_name = subpalette["name"]
+                write(f"#define SUBPALETTE_{species_name.upper()}_{subpalette_name.upper()} {i}")
+        except KeyError:
+            write(f"// No subpalettes defined for {species_name}")
         write("")
     write("#endif // GUARD_CONSTANTS_VARIANTS_H")
 
@@ -79,7 +82,10 @@ def write_variant_tables(file, json_data):
     for species in json_data["variant_data"]:
         species_name = species["species"]
         write(f"{tab}[SPECIES_{species_name.upper()}] = {{")
-        subpalettes = species["subpalettes"]
+        try:
+            subpalettes = species["subpalettes"]
+        except KeyError:
+            subpalettes = []
         for i in range(16):
             subpalette_label = "ANY"
             for subpalette in subpalettes:
