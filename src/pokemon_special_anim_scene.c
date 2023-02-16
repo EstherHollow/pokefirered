@@ -648,6 +648,7 @@ void PSA_CreateMonSpriteAtCloseness(u8 closeness)
     const u16 *palette;
     u16 species = GetMonData(pokemon, MON_DATA_SPECIES);
     u32 personality = GetMonData(pokemon, MON_DATA_PERSONALITY);
+    u16 variant = GetMonData(pokemon, MON_DATA_VARIANT);
     u8 r1 = Menu2_GetMonSpriteAnchorCoord(species, personality, 2);
     void *r6;
     void *r9;
@@ -668,8 +669,8 @@ void PSA_CreateMonSpriteAtCloseness(u8 closeness)
     r9 = Alloc(0x2000);
     if (r6 != NULL && r9 != NULL)
     {
-        HandleLoadSpecialPokePic(&gMonFrontPicTable[species][0], r6, species, personality);
-        palette = GetMonSpritePal(pokemon);
+        HandleLoadSpecialPokePic(GetMonFrontPicStructFromVariant(species, variant), r6, species, variant, personality);
+        palette = GetMonPalette(pokemon);
         LoadMonSpriteGraphics(r6, palette);
         spriteId = CreateSprite(&sSpriteTemplate_MonSprite, 120, scene->monSpriteY1, 4);
         if (spriteId != MAX_SPRITES)

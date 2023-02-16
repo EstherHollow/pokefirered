@@ -2802,7 +2802,7 @@ const u16 gMonPalettes_Politoed[8][16] = {
 		INCBIN_U16("graphics/pokemon/186_politoed/shiny.gbapal"),
 };
 
-const u32 gMonFrontPic_Hoppip_0[] = INCBIN_U32("graphics/pokemon/187_hoppip/front.4bpp.lz");
+const u32 gMonFrontPic_Hoppip_0[] = INCBIN_U32("graphics/pokemon/187_hoppip/front_beta.4bpp.lz");
 const u32 gMonFrontPic_Hoppip_1[] = {0};
 const u32 gMonFrontPic_Hoppip_2[] = {0};
 const u32 gMonFrontPic_Hoppip_3[] = {0};
@@ -2813,7 +2813,7 @@ const u32 gMonBackPic_Hoppip_3[] = {0};
 const u8 gMonIcon_Hoppip[] = INCBIN_U8( "graphics/pokemon/187_hoppip/icon.4bpp");
 const u8 gMonFootprint_Hoppip[] = INCBIN_U8("graphics/pokemon/187_hoppip/footprint.1bpp");
 const u16 gMonPalettes_Hoppip[8][16] = {
-		INCBIN_U16("graphics/pokemon/187_hoppip/normal.gbapal"),
+		INCBIN_U16("graphics/pokemon/187_hoppip/pink.gbapal"),
 		INCBIN_U16("graphics/pokemon/187_hoppip/shiny.gbapal"),
 };
 

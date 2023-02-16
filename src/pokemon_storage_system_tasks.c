@@ -79,7 +79,7 @@ static void StartDisplayMonMosaic(void);
 static void SpriteCB_DisplayMonMosaic(struct Sprite *sprite);
 static bool8 IsDisplayMonMosaicActive(void);
 static void CreateDisplayMonSprite(void);
-static void LoadDisplayMonGfx(u16 species, u32 personality);
+static void LoadDisplayMonGfx(u16 species, u16 variant, u32 personality);
 static void PrintDisplayMonInfo(void);
 static void UpdateWaveformAnimation(void);
 static void InitSupplementalTilemaps(void);
@@ -2187,7 +2187,7 @@ static void CreateWaveformSprites(void)
 
 static void RefreshDisplayMonData(void)
 {
-    LoadDisplayMonGfx(gStorage->displayMonSpecies, gStorage->displayMonPersonality);
+    LoadDisplayMonGfx(gStorage->displayMonSpecies, gStorage->displayMonVariant, gStorage->displayMonPersonality);
     PrintDisplayMonInfo();
     UpdateWaveformAnimation();
     ScheduleBgCopyTilemapToVram(0);
@@ -2265,14 +2265,14 @@ static void CreateDisplayMonSprite(void)
     }
 }
 
-static void LoadDisplayMonGfx(u16 species, u32 personality)
+static void LoadDisplayMonGfx(u16 species, u16 variant, u32 personality)
 {
     if (gStorage->displayMonSprite == NULL)
         return;
 
     if (species != SPECIES_NONE)
     {
-        HandleLoadSpecialPokePic(&gMonFrontPicTable[species][0], gStorage->tileBuffer, species, personality);
+        HandleLoadSpecialPokePic(GetMonFrontPicStructFromVariant(species, variant), gStorage->tileBuffer, species, variant, personality);
         CpuCopy32(gStorage->tileBuffer, gStorage->displayMonTilePtr, 0x800);
         LoadPalette(gStorage->displayMonPalette, gStorage->displayMonPalOffset, 0x20);
         gStorage->displayMonSprite->invisible = FALSE;

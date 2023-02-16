@@ -1942,7 +1942,7 @@ u8 GetBattlerSpriteBGPriorityRank(u8 battlerId)
 }
 
 // Create pokemon sprite to be used for a move animation effect (e.g. Role Play / Snatch)
-u8 CreateAdditionalMonSpriteForMoveAnim(u16 species, bool8 isBackpic, u8 templateId, s16 x, s16 y, u8 subpriority, u32 personality, u16 variant, u32 battlerId, bool32 ignoreDeoxys)
+u8 CreateAdditionalMonSpriteForMoveAnim(u16 species, u16 variant, u32 personality, bool8 isBackpic, u8 templateId, s16 x, s16 y, u8 subpriority, u32 battlerId, bool32 ignoreDeoxys)
 {
     u8 spriteId;
     u16 sheet = LoadSpriteSheet(&sSpriteSheets_MoveEffectMons[templateId]);
@@ -1952,33 +1952,37 @@ u8 CreateAdditionalMonSpriteForMoveAnim(u16 species, bool8 isBackpic, u8 templat
         gMonSpritesGfxPtr->multiUseBuffer = AllocZeroed(0x2000);
     if (!isBackpic)
     {
-        LoadPalette(GetMonSpritePalFromVariant(species, variant), (palette * 0x10) + 0x100, 0x20);
+        LoadPalette(GetMonPaletteFromVariant(species, variant), (palette * 0x10) + 0x100, 0x20);
         if (ignoreDeoxys == TRUE || ShouldIgnoreDeoxysForm(DEOXYS_CHECK_BATTLE_ANIM, battlerId) == TRUE || gBattleSpritesDataPtr->battlerData[battlerId].transformSpecies != 0)
-            LoadSpecialPokePic_DontHandleDeoxys(&gMonFrontPicTable[species][0],
+            LoadSpecialPokePic_DontHandleDeoxys(GetMonFrontPicStructFromVariant(species, variant),
                                                 gMonSpritesGfxPtr->multiUseBuffer,
                                                 species,
+                                                variant,
                                                 personality,
                                                 TRUE);
         else
-            LoadSpecialPokePic(&gMonFrontPicTable[species][0],
+            LoadSpecialPokePic(GetMonFrontPicStructFromVariant(species, variant),
                                gMonSpritesGfxPtr->multiUseBuffer,
                                species,
+                               variant,
                                personality,
                                TRUE);
     }
     else
     {
-        LoadPalette(GetMonSpritePalFromVariant(species, variant), (palette * 0x10) + 0x100, 0x20);
+        LoadPalette(GetMonPaletteFromVariant(species, variant), (palette * 0x10) + 0x100, 0x20);
         if (ignoreDeoxys == TRUE || ShouldIgnoreDeoxysForm(DEOXYS_CHECK_BATTLE_ANIM, battlerId) == TRUE || gBattleSpritesDataPtr->battlerData[battlerId].transformSpecies != 0)
-            LoadSpecialPokePic_DontHandleDeoxys(&gMonBackPicTable[species][0],
+            LoadSpecialPokePic_DontHandleDeoxys(GetMonBackPicStructFromVariant(species, variant),
                                                 gMonSpritesGfxPtr->multiUseBuffer,
                                                 species,
+                                                variant,
                                                 personality,
                                                 FALSE);
         else
-            LoadSpecialPokePic(&gMonBackPicTable[species][0],
+            LoadSpecialPokePic(GetMonBackPicStructFromVariant(species, variant),
                                gMonSpritesGfxPtr->multiUseBuffer,
                                species,
+                               variant,
                                personality,
                                FALSE);
     }

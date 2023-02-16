@@ -4157,9 +4157,10 @@ static void CreateJumpMonSprite(struct PokemonJumpGfx *jumpGfx, struct PokemonJu
     if (buffer && unusedBuffer)
     {
         HandleLoadSpecialPokePic(
-            &gMonFrontPicTable[monInfo->species][0],
+            GetMonFrontPicStructFromVariant(monInfo->species, monInfo->variant),
             buffer,
             monInfo->species,
+            monInfo->variant,
             monInfo->personality);
 
         spriteSheet.data = buffer;
@@ -4167,7 +4168,7 @@ static void CreateJumpMonSprite(struct PokemonJumpGfx *jumpGfx, struct PokemonJu
         spriteSheet.size = MON_PIC_SIZE;
         LoadSpriteSheet(&spriteSheet);
 
-        spritePalette.data = GetMonSpritePalFromVariant(monInfo->species, monInfo->variant);
+        spritePalette.data = GetMonPaletteFromVariant(monInfo->species, monInfo->variant);
         spritePalette.tag = multiplayerId;
         LoadSpritePalette(&spritePalette);
 

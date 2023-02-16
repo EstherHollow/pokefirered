@@ -443,9 +443,15 @@ u8 GenerateMonVariant(u16 species, u32 variantSeed);
 extern struct SpritePalette dynamicPalette;
 extern u16 dynamicPaletteData[16];
 
-const u16 *GetMonSpritePal(struct Pokemon *mon);
-const u16 *GetMonSpritePalFromVariant(u16 species, u16 variant);
-const struct SpritePalette *GetMonSpritePalStruct(struct Pokemon *mon);
-const struct SpritePalette *GetMonSpritePalStructFromVariant(u16 species, u16 variant);
+const u32 *GetMonFrontPicFromVariant(u16 species, u16 variant);
+const u32 *GetMonBackPicFromVariant(u16 species, u16 variant);
+
+const struct CompressedSpriteSheet *GetMonFrontPicStructFromVariant(u16 species, u16 variant);
+const struct CompressedSpriteSheet *GetMonBackPicStructFromVariant(u16 species, u16 variant);
+
+const u16 *GetMonPalette(struct Pokemon *mon);
+const u16 *GetMonPaletteFromVariant(u16 species, u16 variant);
+const struct SpritePalette *GetMonPaletteStruct(struct Pokemon *mon);
+const struct SpritePalette *GetMonPaletteStructFromVariant(u16 species, u16 variant);
 
 #endif // GUARD_POKEMON_H

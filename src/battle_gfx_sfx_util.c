@@ -338,14 +338,14 @@ void BattleLoadOpponentMonSpriteGfx(struct Pokemon *mon, u8 battlerId)
     }
     variant = GetMonData(mon, MON_DATA_VARIANT);
     position = GetBattlerPosition(battlerId);
-    HandleLoadSpecialPokePic_DontHandleDeoxys(&gMonFrontPicTable[species][0],
+    HandleLoadSpecialPokePic_DontHandleDeoxys(GetMonFrontPicStructFromVariant(species, variant),
                                               gMonSpritesGfxPtr->sprites[position],
-                                              species, currentPersonality);
+                                              species, variant, currentPersonality);
     paletteOffset = 0x100 + battlerId * 16;
     if (gBattleSpritesDataPtr->battlerData[battlerId].transformSpecies == SPECIES_NONE)
-        lzPaletteData = GetMonSpritePal(mon);
+        lzPaletteData = GetMonPalette(mon);
     else
-        lzPaletteData = GetMonSpritePalFromVariant(species, variant);
+        lzPaletteData = GetMonPaletteFromVariant(species, variant);
     LoadPalette(lzPaletteData, paletteOffset, 0x20);
     LoadPalette(lzPaletteData, 0x80 + battlerId * 16, 0x20);
     if (species == SPECIES_CASTFORM)
@@ -385,18 +385,18 @@ void BattleLoadPlayerMonSpriteGfx(struct Pokemon *mon, u8 battlerId)
     variant = GetMonData(mon, MON_DATA_VARIANT);
     position = GetBattlerPosition(battlerId);
     if (ShouldIgnoreDeoxysForm(DEOXYS_CHECK_BATTLE_SPRITE, battlerId) == TRUE || gBattleSpritesDataPtr->battlerData[battlerId].transformSpecies != SPECIES_NONE)
-        HandleLoadSpecialPokePic_DontHandleDeoxys(&gMonBackPicTable[species][0],
+        HandleLoadSpecialPokePic_DontHandleDeoxys(GetMonBackPicStructFromVariant(species, variant),
                                                   gMonSpritesGfxPtr->sprites[position],
-                                                  species, currentPersonality);
+                                                  species, variant, currentPersonality);
     else
-        HandleLoadSpecialPokePic(&gMonBackPicTable[species][0],
+        HandleLoadSpecialPokePic(GetMonBackPicStructFromVariant(species, variant),
                                 gMonSpritesGfxPtr->sprites[position],
-                                species, currentPersonality);
+                                species, variant, currentPersonality);
     paletteOffset = 0x100 + battlerId * 16;
     if (gBattleSpritesDataPtr->battlerData[battlerId].transformSpecies == SPECIES_NONE)
-        lzPaletteData = GetMonSpritePal(mon);
+        lzPaletteData = GetMonPalette(mon);
     else
-        lzPaletteData = GetMonSpritePalFromVariant(species, variant);
+        lzPaletteData = GetMonPaletteFromVariant(species, variant);
     LoadPalette(lzPaletteData, paletteOffset, 0x20);
     LoadPalette(lzPaletteData, 0x80 + battlerId * 16, 0x20);
     if (species == SPECIES_CASTFORM)
@@ -661,15 +661,16 @@ void HandleSpeciesGfxDataChange(u8 battlerAtk, u8 battlerDef, u8 transformType)
         targetSpecies = GetMonData(&gEnemyParty[gBattlerPartyIndexes[battlerAtk]], MON_DATA_SPECIES);
         personalityValue = GetMonData(&gEnemyParty[gBattlerPartyIndexes[battlerAtk]], MON_DATA_PERSONALITY);
         variant = GetMonData(&gEnemyParty[gBattlerPartyIndexes[battlerAtk]], MON_DATA_VARIANT);
-        HandleLoadSpecialPokePic_DontHandleDeoxys(&gMonFrontPicTable[targetSpecies][0],
+        HandleLoadSpecialPokePic_DontHandleDeoxys(GetMonFrontPicStructFromVariant(targetSpecies, variant),
                                                   gMonSpritesGfxPtr->sprites[position],
                                                   targetSpecies,
+                                                  variant,
                                                   personalityValue);
         src = gMonSpritesGfxPtr->sprites[position];
         dst = (void *)(VRAM + 0x10000 + gSprites[gBattlerSpriteIds[battlerAtk]].oam.tileNum * 32);
         DmaCopy32(3, src, dst, 0x800);
         paletteOffset = 0x100 + battlerAtk * 16;
-        lzPaletteData = GetMonSpritePalFromVariant(targetSpecies, variant);
+        lzPaletteData = GetMonPaletteFromVariant(targetSpecies, variant);
         LoadPalette(lzPaletteData, paletteOffset, 32);
         gSprites[gBattlerSpriteIds[battlerAtk]].y = GetBattlerSpriteDefault_Y(battlerAtk);
         StartSpriteAnim(&gSprites[gBattlerSpriteIds[battlerAtk]], gBattleMonForms[battlerAtk]);
@@ -705,9 +706,10 @@ void HandleSpeciesGfxDataChange(u8 battlerAtk, u8 battlerDef, u8 transformType)
             personalityValue = GetMonData(&gPlayerParty[gBattlerPartyIndexes[battlerAtk]], MON_DATA_PERSONALITY);
             variant = GetMonData(&gPlayerParty[gBattlerPartyIndexes[battlerAtk]], MON_DATA_VARIANT);
 
-            HandleLoadSpecialPokePic_DontHandleDeoxys(&gMonBackPicTable[targetSpecies][0],
+            HandleLoadSpecialPokePic_DontHandleDeoxys(GetMonBackPicStructFromVariant(targetSpecies, variant),
                                                       gMonSpritesGfxPtr->sprites[position],
                                                       targetSpecies,
+                                                      variant,
                                                       gTransformedPersonalities[battlerAtk]);
         }
         else
@@ -715,16 +717,17 @@ void HandleSpeciesGfxDataChange(u8 battlerAtk, u8 battlerDef, u8 transformType)
             personalityValue = GetMonData(&gEnemyParty[gBattlerPartyIndexes[battlerAtk]], MON_DATA_PERSONALITY);
             variant = GetMonData(&gEnemyParty[gBattlerPartyIndexes[battlerAtk]], MON_DATA_VARIANT);
 
-            HandleLoadSpecialPokePic_DontHandleDeoxys(&gMonFrontPicTable[targetSpecies][0],
+            HandleLoadSpecialPokePic_DontHandleDeoxys(GetMonFrontPicStructFromVariant(targetSpecies, variant),
                                                       gMonSpritesGfxPtr->sprites[position],
                                                       targetSpecies,
+                                                      variant,
                                                       gTransformedPersonalities[battlerAtk]);
         }
         src = gMonSpritesGfxPtr->sprites[position];
         dst = (void *)(VRAM + 0x10000 + gSprites[gBattlerSpriteIds[battlerAtk]].oam.tileNum * 32);
         DmaCopy32(3, src, dst, 0x800);
         paletteOffset = 0x100 + battlerAtk * 16;
-        lzPaletteData = GetMonSpritePalFromVariant(targetSpecies, variant);
+        lzPaletteData = GetMonPaletteFromVariant(targetSpecies, variant);
         LoadPalette(lzPaletteData, paletteOffset, 32);
         if (targetSpecies == SPECIES_CASTFORM)
         {
