@@ -848,9 +848,7 @@ static void CB2_CreateTradeMenu(void)
         gPaletteFade.bufferTransferDisabled = FALSE;
 
         for (i = 0; i < PARTY_SIZE; i++)
-        {
-            CreatePlayerMon(&gEnemyParty[i], SPECIES_NONE, 0, USE_RANDOM_IVS, FALSE, 0);
-        }
+            CreatePlayerMon(&gEnemyParty[i], SPECIES_NONE, 0, DEFAULT_IVS, FALSE, 0);
 
         PrintTradeMessage(MSG_STANDBY);
         ShowBg(0);

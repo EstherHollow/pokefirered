@@ -3,7 +3,6 @@
 
 #include "global.h"
 
-#define SPECIES_TAG_INCREMENT 500 // A little more than the # of pokemon (387)
 #define TRAINER_ENCOUNTER_MUSIC(trainer)((gTrainers[trainer].encounterMusic_gender & 0x7F))
 
 struct MonCoords

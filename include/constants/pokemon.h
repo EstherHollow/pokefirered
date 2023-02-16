@@ -236,9 +236,11 @@
 #define MAX_SHEEN       255
 #define MAX_CONDITION   255
 
-#define MAX_PER_STAT_IVS 31
+#define MIN_IVS 0
+#define DEFAULT_IVS 23
+#define MAX_IVS 31
 #define MAX_IV_MASK 31
-#define USE_RANDOM_IVS (MAX_PER_STAT_IVS + 1)
+
 #define MAX_PER_STAT_EVS 255
 #define MAX_TOTAL_EVS 510
 #define EV_ITEM_RAISE_LIMIT 100
@@ -290,7 +292,6 @@
 
 #define EVOS_PER_MON 5
 
-#define STATIC_IV 23
 #define EXP_MODIFIER 5
 
 #define PARTY_SIZE 6

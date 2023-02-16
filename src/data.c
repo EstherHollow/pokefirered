@@ -277,6 +277,8 @@ const union AnimCmd *const gAnims_MonPic[] =
     sAnim_MonPic_3,
 };
 
+#define SPECIES_TAG_INCREMENT 500 // A margin more than SPECIES_EGG (412)
+
 #define SPECIES_SPRITE(species, index, sprite) {sprite, 0x800, SPECIES_##species + (SPECIES_TAG_INCREMENT * index)}
 #define SPECIES_PAL(species, index, pal) {pal, SPECIES_##species + (SPECIES_TAG_INCREMENT * index)}
 

@@ -1840,7 +1840,7 @@ void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, 
     }
     else
     {
-        u32 iv = STATIC_IV;
+        u32 iv = DEFAULT_IVS;
         SetBoxMonData(boxMon, MON_DATA_HP_IV, &iv);
         SetBoxMonData(boxMon, MON_DATA_ATK_IV, &iv);
         SetBoxMonData(boxMon, MON_DATA_DEF_IV, &iv);
@@ -6462,10 +6462,10 @@ bool8 IsTrainerRival(u16 trainerId) {
 }
 
 u16 GenerateMonVariant(u16 species, u32 variantSeed) {
-    u16 paletteSeed1 =  (variantSeed & 0x0000003F);
-    u16 paletteSeed2 =  (variantSeed & 0x00000FC0) >> 6;
-    u16 paletteSeed3 =  (variantSeed & 0x0003F000) >> 12;
-    u16 paletteSeed4 =  (variantSeed & 0x00FC0000) >> 18;
+    u16 paletteSeed0 =  (variantSeed & 0x0000003F);
+    u16 paletteSeed1 =  (variantSeed & 0x00000FC0) >> 6;
+    u16 paletteSeed2 =  (variantSeed & 0x0003F000) >> 12;
+    u16 paletteSeed3 =  (variantSeed & 0x00FC0000) >> 18;
     u16 spriteSeed =    (variantSeed & 0xFF000000) >> 24;
 
     u8 spriteCount = sMonSpriteCount[species];
@@ -6480,18 +6480,18 @@ u16 GenerateMonVariant(u16 species, u32 variantSeed) {
 
     switch (species) {
     case SPECIES_BULBASAUR:
-        palettes[SUBPALETTE_BULBASAUR_BODY] = paletteSeed1 % (sMonPaletteCount[species] - 1) + 1;
-        palettes[SUBPALETTE_BULBASAUR_BULB] = paletteSeed2 % (sMonPaletteCount[species] - 1) + 1;
+        palettes[SUBPALETTE_BULBASAUR_BODY] = paletteSeed0 % (paletteCount - 1) + 1;
+        palettes[SUBPALETTE_BULBASAUR_BULB] = paletteSeed1 % (paletteCount - 1) + 1;
         palettes[SUBPALETTE_BULBASAUR_MOUTH] = palettes[SUBPALETTE_BULBASAUR_BULB];
         break;
     case SPECIES_CHARMANDER:
-        palettes[SUBPALETTE_CHARMANDER_BODY] = paletteSeed1 % (sMonPaletteCount[species] - 1) + 1;
-        palettes[SUBPALETTE_CHARMANDER_FLAME] = paletteSeed2 % (sMonPaletteCount[species] - 1) + 1;
-        palettes[SUBPALETTE_CHARMANDER_EYES] = paletteSeed3 % (sMonPaletteCount[species] - 1) + 1;
+        palettes[SUBPALETTE_CHARMANDER_BODY] = paletteSeed0 % (paletteCount - 1) + 1;
+        palettes[SUBPALETTE_CHARMANDER_FLAME] = paletteSeed1 % (paletteCount - 1) + 1;
+        palettes[SUBPALETTE_CHARMANDER_EYES] = paletteSeed2 % (paletteCount - 1) + 1;
         break;
     case SPECIES_SQUIRTLE:
-        palettes[SUBPALETTE_SQUIRTLE_BODY] = paletteSeed1 % (sMonPaletteCount[species] - 1) + 1;
-        palettes[SUBPALETTE_SQUIRTLE_SHELL] = paletteSeed2 % (sMonPaletteCount[species] - 1) + 1;
+        palettes[SUBPALETTE_SQUIRTLE_BODY] = paletteSeed0 % (paletteCount - 1) + 1;
+        palettes[SUBPALETTE_SQUIRTLE_SHELL] = paletteSeed1 % (paletteCount - 1) + 1;
         palettes[SUBPALETTE_SQUIRTLE_MOUTH] = palettes[SUBPALETTE_SQUIRTLE_SHELL];
         break;
     default:
@@ -6502,7 +6502,7 @@ u16 GenerateMonVariant(u16 species, u32 variantSeed) {
 
         // By default, select 1 of the species' palettes and set it to all 4 slots.
         if (paletteCount > 1) {
-            paletteSeed = paletteSeed1 & paletteSeed2 & paletteSeed3 & paletteSeed4;
+            paletteSeed = paletteSeed0 ^ paletteSeed1 ^ paletteSeed2 ^ paletteSeed3;
             palette = paletteSeed % paletteCount;
             palettes[0] = palette;
             palettes[1] = palette;
@@ -6514,7 +6514,20 @@ u16 GenerateMonVariant(u16 species, u32 variantSeed) {
 
     variant = (palettes[0]) | (palettes[1] << 3) | (palettes[2] << 6) | (palettes[3] << 9) | (sprite << 12);
 
-    DebugPrintf("set variant: 0x%x", variant);
+    DebugPrintf("GenerateMonVariant speciesName: %S", gSpeciesNames[species]);
+    DebugPrintf("GenerateMonVariant paletteSeeds: 0x%x, 0x%x, 0x%x, 0x%x spriteSeed: 0x%x",
+            paletteSeed0,
+            paletteSeed1,
+            paletteSeed2,
+            paletteSeed3,
+            spriteSeed);
+    DebugPrintf("GenerateMonVariant palettes: %d, %d, %d, %d sprite: %d",
+            palettes[0],
+            palettes[1],
+            palettes[2],
+            palettes[3],
+            sprite);
+    DebugPrintf("GenerateMonVariant variant: 0x%x", variant);
     return variant;
 }
 
@@ -6586,6 +6599,6 @@ const struct SpritePalette *GetMonPaletteStructFromVariant(u16 species, u16 vari
     };
     dynamicPalette = dynamicPaletteBuffer;
 
-    DebugPrintf("get variant: 0x%x", variant);
+    DebugPrintf("GetMonPaletteStructFromVariant variant: 0x%x", variant);
     return &dynamicPalette;
 }
