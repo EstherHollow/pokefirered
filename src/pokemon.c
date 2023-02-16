@@ -6312,11 +6312,14 @@ u16 GenerateMonVariant(u16 species, u32 variantSeed) {
     u16 paletteSeed4 =  (variantSeed & 0x00FC0000) >> 18;
     u16 spriteSeed =    (variantSeed & 0xFF000000) >> 24;
 
-    u16 palettes[4] = {0, 0, 0, 0};
-    u16 sprite = 0;
+    u8 spriteCount = sMonSpriteCount[species];
+    u8 paletteCount = sMonPaletteCount[species];
 
-    u8 paletteCount;
-    u16 paletteSeedUnion;
+    u16 sprite = 0;
+    u16 palettes[4] = {0, 0, 0, 0};
+    u16 variant;
+
+    u16 paletteSeed;
     u8 palette;
 
     switch (species) {
@@ -6336,12 +6339,15 @@ u16 GenerateMonVariant(u16 species, u32 variantSeed) {
         palettes[SUBPALETTE_SQUIRTLE_MOUTH] = palettes[SUBPALETTE_SQUIRTLE_SHELL];
         break;
     default:
+        // By default, select 1 of the species' sprites.
+        if (spriteCount > 1) {
+            sprite = spriteSeed % spriteCount;
+        }
+
         // By default, select 1 of the species' palettes and set it to all 4 slots.
-        // If no palettes are defined, then default to 0.
-        paletteCount = sMonPaletteCount[species];
-        if (paletteCount > 0) {
-            paletteSeedUnion = paletteSeed1 & paletteSeed2 & paletteSeed3 & paletteSeed4;
-            palette = paletteSeedUnion % paletteCount;
+        if (paletteCount > 1) {
+            paletteSeed = paletteSeed1 & paletteSeed2 & paletteSeed3 & paletteSeed4;
+            palette = paletteSeed % paletteCount;
             palettes[0] = palette;
             palettes[1] = palette;
             palettes[2] = palette;
@@ -6350,9 +6356,10 @@ u16 GenerateMonVariant(u16 species, u32 variantSeed) {
         break;
     }
 
-    DebugPrintf("set variant: 0x%x", (palettes[0]) | (palettes[1] << 3) | (palettes[2] << 6) | (palettes[3] << 9) | (sprite << 12));
+    variant = (palettes[0]) | (palettes[1] << 3) | (palettes[2] << 6) | (palettes[3] << 9) | (sprite << 12);
 
-    return (palettes[0]) | (palettes[1] << 3) | (palettes[2] << 6) | (palettes[3] << 9) | (sprite << 12);
+    DebugPrintf("set variant: 0x%x", variant);
+    return variant;
 }
 
 const u32 *GetMonFrontPicFromVariant(u16 species, u16 variant) {
@@ -6390,7 +6397,6 @@ const struct SpritePalette *GetMonPaletteStruct(struct Pokemon *mon) {
 #define REF_SUBPALETTE_MAP(index) gMonPaletteTable[species][palettes[sMonSubpaletteMap[species][index]]].data[index]
 
 EWRAM_DATA struct SpritePalette dynamicPalette = {0};
-EWRAM_DATA u16 dynamicPaletteData[16] = {0};
 const struct SpritePalette *GetMonPaletteStructFromVariant(u16 species, u16 variant) {
     u8 palettes[4] = {
             (variant & 0x0007),
@@ -6425,6 +6431,5 @@ const struct SpritePalette *GetMonPaletteStructFromVariant(u16 species, u16 vari
     dynamicPalette = dynamicPaletteBuffer;
 
     DebugPrintf("get variant: 0x%x", variant);
-
     return &dynamicPalette;
 }

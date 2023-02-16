@@ -38,21 +38,40 @@ def write_variant_constants(file, json_data):
     write("#ifndef GUARD_CONSTANTS_VARIANTS_H")
     write("#define GUARD_CONSTANTS_VARIANTS_H")
     write("")
+    
     for warning_line in warning_lines:
         write(warning_line)
     write("")
+    
     write("#define VARIANT_DEFAULT 0")
     write("#define VARIANT_RANDOM  8")
     write("")
     write("#define SUBPALETTE_ANY 0")
     write("")
+    
     for species in json_data["variant_data"]:
         species_name = species["species"]
-        palettes = species["palettes"]
-        for i, palette_name in enumerate(palettes):
-            write(f"#define PALETTE_{species_name.upper()}_{palette_name.upper()} {i}")
-        write(f"#define NUM_PALETTES_{species_name.upper()} {len(palettes)}")
+        
+        try:
+            sprites = species["sprites"]
+            for i, sprite_name in enumerate(sprites):
+                write(f"#define SPRITE_{species_name.upper()}_{sprite_name.upper()} {i}")
+            write(f"#define NUM_SPRITES_{species_name.upper()} {len(sprites)}")
+        except KeyError:
+            write(f"#define SPRITE_{species_name.upper()}_NORMAL 0")
+            write(f"#define NUM_SPRITES_{species_name.upper()} 1")
         write("")
+        
+        try:
+            palettes = species["palettes"]
+            for i, palette_name in enumerate(palettes):
+                write(f"#define PALETTE_{species_name.upper()}_{palette_name.upper()} {i}")
+            write(f"#define NUM_PALETTES_{species_name.upper()} {len(palettes)}")
+        except KeyError:
+            write(f"#define PALETTE_{species_name.upper()}_NORMAL 0")
+            write(f"#define NUM_PALETTES_{species_name.upper()} 1")
+        write("")
+        
         try:
             subpalettes = species["subpalettes"]
             for i, subpalette in enumerate(subpalettes):
@@ -60,7 +79,9 @@ def write_variant_constants(file, json_data):
                 write(f"#define SUBPALETTE_{species_name.upper()}_{subpalette_name.upper()} {i}")
         except KeyError:
             write(f"// No subpalettes defined for {species_name}")
+        
         write("")
+    
     write("#endif // GUARD_CONSTANTS_VARIANTS_H")
 
 def write_variant_tables(file, json_data):
@@ -70,18 +91,33 @@ def write_variant_tables(file, json_data):
     for warning_line in warning_lines:
         write(warning_line)
     write("")
-    variant_counts_label = json_data["variant_counts_label"]
-    write(f"static const u16 {variant_counts_label}[NUM_SPECIES] = {{")
+    
+    write("#define SPECIES_SPRITE_COUNT(species) [SPECIES_##species] = NUM_SPRITES_##species")
+    write("")
+    sprite_count_label = json_data["sprite_count_label"]
+    write(f"static const u8 {sprite_count_label}[NUM_SPECIES] = {{")
     for species in json_data["variant_data"]:
         species_name = species["species"]
-        write(f"{tab}[SPECIES_{species_name.upper()}] = NUM_PALETTES_{species_name.upper()},")
-    write("};")
+        write(f"{tab}SPECIES_SPRITE_COUNT({species_name.upper()}),")
+    write(f"}};")
     write("")
-    variant_parts_label = json_data["variant_parts_label"]
-    write(f"static const u8 {variant_parts_label}[NUM_SPECIES][16] = {{")
+    
+    write("#define SPECIES_PALETTE_COUNT(species) [SPECIES_##species] = NUM_PALETTES_##species")
+    write("")
+    palette_count_label = json_data["palette_count_label"]
+    write(f"static const u8 {palette_count_label}[NUM_SPECIES] = {{")
+    for species in json_data["variant_data"]:
+        species_name = species["species"]
+        write(f"{tab}SPECIES_PALETTE_COUNT({species_name.upper()}),")
+    write(f"}};")
+    write("")
+    
+    subpalette_map_label = json_data["subpalette_map_label"]
+    write(f"static const u8 {subpalette_map_label}[NUM_SPECIES][16] = {{")
     for species in json_data["variant_data"]:
         species_name = species["species"]
         write(f"{tab}[SPECIES_{species_name.upper()}] = {{")
+        
         try:
             subpalettes = species["subpalettes"]
         except KeyError:
@@ -94,7 +130,8 @@ def write_variant_tables(file, json_data):
                         subpalette_label = f"{species_name.upper()}_{subpalette['name']}"
             write(f"{tab}{tab}[{i}] = SUBPALETTE_{subpalette_label.upper()},")
         write(f"{tab}}},")
-    write("};")
+    
+    write(f"}};")
 
 def write_pokemon_graphics_header(file, json_data):
     def write(line):
