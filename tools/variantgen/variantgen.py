@@ -39,19 +39,19 @@ def write_variant_constants(constants_file, json_data):
     write("#define VARIANT_DEFAULT 0")
     write("#define VARIANT_RANDOM  8")
     write("")
-    write("#define VARIANT_PART_ANY 0")
+    write("#define SUBPALETTE_ANY 0")
     write("")
     for species in json_data["variant_data"]:
         species_name = species["species"]
-        variants = species["variants"]
-        for i, variant_name in enumerate(variants):
-            write(f"#define VARIANT_{species_name.upper()}_{variant_name.upper()} {i}")
-        write(f"#define NUM_VARIANT_{species_name.upper()} {len(variants)}")
+        palettes = species["palettes"]
+        for i, palette_name in enumerate(palettes):
+            write(f"#define PALETTE_{species_name.upper()}_{palette_name.upper()} {i}")
+        write(f"#define NUM_PALETTES_{species_name.upper()} {len(palettes)}")
         write("")
-        parts = species["parts"]
-        for i, part in enumerate(parts):
-            part_name = part["name"]
-            write(f"#define VARIANT_PART_{species_name.upper()}_{part_name.upper()} {i}")
+        subpalettes = species["subpalettes"]
+        for i, subpalette in enumerate(subpalettes):
+            subpalette_name = subpalette["name"]
+            write(f"#define SUBPALETTE_{species_name.upper()}_{subpalette_name.upper()} {i}")
         write("")
     write("#endif // GUARD_CONSTANTS_VARIANTS_H")
 
@@ -66,23 +66,23 @@ def write_variant_tables(tables_file, json_data):
     write(f"static const u16 {variant_counts_label}[NUM_SPECIES] = {{")
     for species in json_data["variant_data"]:
         species_name = species["species"]
-        write(f"{tab}{tab}NUM_VARIANT_{species_name.upper()},")
+        write(f"{tab}[SPECIES_{species_name.upper()}] = NUM_PALETTES_{species_name.upper()},")
     write("};")
     write("")
     variant_parts_label = json_data["variant_parts_label"]
     write(f"static const u8 {variant_parts_label}[NUM_SPECIES][16] = {{")
     for species in json_data["variant_data"]:
         species_name = species["species"]
-        write(f"{tab}{tab}[SPECIES_{species_name.upper()}] = {{")
-        parts = species["parts"]
+        write(f"{tab}[SPECIES_{species_name.upper()}] = {{")
+        subpalettes = species["subpalettes"]
         for i in range(16):
-            part_name = "ANY"
-            for part in parts:
-                for index in part["palette"]:
+            subpalette_label = "ANY"
+            for subpalette in subpalettes:
+                for index in subpalette["indexes"]:
                     if i == index:
-                        part_name = f"{species_name.upper()}_{part['name']}"
-            write(f"{tab}{tab}{tab}{tab}[{i}] = VARIANT_PART_{part_name.upper()},")
-        write(f"{tab}{tab}}},")
+                        subpalette_label = f"{species_name.upper()}_{subpalette['name']}"
+            write(f"{tab}{tab}[{i}] = SUBPALETTE_{subpalette_label.upper()},")
+        write(f"{tab}}},")
     write("};")
 
 if __name__ == "__main__":

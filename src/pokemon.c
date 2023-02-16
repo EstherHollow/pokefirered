@@ -6306,34 +6306,51 @@ bool8 IsTrainerRival(u16 trainerId) {
 }
 
 u8 GenerateMonVariant(u16 species, u32 variantSeed) {
-    u16 colorSeed1 =  (variantSeed & 0x0000003F);
-    u16 colorSeed2 =  (variantSeed & 0x00000FC0) >> 6;
-    u16 colorSeed3 =  (variantSeed & 0x0003F000) >> 12;
-    u16 colorSeed4 =  (variantSeed & 0x00FC0000) >> 18;
-    u16 patternSeed = (variantSeed & 0xFF000000) >> 24;
+    u16 paletteSeed1 =  (variantSeed & 0x0000003F);
+    u16 paletteSeed2 =  (variantSeed & 0x00000FC0) >> 6;
+    u16 paletteSeed3 =  (variantSeed & 0x0003F000) >> 12;
+    u16 paletteSeed4 =  (variantSeed & 0x00FC0000) >> 18;
+    u16 spriteSeed =    (variantSeed & 0xFF000000) >> 24;
 
-    u16 colors[4] = {0, 0, 0, 0};
-    u16 pattern = 0;
+    u16 palettes[4] = {0, 0, 0, 0};
+    u16 sprite = 0;
+
+    u8 paletteCount;
+    u16 paletteSeedUnion;
+    u8 palette;
 
     switch (species) {
     case SPECIES_BULBASAUR:
-        colors[VARIANT_PART_BULBASAUR_BODY] = colorSeed1 % (sPokemonNumVariants[species] - 1) + 1;
-        colors[VARIANT_PART_BULBASAUR_BULB] = colorSeed2 % (sPokemonNumVariants[species] - 1) + 1;
-        colors[VARIANT_PART_BULBASAUR_MOUTH] = colors[VARIANT_PART_BULBASAUR_BULB];
+        palettes[SUBPALETTE_BULBASAUR_BODY] = paletteSeed1 % (sMonPaletteCount[species] - 1) + 1;
+        palettes[SUBPALETTE_BULBASAUR_BULB] = paletteSeed2 % (sMonPaletteCount[species] - 1) + 1;
+        palettes[SUBPALETTE_BULBASAUR_MOUTH] = palettes[SUBPALETTE_BULBASAUR_BULB];
         break;
     case SPECIES_CHARMANDER:
-        colors[VARIANT_PART_CHARMANDER_BODY] = colorSeed1 % (sPokemonNumVariants[species] - 1) + 1;
-        colors[VARIANT_PART_CHARMANDER_FLAME] = colorSeed2 % (sPokemonNumVariants[species] - 1) + 1;
-        colors[VARIANT_PART_CHARMANDER_EYES] = colorSeed3 % (sPokemonNumVariants[species] - 1) + 1;
+        palettes[SUBPALETTE_CHARMANDER_BODY] = paletteSeed1 % (sMonPaletteCount[species] - 1) + 1;
+        palettes[SUBPALETTE_CHARMANDER_FLAME] = paletteSeed2 % (sMonPaletteCount[species] - 1) + 1;
+        palettes[SUBPALETTE_CHARMANDER_EYES] = paletteSeed3 % (sMonPaletteCount[species] - 1) + 1;
         break;
     case SPECIES_SQUIRTLE:
-        colors[VARIANT_PART_SQUIRTLE_BODY] = colorSeed1 % (sPokemonNumVariants[species] - 1) + 1;
-        colors[VARIANT_PART_SQUIRTLE_SHELL] = colorSeed2 % (sPokemonNumVariants[species] - 1) + 1;
-        colors[VARIANT_PART_SQUIRTLE_MOUTH] = colors[VARIANT_PART_SQUIRTLE_SHELL];
+        palettes[SUBPALETTE_SQUIRTLE_BODY] = paletteSeed1 % (sMonPaletteCount[species] - 1) + 1;
+        palettes[SUBPALETTE_SQUIRTLE_SHELL] = paletteSeed2 % (sMonPaletteCount[species] - 1) + 1;
+        palettes[SUBPALETTE_SQUIRTLE_MOUTH] = palettes[SUBPALETTE_SQUIRTLE_SHELL];
+        break;
+    default:
+        // By default, select 1 of the species' palettes and set it to all 4 slots.
+        // If no palettes are defined, then default to 0.
+        paletteCount = sMonPaletteCount[species];
+        if (paletteCount > 0) {
+            paletteSeedUnion = paletteSeed1 & paletteSeed2 & paletteSeed3 & paletteSeed4;
+            palette = paletteSeedUnion % paletteCount;
+            palettes[0] = palette;
+            palettes[1] = palette;
+            palettes[2] = palette;
+            palettes[3] = palette;
+        }
         break;
     }
 
-    return (colors[0]) | (colors[1] << 3) | (colors[2] << 6) | (colors[3] << 9) | (pattern << 12);
+    return (palettes[0]) | (palettes[1] << 3) | (palettes[2] << 6) | (palettes[3] << 9) | (sprite << 12);
 }
 
 const u16 *GetMonSpritePal(struct Pokemon *mon) {
@@ -6350,70 +6367,41 @@ const struct SpritePalette *GetMonSpritePalStruct(struct Pokemon *mon) {
     return GetMonSpritePalStructFromVariant(species, variant);
 }
 
+#define REF_SUBPALETTE_MAP(index) gMonPaletteTable[species][palettes[sMonSubpaletteMap[species][index]]].data[index]
+
 EWRAM_DATA struct SpritePalette dynamicPalette = {0};
 EWRAM_DATA u16 dynamicPaletteData[16] = {0};
-
 const struct SpritePalette *GetMonSpritePalStructFromVariant(u16 species, u16 variant) {
-//    DebugPrintf("variant: %d", variant);
+    u8 palettes[4] = {
+            (variant & 0x0007),
+            (variant & 0x0038) >> 3,
+            (variant & 0x01C0) >> 6,
+            (variant & 0x0E00) >> 9,
+    };
 
-    if (species == SPECIES_BULBASAUR || species == SPECIES_CHARMANDER || species == SPECIES_SQUIRTLE) {
-        u8 paletteIndexes[4] = {
-                (variant & 0x0007),
-                (variant & 0x0038) >> 3,
-                (variant & 0x01C0) >> 6,
-                (variant & 0x0E00) >> 9,
-        };
+    const u16 dataBuffer[16] = {
+            REF_SUBPALETTE_MAP(0),
+            REF_SUBPALETTE_MAP(1),
+            REF_SUBPALETTE_MAP(2),
+            REF_SUBPALETTE_MAP(3),
+            REF_SUBPALETTE_MAP(4),
+            REF_SUBPALETTE_MAP(5),
+            REF_SUBPALETTE_MAP(6),
+            REF_SUBPALETTE_MAP(7),
+            REF_SUBPALETTE_MAP(8),
+            REF_SUBPALETTE_MAP(9),
+            REF_SUBPALETTE_MAP(10),
+            REF_SUBPALETTE_MAP(11),
+            REF_SUBPALETTE_MAP(12),
+            REF_SUBPALETTE_MAP(13),
+            REF_SUBPALETTE_MAP(14),
+            REF_SUBPALETTE_MAP(15),
+    };
 
-        const u16 buffer[16] = {
-                gMonPaletteTable[species][paletteIndexes[sPokemonVariantParts[species][0]]].data[0],
-                gMonPaletteTable[species][paletteIndexes[sPokemonVariantParts[species][1]]].data[1],
-                gMonPaletteTable[species][paletteIndexes[sPokemonVariantParts[species][2]]].data[2],
-                gMonPaletteTable[species][paletteIndexes[sPokemonVariantParts[species][3]]].data[3],
-                gMonPaletteTable[species][paletteIndexes[sPokemonVariantParts[species][4]]].data[4],
-                gMonPaletteTable[species][paletteIndexes[sPokemonVariantParts[species][5]]].data[5],
-                gMonPaletteTable[species][paletteIndexes[sPokemonVariantParts[species][6]]].data[6],
-                gMonPaletteTable[species][paletteIndexes[sPokemonVariantParts[species][7]]].data[7],
-                gMonPaletteTable[species][paletteIndexes[sPokemonVariantParts[species][8]]].data[8],
-                gMonPaletteTable[species][paletteIndexes[sPokemonVariantParts[species][9]]].data[9],
-                gMonPaletteTable[species][paletteIndexes[sPokemonVariantParts[species][10]]].data[10],
-                gMonPaletteTable[species][paletteIndexes[sPokemonVariantParts[species][11]]].data[11],
-                gMonPaletteTable[species][paletteIndexes[sPokemonVariantParts[species][12]]].data[12],
-                gMonPaletteTable[species][paletteIndexes[sPokemonVariantParts[species][13]]].data[13],
-                gMonPaletteTable[species][paletteIndexes[sPokemonVariantParts[species][14]]].data[14],
-                gMonPaletteTable[species][paletteIndexes[sPokemonVariantParts[species][15]]].data[15],
-        };
-
-        struct SpritePalette dynamicPaletteBuffer = {
-                .data = buffer,
-                .tag = species,
-        };
-
-//        DebugPrintf("paletteIndexes[0]: %d", paletteIndexes[0]);
-//        DebugPrintf("paletteIndexes[1]: %d", paletteIndexes[1]);
-//        DebugPrintf("paletteIndexes[2]: %d", paletteIndexes[2]);
-//        DebugPrintf("paletteIndexes[3]: %d", paletteIndexes[3]);
-//
-//        DebugPrintf("buffer[0]: 0x%x", buffer[0]);
-//        DebugPrintf("buffer[1]: 0x%x", buffer[1]);
-//        DebugPrintf("buffer[2]: 0x%x", buffer[2]);
-//        DebugPrintf("buffer[3]: 0x%x", buffer[3]);
-//        DebugPrintf("buffer[4]: 0x%x", buffer[4]);
-//        DebugPrintf("buffer[5]: 0x%x", buffer[5]);
-//        DebugPrintf("buffer[6]: 0x%x", buffer[6]);
-//        DebugPrintf("buffer[7]: 0x%x", buffer[7]);
-//        DebugPrintf("buffer[8]: 0x%x", buffer[8]);
-//        DebugPrintf("buffer[9]: 0x%x", buffer[9]);
-//        DebugPrintf("buffer[10]: 0x%x", buffer[10]);
-//        DebugPrintf("buffer[11]: 0x%x", buffer[11]);
-//        DebugPrintf("buffer[12]: 0x%x", buffer[12]);
-//        DebugPrintf("buffer[13]: 0x%x", buffer[13]);
-//        DebugPrintf("buffer[14]: 0x%x", buffer[14]);
-//        DebugPrintf("buffer[15]: 0x%x", buffer[15]);
-
-        dynamicPalette = dynamicPaletteBuffer;
-
-        return &dynamicPalette;
-    }
-
-    return &gMonPaletteTable[species][variant];
+    struct SpritePalette dynamicPaletteBuffer = {
+            .data = dataBuffer,
+            .tag = species,
+    };
+    dynamicPalette = dynamicPaletteBuffer;
+    return &dynamicPalette;
 }

@@ -20,43 +20,49 @@
             "items": {
                 "type": "object",
                 "required": [
-                    "species",
-                    "variants",
-                    "parts"
+                    "species"
                 ],
                 "properties": {
                     "species": {
                         "type": "string"
                     },
-                    "variants": {
+                    "sprites": {
                         "type": "array",
                         "items": {
                             "type": "string"
                         },
-                        "minItems": 1,
                         "uniqueItems": true
                     },
-                    "parts": {
+                    "palettes": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "uniqueItems": true
+                    },
+                    "subpalettes": {
                         "type": "array",
                         "items": {
                             "type": "object",
                             "required": [
                                 "name",
-                                "palette"
+                                "indexes"
                             ],
                             "properties": {
                                 "name": {
                                     "type": "string"
                                 },
-                                "palette": {
+                                "indexes": {
                                     "type": "array",
                                     "items": {
-                                        "type": "integer"
-                                    }
+                                        "type": "integer",
+                                        "minimum": 0,
+                                        "exclusiveMaximum": 16
+                                    },
+                                    "minContains": 1
                                 }
                             }
                         },
-                        "minItems": 1,
                         "uniqueItems": true
                     }
                 }
