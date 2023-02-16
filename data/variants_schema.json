@@ -1,18 +1,22 @@
 {
-    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "__$schema__": "https://json-schema.org/draft/2019-09/schema",
     "type": "object",
     "default": {},
     "title": "Root Schema",
     "required": [
-        "variant_counts_label",
-        "variant_parts_label",
+        "sprite_count_label",
+        "palette_count_label",
+        "subpalette_map_label",
         "variant_data"
     ],
     "properties": {
-        "variant_counts_label": {
+        "palette_count_label": {
             "type": "string"
         },
-        "variant_parts_label": {
+        "sprite_count_label":{
+            "type": "string"
+        },
+        "subpalette_map_label": {
             "type": "string"
         },
         "variant_data": {
@@ -25,8 +29,7 @@
                 ],
                 "properties": {
                     "index": {
-                        "type": "integer",
-                        "minimum": 1
+                        "type": "integer"
                     },
                     "species": {
                         "type": "string"

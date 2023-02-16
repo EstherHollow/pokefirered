@@ -1,7 +1,8 @@
 {
     "$schema": "./variants_schema.json",
-    "variant_counts_label": "sMonPaletteCount",
-    "variant_parts_label": "sMonSubpaletteMap",
+    "sprite_count_label": "sMonSpriteCount",
+    "palette_count_label": "sMonPaletteCount",
+    "subpalette_map_label": "sMonSubpaletteMap",
     "variant_data": [
         {
             "index": 1,
@@ -134,6 +135,24 @@
             ]
         },
         {
+            "index": 74,
+            "species": "geodude",
+            "palettes": [
+                "white",
+                "orange",
+                "red"
+            ]
+        },
+        {
+            "index": 95,
+            "species": "onix",
+            "palettes": [
+                "white",
+                "yellow",
+                "blue"
+            ]
+        },
+        {
             "index": 114,
             "species": "tangela",
             "palettes": [
@@ -240,6 +259,25 @@
             ]
         },
         {
+            "index": 213,
+            "species": "shuckle",
+            "palettes": [
+                "red",
+                "blue",
+                "yellow"
+            ],
+            "subpalettes": [
+                {
+                    "name": "shell",
+                    "indexes": [1, 2, 8, 9, 11, 12, 13, 14, 15]
+                },
+                {
+                    "name": "flesh",
+                    "indexes": [3, 4, 5, 6]
+                }
+            ]
+        },
+        {
             "index": 228,
             "species": "houndour",
             "palettes": [
@@ -318,6 +356,15 @@
                     "name": "horn",
                     "indexes": [5, 6, 7, 8]
                 }
+            ]
+        },
+        {
+            "index": 304,
+            "species": "aron",
+            "palettes": [
+                "white",
+                "black",
+                "yellow"
             ]
         }
     ]

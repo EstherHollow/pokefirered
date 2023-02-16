@@ -440,15 +440,13 @@ u8 *MonSpritesGfxManager_GetSpritePtr(u8 bufferId);
 bool8 IsTrainerRival(u16 trainerId);
 u16 GenerateMonVariant(u16 species, u32 variantSeed);
 
-extern struct SpritePalette dynamicPalette;
-extern u16 dynamicPaletteData[16];
-
 const u32 *GetMonFrontPicFromVariant(u16 species, u16 variant);
 const u32 *GetMonBackPicFromVariant(u16 species, u16 variant);
 
 const struct CompressedSpriteSheet *GetMonFrontPicStructFromVariant(u16 species, u16 variant);
 const struct CompressedSpriteSheet *GetMonBackPicStructFromVariant(u16 species, u16 variant);
 
+extern struct SpritePalette dynamicPalette;
 const u16 *GetMonPalette(struct Pokemon *mon);
 const u16 *GetMonPaletteFromVariant(u16 species, u16 variant);
 const struct SpritePalette *GetMonPaletteStruct(struct Pokemon *mon);
