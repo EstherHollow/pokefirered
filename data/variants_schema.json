@@ -31,6 +31,7 @@
                         "items": {
                             "type": "string"
                         },
+                        "maxItems": 4,
                         "uniqueItems": true
                     },
                     "palettes": {
@@ -38,6 +39,7 @@
                         "items": {
                             "type": "string"
                         },
+                        "maxItems": 8,
                         "uniqueItems": true
                     },
                     "subpalettes": {
@@ -59,10 +61,12 @@
                                         "minimum": 0,
                                         "exclusiveMaximum": 16
                                     },
-                                    "minContains": 1
+                                    "minContains": 1,
+                                    "uniqueItems": true
                                 }
                             }
                         },
+                        "maxItems": 4,
                         "uniqueItems": true
                     }
                 }

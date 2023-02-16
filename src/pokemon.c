@@ -6305,7 +6305,7 @@ bool8 IsTrainerRival(u16 trainerId) {
     }
 }
 
-u8 GenerateMonVariant(u16 species, u32 variantSeed) {
+u16 GenerateMonVariant(u16 species, u32 variantSeed) {
     u16 paletteSeed1 =  (variantSeed & 0x0000003F);
     u16 paletteSeed2 =  (variantSeed & 0x00000FC0) >> 6;
     u16 paletteSeed3 =  (variantSeed & 0x0003F000) >> 12;
@@ -6349,6 +6349,8 @@ u8 GenerateMonVariant(u16 species, u32 variantSeed) {
         }
         break;
     }
+
+    DebugPrintf("set variant: 0x%x", (palettes[0]) | (palettes[1] << 3) | (palettes[2] << 6) | (palettes[3] << 9) | (sprite << 12));
 
     return (palettes[0]) | (palettes[1] << 3) | (palettes[2] << 6) | (palettes[3] << 9) | (sprite << 12);
 }
@@ -6421,5 +6423,8 @@ const struct SpritePalette *GetMonPaletteStructFromVariant(u16 species, u16 vari
             .tag = species,
     };
     dynamicPalette = dynamicPaletteBuffer;
+
+    DebugPrintf("get variant: 0x%x", variant);
+
     return &dynamicPalette;
 }

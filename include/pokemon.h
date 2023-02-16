@@ -480,7 +480,7 @@ void OakSpeechNidoranFFreeResources(void);
 void *OakSpeechNidoranFGetBuffer(u8 bufferId);
 
 bool8 IsTrainerRival(u16 trainerId);
-u8 GenerateMonVariant(u16 species, u32 variantSeed);
+u16 GenerateMonVariant(u16 species, u32 variantSeed);
 
 extern struct SpritePalette dynamicPalette;
 extern u16 dynamicPaletteData[16];
