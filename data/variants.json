@@ -74,6 +74,26 @@
                     "palette": [10]
                 }
             ]
+        },
+        {
+            "species": "zigzagoon",
+            "variants": [
+                "original"
+            ],
+            "parts": [
+                {
+                    "name": "body_dark",
+                    "palette": [1, 2, 3, 4, 6, 7, 14]
+                },
+                {
+                    "name": "body_light",
+                    "palette": [5, 8, 9, 13]
+                },
+                {
+                    "name": "eyes",
+                    "palette": [10, 11, 12]
+                }
+            ]
         }
     ]
 }
