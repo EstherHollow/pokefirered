@@ -6353,25 +6353,43 @@ u8 GenerateMonVariant(u16 species, u32 variantSeed) {
     return (palettes[0]) | (palettes[1] << 3) | (palettes[2] << 6) | (palettes[3] << 9) | (sprite << 12);
 }
 
-const u16 *GetMonSpritePal(struct Pokemon *mon) {
-    return GetMonSpritePalStruct(mon)->data;
+const u32 *GetMonFrontPicFromVariant(u16 species, u16 variant) {
+    return GetMonFrontPicStructFromVariant(species, variant)->data;
 }
 
-const u16 *GetMonSpritePalFromVariant(u16 species, u16 variant) {
-    return GetMonSpritePalStructFromVariant(species, variant)->data;
+const u32 *GetMonBackPicFromVariant(u16 species, u16 variant) {
+    return GetMonBackPicStructFromVariant(species, variant)->data;
 }
 
-const struct SpritePalette *GetMonSpritePalStruct(struct Pokemon *mon) {
+const struct CompressedSpriteSheet *GetMonFrontPicStructFromVariant(u16 species, u16 variant) {
+    u8 sprite = (variant & 0x3000) >> 12;
+    return &gMonFrontPicTable[species][sprite];
+}
+
+const struct CompressedSpriteSheet *GetMonBackPicStructFromVariant(u16 species, u16 variant) {
+    u8 sprite = (variant & 0x3000) >> 12;
+    return &gMonBackPicTable[species][sprite];
+}
+
+const u16 *GetMonPalette(struct Pokemon *mon) {
+    return GetMonPaletteStruct(mon)->data;
+}
+
+const u16 *GetMonPaletteFromVariant(u16 species, u16 variant) {
+    return GetMonPaletteStructFromVariant(species, variant)->data;
+}
+
+const struct SpritePalette *GetMonPaletteStruct(struct Pokemon *mon) {
     u16 species = GetMonData(mon, MON_DATA_SPECIES2, NULL);
     u16 variant = GetMonData(mon, MON_DATA_VARIANT, NULL);
-    return GetMonSpritePalStructFromVariant(species, variant);
+    return GetMonPaletteStructFromVariant(species, variant);
 }
 
 #define REF_SUBPALETTE_MAP(index) gMonPaletteTable[species][palettes[sMonSubpaletteMap[species][index]]].data[index]
 
 EWRAM_DATA struct SpritePalette dynamicPalette = {0};
 EWRAM_DATA u16 dynamicPaletteData[16] = {0};
-const struct SpritePalette *GetMonSpritePalStructFromVariant(u16 species, u16 variant) {
+const struct SpritePalette *GetMonPaletteStructFromVariant(u16 species, u16 variant) {
     u8 palettes[4] = {
             (variant & 0x0007),
             (variant & 0x0038) >> 3,

@@ -1708,8 +1708,6 @@ bool8 DaycareMonReceivedMail(void)
     return BufferDayCareMonReceivedMail(&gSaveBlock1Ptr->daycare, gSpecialVar_0x8004);
 }
 
-extern const struct CompressedSpriteSheet gMonFrontPicTable[][4];
-
 static u8 EggHatchCreateMonSprite(u8 a0, u8 switchID, u8 pokeID, u16 *speciesLoc)
 {
     u8 r4 = 0;
@@ -1731,14 +1729,15 @@ static u8 EggHatchCreateMonSprite(u8 a0, u8 switchID, u8 pokeID, u16 *speciesLoc
     case 0:
     {
         u16 species = GetMonData(mon, MON_DATA_SPECIES);
+        u16 variant = GetMonData(mon, MON_DATA_VARIANT);
         u32 pid = GetMonData(mon, MON_DATA_PERSONALITY);
-        HandleLoadSpecialPokePic(&gMonFrontPicTable[species][0], gMonSpritesGfxPtr->sprites[(a0 * 2) + 1], species, pid);
-        LoadSpritePalette(GetMonSpritePalStruct(mon));
+        HandleLoadSpecialPokePic(GetMonFrontPicStructFromVariant(species, variant), gMonSpritesGfxPtr->sprites[(a0 * 2) + 1], species, variant, pid);
+        LoadSpritePalette(GetMonPaletteStruct(mon));
         *speciesLoc = species;
     }
         break;
     case 1:
-        SetMultiuseSpriteTemplateToPokemon(GetMonSpritePalStruct(mon)->tag, r4);
+        SetMultiuseSpriteTemplateToPokemon(GetMonPaletteStruct(mon)->tag, r4);
         spriteID = CreateSprite(&gMultiuseSpriteTemplate, 120, 70, 6);
         gSprites[spriteID].invisible = TRUE;
         gSprites[spriteID].callback = SpriteCallbackDummy;

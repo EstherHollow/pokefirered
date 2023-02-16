@@ -106,18 +106,19 @@ struct {
     /*0xEC*/ u16 bg2alpha;
     /*0xEE*/ bool8 isLinkTrade;
     /*0xF0*/ u16 monSpecies[2];
-    /*0xF4*/ u16 cachedMapMusic;
-    /*0xF6*/ u8 unk_F6;
-    /*0xF8*/ u16 questLogSpecies[2];
-    /*0xFC*/ u8 linkPartnerName[7];
-    /*0x103*/ u8 filler_103[1];
-    /*0x104*/ u8 textColor[3];
-    /*0x107*/ u8 filler_107[1];
-    /*0x108*/ bool8 isCableTrade;
-    /*0x109*/ u8 win0left;
-    /*0x10A*/ u8 win0top;
-    /*0x10B*/ u8 win0right;
-    /*0x10C*/ u8 win0bottom;
+    /*0xF4*/ u16 monVariants[2];
+    /*0xF8*/ u16 cachedMapMusic;
+    /*0xFA*/ u8 unk_F6;
+    /*0xFC*/ u16 questLogSpecies[2];
+    /*0xFE*/ u8 linkPartnerName[7];
+    /*0x105*/ u8 filler_103[1];
+    /*0x106*/ u8 textColor[3];
+    /*0x109*/ u8 filler_107[1];
+    /*0x10A*/ bool8 isCableTrade;
+    /*0x10B*/ u8 win0left;
+    /*0x10C*/ u8 win0top;
+    /*0x10D*/ u8 win0right;
+    /*0x10E*/ u8 win0bottom;
 } static EWRAM_DATA * sTradeAnim = NULL;
 
 static void SpriteCB_LinkMonGlow(struct Sprite *sprite);
@@ -739,6 +740,7 @@ static void LoadTradeMonPic(u8 whichParty, u8 state)
     struct Pokemon * mon = NULL;
     u16 species;
     u32 personality;
+    u16 variant;
 
     if (whichParty == TRADE_PLAYER)
     {
@@ -758,19 +760,20 @@ static void LoadTradeMonPic(u8 whichParty, u8 state)
         // Load graphics
         species = GetMonData(mon, MON_DATA_SPECIES2);
         personality = GetMonData(mon, MON_DATA_PERSONALITY);
+        variant = GetMonData(mon, MON_DATA_VARIANT);
 
         if (whichParty == TRADE_PLAYER)
-            HandleLoadSpecialPokePic(&gMonFrontPicTable[species][0], gMonSpritesGfxPtr->sprites[1], species, personality);
+            HandleLoadSpecialPokePic(GetMonFrontPicStructFromVariant(species, variant), gMonSpritesGfxPtr->sprites[1], species, variant, personality);
         else
-            HandleLoadSpecialPokePic_DontHandleDeoxys(&gMonFrontPicTable[species][0], gMonSpritesGfxPtr->sprites[whichParty * 2 + 1], species, personality);
+            HandleLoadSpecialPokePic_DontHandleDeoxys(GetMonFrontPicStructFromVariant(species, variant), gMonSpritesGfxPtr->sprites[whichParty * 2 + 1], species, variant, personality);
 
-        LoadSpritePalette(GetMonSpritePalStruct(mon));
+        LoadSpritePalette(GetMonPaletteStruct(mon));
         sTradeAnim->monSpecies[whichParty] = species;
         sTradeAnim->monPersonalities[whichParty] = personality;
         break;
     case 1:
         // Create sprite
-        SetMultiuseSpriteTemplateToPokemon(GetMonSpritePalStruct(mon)->tag, pos);
+        SetMultiuseSpriteTemplateToPokemon(GetMonPaletteStruct(mon)->tag, pos);
         sTradeAnim->monSpriteIds[whichParty] = CreateSprite(&gMultiuseSpriteTemplate, 120, 60, 6);
         gSprites[sTradeAnim->monSpriteIds[whichParty]].invisible = TRUE;
         gSprites[sTradeAnim->monSpriteIds[whichParty]].callback = SpriteCallbackDummy;
@@ -1706,9 +1709,10 @@ static bool8 DoTradeAnim_Cable(void)
     case STATE_POKEBALL_ARRIVE_WAIT:
         if (gSprites[sTradeAnim->bouncingPokeballSpriteId].callback == SpriteCallbackDummy)
         {
-            HandleLoadSpecialPokePic(&gMonFrontPicTable[sTradeAnim->monSpecies[TRADE_PARTNER]][0],
+            HandleLoadSpecialPokePic(GetMonFrontPicStructFromVariant(sTradeAnim->monSpecies[TRADE_PARTNER], sTradeAnim->monVariants[TRADE_PARTNER]),
                                       gMonSpritesGfxPtr->sprites[B_POSITION_OPPONENT_RIGHT],
                                       sTradeAnim->monSpecies[TRADE_PARTNER],
+                                      sTradeAnim->monVariants[TRADE_PARTNER],
                                       sTradeAnim->monPersonalities[TRADE_PARTNER]);
             sTradeAnim->state++;
         }
@@ -2206,9 +2210,10 @@ static bool8 DoTradeAnim_Wireless(void)
     case STATE_POKEBALL_ARRIVE_WAIT:
         if (gSprites[sTradeAnim->bouncingPokeballSpriteId].callback == SpriteCallbackDummy)
         {
-            HandleLoadSpecialPokePic(&gMonFrontPicTable[sTradeAnim->monSpecies[TRADE_PARTNER]][0],
+            HandleLoadSpecialPokePic(GetMonFrontPicStructFromVariant(sTradeAnim->monSpecies[TRADE_PARTNER], sTradeAnim->monVariants[TRADE_PARTNER]),
                                      gMonSpritesGfxPtr->sprites[B_POSITION_OPPONENT_RIGHT],
                                      sTradeAnim->monSpecies[TRADE_PARTNER],
+                                     sTradeAnim->monVariants[TRADE_PARTNER],
                                      sTradeAnim->monPersonalities[TRADE_PARTNER]);
             sTradeAnim->state++;
         }
