@@ -6,6 +6,7 @@ static const u16 sPokemonNumVariants[NUM_SPECIES] = {
         NUM_VARIANT_BULBASAUR,
         NUM_VARIANT_CHARMANDER,
         NUM_VARIANT_SQUIRTLE,
+        NUM_VARIANT_ZIGZAGOON,
 };
 
 static const u8 sPokemonVariantParts[NUM_SPECIES][16] = {
@@ -62,5 +63,23 @@ static const u8 sPokemonVariantParts[NUM_SPECIES][16] = {
                 [13] = VARIANT_PART_SQUIRTLE_BODY,
                 [14] = VARIANT_PART_SQUIRTLE_BODY,
                 [15] = VARIANT_PART_SQUIRTLE_BODY,
+        },
+        [SPECIES_ZIGZAGOON] = {
+                [0] = VARIANT_PART_ANY,
+                [1] = VARIANT_PART_ZIGZAGOON_BODY_DARK,
+                [2] = VARIANT_PART_ZIGZAGOON_BODY_DARK,
+                [3] = VARIANT_PART_ZIGZAGOON_BODY_DARK,
+                [4] = VARIANT_PART_ZIGZAGOON_BODY_DARK,
+                [5] = VARIANT_PART_ZIGZAGOON_BODY_LIGHT,
+                [6] = VARIANT_PART_ZIGZAGOON_BODY_DARK,
+                [7] = VARIANT_PART_ZIGZAGOON_BODY_DARK,
+                [8] = VARIANT_PART_ZIGZAGOON_BODY_LIGHT,
+                [9] = VARIANT_PART_ZIGZAGOON_BODY_LIGHT,
+                [10] = VARIANT_PART_ZIGZAGOON_EYES,
+                [11] = VARIANT_PART_ZIGZAGOON_EYES,
+                [12] = VARIANT_PART_ZIGZAGOON_EYES,
+                [13] = VARIANT_PART_ZIGZAGOON_BODY_LIGHT,
+                [14] = VARIANT_PART_ZIGZAGOON_BODY_DARK,
+                [15] = VARIANT_PART_ANY,
         },
 };
