@@ -6,7 +6,7 @@
         {
             "species": "bulbasaur",
             "palettes": [
-                "original",
+                "normal",
                 "red",
                 "green",
                 "blue",
@@ -30,7 +30,7 @@
         {
             "species": "charmander",
             "palettes": [
-                "original",
+                "normal",
                 "red",
                 "green",
                 "blue",
@@ -54,7 +54,7 @@
         {
             "species": "squirtle",
             "palettes": [
-                "original",
+                "normal",
                 "red",
                 "green",
                 "blue",
@@ -76,9 +76,27 @@
             ]
         },
         {
+            "species": "rattata",
+            "palettes": [
+                "purple",
+                "brown",
+                "white"
+            ],
+            "subpalettes": [
+                {
+                    "name": "body",
+                    "indexes": [1, 2, 3, 4, 7, 8, 9, 10, 11, 13, 14, 15]
+                },
+                {
+                    "name": "mouth_and_eyes",
+                    "indexes": [5, 6]
+                }
+            ]
+        },
+        {
             "species": "zigzagoon",
             "palettes": [
-                "original"
+                "normal"
             ],
             "subpalettes": [
                 {

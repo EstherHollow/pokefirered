@@ -9692,8 +9692,8 @@ static void Cmd_displaydexinfo(void)
         if (!IsDma3ManagerBusyWithBgCopy())
         {
             CreateMonPicSprite_HandleDeoxys(species,
-                                            gBattleMons[B_POSITION_OPPONENT_LEFT].personality,
                                             gBattleMons[B_POSITION_OPPONENT_LEFT].variant,
+                                            gBattleMons[B_POSITION_OPPONENT_LEFT].personality,
                                             TRUE,
                                             120,
                                             64,
