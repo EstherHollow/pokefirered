@@ -1,97 +1,97 @@
 {
     "$schema": "./variants_schema.json",
-    "variant_counts_label": "sPokemonNumVariants",
-    "variant_parts_label": "sPokemonVariantParts",
+    "variant_counts_label": "sMonPaletteCount",
+    "variant_parts_label": "sMonSubpaletteMap",
     "variant_data": [
         {
             "species": "bulbasaur",
-            "variants": [
+            "palettes": [
                 "original",
                 "red",
                 "green",
                 "blue",
                 "pink"
             ],
-            "parts": [
+            "subpalettes": [
                 {
                     "name": "body",
-                    "palette": [2, 3, 4, 5, 10]
+                    "indexes": [2, 3, 4, 5, 10]
                 },
                 {
                     "name": "bulb",
-                    "palette": [11, 12, 13, 14]
+                    "indexes": [11, 12, 13, 14]
                 },
                 {
                     "name": "mouth",
-                    "palette": [1, 6, 7, 8, 9]
+                    "indexes": [1, 6, 7, 8, 9]
                 }
             ]
         },
         {
             "species": "charmander",
-            "variants": [
+            "palettes": [
                 "original",
                 "red",
                 "green",
                 "blue",
                 "white"
             ],
-            "parts": [
+            "subpalettes": [
                 {
                     "name": "body",
-                    "palette": [1, 2, 4, 5, 6, 9, 10, 11, 12]
+                    "indexes": [1, 2, 4, 5, 6, 9, 10, 11, 12]
                 },
                 {
                     "name": "flame",
-                    "palette": [7, 8]
+                    "indexes": [7, 8]
                 },
                 {
                     "name": "eyes",
-                    "palette": [3, 13, 14, 15]
+                    "indexes": [3, 13, 14, 15]
                 }
             ]
         },
         {
             "species": "squirtle",
-            "variants": [
+            "palettes": [
                 "original",
                 "red",
                 "green",
                 "blue",
                 "pink"
             ],
-            "parts": [
+            "subpalettes": [
                 {
                     "name": "body",
-                    "palette": [11, 12, 13, 14, 15]
+                    "indexes": [11, 12, 13, 14, 15]
                 },
                 {
                     "name": "shell",
-                    "palette": [1, 2, 3, 4, 5, 6, 7, 8, 9]
+                    "indexes": [1, 2, 3, 4, 5, 6, 7, 8, 9]
                 },
                 {
                     "name": "mouth",
-                    "palette": [10]
+                    "indexes": [10]
                 }
             ]
         },
         {
             "species": "zigzagoon",
-            "variants": [
+            "palettes": [
                 "original"
             ],
-            "parts": [
+            "subpalettes": [
                 {
                     "name": "body_dark",
-                    "palette": [1, 2, 3, 4, 6, 7, 14]
+                    "indexes": [1, 2, 3, 4, 6, 7, 14]
                 },
                 {
                     "name": "body_light",
-                    "palette": [5, 8, 9, 13]
+                    "indexes": [5, 8, 9, 13]
                 },
                 {
                     "name": "eyes",
-                    "palette": [10, 11, 12]
+                    "indexes": [10, 11, 12]
                 }
             ]
         }

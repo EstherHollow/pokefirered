@@ -7,12 +7,12 @@
 
 struct PokemonVariant
 {
-    u16 pattern:2;
-    u16 color1:3;
-    u16 color2:3;
-    u16 color3:3;
-    u16 color4:3;
-    u16 tone:2;
+    u16 sprite:2;
+    u16 palette1:3;
+    u16 palette2:3;
+    u16 palette3:3;
+    u16 palette4:3;
+    u16 filter:2;
 };
 
 struct PokemonSubstruct0

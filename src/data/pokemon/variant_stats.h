@@ -29,7 +29,7 @@ const struct VariantStats gVariantStats[][8] =
 {
         [SPECIES_NONE] = {0},
         [SPECIES_BULBASAUR] = {
-                [VARIANT_BULBASAUR_RED] = {
+                [PALETTE_BULBASAUR_RED] = {
                         .variantFlags = VARIANT_FLAG_STATS | VARIANT_FLAG_TYPE,
                         .hpMod = 0,
                         .attackMod = MAINTAIN_BST,
@@ -40,7 +40,7 @@ const struct VariantStats gVariantStats[][8] =
                         .type1 = TYPE_GRASS,
                         .type2 = TYPE_FIRE,
                 },
-                [VARIANT_BULBASAUR_GREEN] = {
+                [PALETTE_BULBASAUR_GREEN] = {
                         .variantFlags = VARIANT_FLAG_STATS | VARIANT_FLAG_TYPE,
                         .hpMod = 0,
                         .attackMod = MAINTAIN_BST,
@@ -51,7 +51,7 @@ const struct VariantStats gVariantStats[][8] =
                         .type1 = TYPE_GRASS,
                         .type2 = TYPE_GRASS,
                 },
-                [VARIANT_BULBASAUR_BLUE] = {
+                [PALETTE_BULBASAUR_BLUE] = {
                         .variantFlags = VARIANT_FLAG_STATS | VARIANT_FLAG_TYPE,
                         .hpMod = 150,
                         .attackMod = 0,
@@ -62,7 +62,7 @@ const struct VariantStats gVariantStats[][8] =
                         .type1 = TYPE_GRASS,
                         .type2 = TYPE_WATER,
                 },
-                [VARIANT_BULBASAUR_PINK] = {
+                [PALETTE_BULBASAUR_PINK] = {
                         .variantFlags = VARIANT_FLAG_NONE,
                 },
         },
