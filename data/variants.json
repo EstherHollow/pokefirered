@@ -4,6 +4,7 @@
     "variant_parts_label": "sMonSubpaletteMap",
     "variant_data": [
         {
+            "index": 1,
             "species": "bulbasaur",
             "palettes": [
                 "normal",
@@ -28,6 +29,7 @@
             ]
         },
         {
+            "index": 4,
             "species": "charmander",
             "palettes": [
                 "normal",
@@ -52,6 +54,7 @@
             ]
         },
         {
+            "index": 7,
             "species": "squirtle",
             "palettes": [
                 "normal",
@@ -76,32 +79,212 @@
             ]
         },
         {
+            "index": 10,
+            "species": "caterpie",
+            "palettes": [
+                "green",
+                "blue",
+                "orange"
+            ]
+        },
+        {
+            "index": 13,
+            "species": "weedle",
+            "palettes": [
+                "yellow",
+                "red",
+                "purple"
+            ]
+        },
+        {
+            "index": 16,
+            "species": "pidgey",
+            "palettes": [
+                "yellow",
+                "red",
+                "blue"
+            ]
+        },
+        {
+            "index": 19,
             "species": "rattata",
             "palettes": [
                 "purple",
                 "brown",
                 "white"
+            ]
+        },
+        {
+            "index": 25,
+            "species": "pikachu",
+            "palettes": [
+                "yellow",
+                "orange",
+                "red",
+                "blue"
+            ]
+        },
+        {
+            "index": 56,
+            "species": "mankey",
+            "palettes": [
+                "yellow",
+                "red",
+                "white"
+            ]
+        },
+        {
+            "index": 114,
+            "species": "tangela",
+            "palettes": [
+                "blue",
+                "green",
+                "red"
             ],
             "subpalettes": [
                 {
-                    "name": "body",
-                    "indexes": [1, 2, 3, 4, 7, 8, 9, 10, 11, 13, 14, 15]
+                    "name": "body_1",
+                    "indexes": [1, 2, 3, 4, 12, 14, 15]
                 },
                 {
-                    "name": "mouth_and_eyes",
-                    "indexes": [5, 6]
+                    "name": "body_2",
+                    "indexes": [8, 9, 10, 11]
+                },
+                {
+                    "name": "feet",
+                    "indexes": [5, 6, 7]
                 }
             ]
         },
         {
+            "index": 147,
+            "species": "dratini",
+            "palettes": [
+                "purple",
+                "blue",
+                "red",
+                "black"
+            ]
+        },
+        {
+            "index": 163,
+            "species": "hoothoot",
+            "palettes": [
+                "brown",
+                "black",
+                "white"
+            ]
+        },
+        {
+            "index": 167,
+            "species": "spinarak",
+            "palettes": [
+                "green",
+                "blue",
+                "brown"
+            ],
+            "subpalettes": [
+                {
+                    "name": "body",
+                    "indexes": [2, 3, 4, 5, 6]
+                },
+                {
+                    "name": "legs",
+                    "indexes": [7, 8, 9]
+                },
+                {
+                    "name": "fangs",
+                    "indexes": [10, 11, 12]
+                },
+                {
+                    "name": "eyes",
+                    "indexes": [1, 13, 14, 15]
+                }
+            ]
+        },
+        {
+            "index": 183,
+            "species": "marill",
+            "palettes": [
+                "blue",
+                "purple",
+                "white",
+                "yellow"
+            ]
+        },
+        {
+            "index": 187,
+            "species": "hoppip",
+            "sprites": [
+                "normal",
+                "beta"
+            ],
+            "palettes": [
+                "red",
+                "pink",
+                "purple"
+            ],
+            "subpalettes": [
+                {
+                    "name": "body",
+                    "indexes": [2, 3, 4, 5, 15]
+                },
+                {
+                    "name": "leaves",
+                    "indexes": [7, 8, 9, 10]
+                },
+                {
+                    "name": "eyes",
+                    "indexes": [12, 13]
+                }
+            ]
+        },
+        {
+            "index": 228,
+            "species": "houndour",
+            "palettes": [
+                "black",
+                "blue",
+                "red",
+                "yellow"
+            ]
+        },
+        {
+            "index": 283,
+            "species": "surskit",
+            "palettes": [
+                "blue",
+                "green",
+                "yellow"
+            ],
+            "subpalettes": [
+                {
+                    "name": "body",
+                    "indexes": [1, 2, 3, 4, 8, 12]
+                },
+                {
+                    "name": "hat",
+                    "indexes": [5, 6, 7, 11]
+                },
+                {
+                    "name": "cheeks",
+                    "indexes": [9, 10]
+                }
+            ]
+        },
+        {
+            "index": 263,
             "species": "zigzagoon",
             "palettes": [
-                "normal"
+                "brown",
+                "white",
+                "pink",
+                "green"
             ],
             "subpalettes": [
                 {
                     "name": "body_dark",
-                    "indexes": [1, 2, 3, 4, 6, 7, 14]
+                    "indexes": [1, 2, 3, 4, 6, 7, 14, 15]
                 },
                 {
                     "name": "body_light",
@@ -110,6 +293,30 @@
                 {
                     "name": "eyes",
                     "indexes": [10, 11, 12]
+                }
+            ]
+        },
+        {
+            "index": 280,
+            "species": "ralts",
+            "palettes": [
+                "green",
+                "orange",
+                "pink",
+                "white"
+            ],
+            "subpalettes": [
+                {
+                    "name": "body",
+                    "indexes": [1, 2, 3, 4, 15]
+                },
+                {
+                    "name": "head",
+                    "indexes": [11, 12, 13, 14]
+                },
+                {
+                    "name": "horn",
+                    "indexes": [5, 6, 7, 8]
                 }
             ]
         }
