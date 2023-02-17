@@ -5,6 +5,7 @@
 #include "random.h"
 #include "util.h"
 #include "constants/abilities.h"
+#include "constants/battle_ai.h"
 #include "constants/item_effects.h"
 #include "constants/items.h"
 #include "constants/moves.h"
@@ -425,122 +426,161 @@ static void ModulateByTypeEffectiveness(u8 atkType, u8 defType1, u8 defType2, u8
     }
 }
 
-u8 GetMostSuitableMonToSwitchInto(void)
-{
-    u8 opposingBattler;
-    u8 bestDmg; // Note : should be changed to u32 for obvious reasons.
-    u8 bestMonId;
-    u8 battlerIn1, battlerIn2;
-    s32 i, j;
-    u8 invalidMons;
-    u16 move;
+u8 FindAce(void) {
+    u8 highestLvl = 0;
+    u8 highestMon = 0;
+    s32 i;
 
-    if (*(gBattleStruct->monToSwitchIntoId + gActiveBattler) != PARTY_SIZE)
+    for (i = 0; i < PARTY_SIZE; ++i) {
+        u16 species = GetMonData(&gEnemyParty[i], MON_DATA_SPECIES);
+        u8 level = GetMonData(&gEnemyParty[i], MON_DATA_LEVEL);
+
+        if (species != SPECIES_NONE && level > highestLvl) {
+            highestLvl = level;
+            highestMon = i;
+        }
+    }
+
+    return highestMon;
+}
+
+u8 GetMostSuitableMonToSwitchInto(void) {
+    u8 battler1, battler2;
+    u8 flankingBattler;
+    u8 opposingBattler;
+
+    u32 bestDamage;
+    u8 bestMon;
+    u8 invalidMons, skippingMons;
+    u8 monCount;
+    u16 species, move;
+    u8 type1, type2, damage;
+    s32 i, j;
+
+    if (*(gBattleStruct->monToSwitchIntoId + gActiveBattler) != PARTY_SIZE) {
         return *(gBattleStruct->monToSwitchIntoId + gActiveBattler);
-    if (gBattleTypeFlags & BATTLE_TYPE_DOUBLE)
-    {
-        battlerIn1 = gActiveBattler;
-        if (gAbsentBattlerFlags & gBitTable[GetBattlerAtPosition(GetBattlerPosition(gActiveBattler) ^ BIT_FLANK)])
-            battlerIn2 = gActiveBattler;
-        else
-            battlerIn2 = GetBattlerAtPosition(GetBattlerPosition(gActiveBattler) ^ BIT_FLANK);
-        // UB: It considers the opponent only player's side even though it can battle alongside player.
+    }
+
+    // Find the active battlers.
+    if (gBattleTypeFlags & BATTLE_TYPE_DOUBLE) {
+        battler1 = gActiveBattler;
+
+        flankingBattler = GetBattlerAtPosition(GetBattlerPosition(gActiveBattler) ^ BIT_FLANK);
+        if (gAbsentBattlerFlags & gBitTable[flankingBattler]) {
+            battler2 = gActiveBattler;
+        }
+        else {
+            battler2 = flankingBattler;
+        }
+
+        // Pick one of the opposing battlers at random.
         opposingBattler = Random() & BIT_FLANK;
-        if (gAbsentBattlerFlags & gBitTable[opposingBattler])
+        if (gAbsentBattlerFlags & gBitTable[opposingBattler]) {
             opposingBattler ^= BIT_FLANK;
+        }
     }
-    else
-    {
+    else {
+        battler1 = gActiveBattler;
+        battler2 = gActiveBattler;
         opposingBattler = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
-        battlerIn1 = gActiveBattler;
-        battlerIn2 = gActiveBattler;
     }
+
     invalidMons = 0;
-    while (invalidMons != 0x3F) // All mons are invalid.
-    {
-        bestDmg = 0;
-        bestMonId = 6;
-        // Find the mon whose type is the most suitable offensively.
-        for (i = 0; i < PARTY_SIZE; ++i)
-        {
-            u16 species = GetMonData(&gEnemyParty[i], MON_DATA_SPECIES);
-            if (species != SPECIES_NONE
-                && GetMonData(&gEnemyParty[i], MON_DATA_HP) != 0
-                && !(gBitTable[i] & invalidMons)
-                && gBattlerPartyIndexes[battlerIn1] != i
-                && gBattlerPartyIndexes[battlerIn2] != i
-                && i != *(gBattleStruct->monToSwitchIntoId + battlerIn1)
-                && i != *(gBattleStruct->monToSwitchIntoId + battlerIn2))
-            {
-                u8 type1 = gBaseStats[species].type1;
-                u8 type2 = gBaseStats[species].type2;
-                u8 typeDmg = 10;
-                ModulateByTypeEffectiveness(gBattleMons[opposingBattler].type1, type1, type2, &typeDmg);
-                ModulateByTypeEffectiveness(gBattleMons[opposingBattler].type2, type1, type2, &typeDmg);
-                if (bestDmg < typeDmg)
-                {
-                    bestDmg = typeDmg;
-                    bestMonId = i;
+    for (i = 0; i < PARTY_SIZE; ++i) {
+        if (gBattlerPartyIndexes[battler1] == i ||
+            gBattlerPartyIndexes[battler2] == i ||
+            *(gBattleStruct->monToSwitchIntoId + battler1) == i ||
+            *(gBattleStruct->monToSwitchIntoId + battler2) == i ||
+            GetMonData(&gEnemyParty[i], MON_DATA_SPECIES) == SPECIES_NONE ||
+            GetMonData(&gEnemyParty[i], MON_DATA_HP) == 0) {
+            invalidMons |= gBitTable[i];
+        }
+    }
+
+    if (gTrainers[gTrainerBattleOpponent_A].aiFlags & AI_SCRIPT_SAVE_ACE_FOR_LAST) {
+        monCount = 0;
+        for (i = 0; i < PARTY_SIZE; ++i) {
+            if (!(invalidMons & gBitTable[i])) {
+                monCount++;
+            }
+        }
+
+        if (monCount > 1) {
+            invalidMons |= gBitTable[FindAce()];
+        }
+    }
+
+    skippingMons = invalidMons;
+    while (skippingMons != 0x3F /*11 1111*/) {
+        bestDamage = 0;
+        bestMon = PARTY_SIZE;
+
+        for (i = 0; i < PARTY_SIZE; ++i) {
+            if (skippingMons & gBitTable[i]) continue;
+
+            species = GetMonData(&gEnemyParty[i], MON_DATA_SPECIES);
+            type1 = gBaseStats[species].type1;
+            type2 = gBaseStats[species].type2;
+            damage = 10;
+            ModulateByTypeEffectiveness(gBattleMons[opposingBattler].type1, type1, type2, &damage);
+            ModulateByTypeEffectiveness(gBattleMons[opposingBattler].type2, type1, type2, &damage);
+
+            if (damage > bestDamage) {
+                bestDamage = damage;
+                bestMon = i;
+            }
+        }
+
+        if (bestMon != PARTY_SIZE) {
+            for (i = 0; i < MAX_MON_MOVES; ++i) {
+                move = GetMonData(&gEnemyParty[bestMon], MON_DATA_MOVE1 + i);
+                if (move != MOVE_NONE) {
+                    if (TypeCalc(move, gActiveBattler, opposingBattler) & MOVE_RESULT_SUPER_EFFECTIVE) {
+                        break;
+                    }
                 }
             }
-            else
-            {
-                invalidMons |= gBitTable[i];
-            }
-        }
-        // Ok, we know the mon has the right typing but does it have at least one super effective move?
-        if (bestMonId != PARTY_SIZE)
-        {
-            for (i = 0; i < MAX_MON_MOVES; ++i)
-            {
-                move = GetMonData(&gEnemyParty[bestMonId], MON_DATA_MOVE1 + i);
-                if (move != MOVE_NONE && TypeCalc(move, gActiveBattler, opposingBattler) & MOVE_RESULT_SUPER_EFFECTIVE)
-                    break;
-            }
-            if (i != MAX_MON_MOVES)
-                return bestMonId; // Has both the typing and at least one super effective move.
 
-            invalidMons |= gBitTable[bestMonId]; // Sorry buddy, we want something better.
+            if (i != MAX_MON_MOVES) {
+                return bestMon;
+            }
+            else {
+                skippingMons |= gBitTable[bestMon];
+            }
         }
-        else
-        {
-            invalidMons = 0x3F; // No viable mon to switch.
+        else {
+            skippingMons = 0x3F;
         }
     }
+
     gDynamicBasePower = 0;
     gBattleStruct->dynamicMoveType = 0;
     gBattleScripting.dmgMultiplier = 1;
     gMoveResultFlags = 0;
     gCritMultiplier = 1;
-    bestDmg = 0;
-    bestMonId = 6;
-    // If we couldn't find the best mon in terms of typing, find the one that deals most damage.
-    for (i = 0; i < PARTY_SIZE; ++i)
-    {
-        if (((u16)(GetMonData(&gEnemyParty[i], MON_DATA_SPECIES)) == SPECIES_NONE)
-         || (GetMonData(&gEnemyParty[i], MON_DATA_HP) == 0)
-         || (gBattlerPartyIndexes[battlerIn1] == i)
-         || (gBattlerPartyIndexes[battlerIn2] == i)
-         || (i == *(gBattleStruct->monToSwitchIntoId + battlerIn1))
-         || (i == *(gBattleStruct->monToSwitchIntoId + battlerIn2)))
-            continue;
-        for (j = 0; j < MAX_MON_MOVES; ++j)
-        {
-            move = GetMonData(&gEnemyParty[i], MON_DATA_MOVE1 + j);
+
+    bestDamage = 0;
+    bestMon = PARTY_SIZE;
+
+    for (i = 0; i < PARTY_SIZE; ++i) {
+        if (invalidMons & gBitTable[i]) continue;
+
+        for (j = 0; j < MAX_MON_MOVES; ++j) {
+            move = GetMonData(&gEnemyParty[bestMon], MON_DATA_MOVE1 + i);
             gBattleMoveDamage = 0;
-            if (move != MOVE_NONE && gBattleMoves[move].power != 1)
-            {
+
+            if (move != MOVE_NONE && gBattleMoves[move].power != 1) {
                 AI_CalcDmg(gActiveBattler, opposingBattler);
                 TypeCalc(move, gActiveBattler, opposingBattler);
             }
-            if (bestDmg < gBattleMoveDamage)
-            {
-                bestDmg = gBattleMoveDamage;
-                bestMonId = i;
+            if (gBattleMoveDamage > bestDamage) {
+                bestDamage = gBattleMoveDamage;
+                bestMon = i;
             }
         }
     }
-    return bestMonId;
+
+    return bestMon;
 }
 
 static u8 GetAI_ItemType(u8 itemId, const u8 *itemEffect) // NOTE: should take u16 as item Id argument

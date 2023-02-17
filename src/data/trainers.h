@@ -4139,7 +4139,7 @@ const struct Trainer gTrainers[] = {
         .trainerName = _("BROCK"),
         .items = {},
         .doubleBattle = TRUE,
-        .aiFlags = AI_SCRIPT_CHECK_BAD_MOVE | AI_SCRIPT_TRY_TO_FAINT | AI_SCRIPT_CHECK_VIABILITY,
+        .aiFlags = AI_SCRIPT_CHECK_BAD_MOVE | AI_SCRIPT_TRY_TO_FAINT | AI_SCRIPT_CHECK_VIABILITY | AI_SCRIPT_SAVE_ACE_FOR_LAST,
         .party = NO_ITEM_CUSTOM_MOVES(sParty_LeaderBrock),
     },
     [TRAINER_LEADER_MISTY] = {
