@@ -150,6 +150,16 @@
                 "white",
                 "yellow",
                 "blue"
+            ],
+            "subpalettes": [
+                {
+                    "name": "body_1",
+                    "indexes": [1, 10, 11, 12, 13, 14, 15]
+                },
+                {
+                    "name": "body_2",
+                    "indexes": [4, 5, 6, 7, 8, 9]
+                }
             ]
         },
         {

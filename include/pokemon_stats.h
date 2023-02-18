@@ -28,22 +28,21 @@ struct VariantStats
 
 extern const struct VariantStats gVariantStats[][8];
 
-u8 GetBaseHP(u16 species);
-u8 GetBaseAttack(u16 species);
-u8 GetBaseDefense(u16 species);
-u8 GetBaseSpeed(u16 species);
-u8 GetBaseSpAttack(u16 species);
-u8 GetBaseSpDefense(u16 species);
+const u8 GetBaseHP(u16 species);
+const u8 GetBaseAttack(u16 species);
+const u8 GetBaseDefense(u16 species);
+const u8 GetBaseSpeed(u16 species);
+const u8 GetBaseSpAttack(u16 species);
+const u8 GetBaseSpDefense(u16 species);
 
-u8 GetVariantHP(u16 species, u16 variant);
-u8 GetVariantAttack(u16 species, u16 variant);
-u8 GetVariantDefense(u16 species, u16 variant);
-u8 GetVariantSpeed(u16 species, u16 variant);
-u8 GetVariantSpAttack(u16 species, u16 variant);
-u8 GetVariantSpDefense(u16 species, u16 variant);
-u8 GetVariantType1(u16 species, u16 variant);
-u8 GetVariantType2(u16 species, u16 variant);
-//u8 GetVariantAbility(u16 species);
-u8 GetVariantLearnset(u16 species, u16 variant, u16 *moves);
+const u8 GetVariantHP(u16 species, u16 variant);
+const u8 GetVariantAttack(u16 species, u16 variant);
+const u8 GetVariantDefense(u16 species, u16 variant);
+const u8 GetVariantSpeed(u16 species, u16 variant);
+const u8 GetVariantSpAttack(u16 species, u16 variant);
+const u8 GetVariantSpDefense(u16 species, u16 variant);
+const u8 GetVariantType1(u16 species, u16 variant);
+const u8 GetVariantType2(u16 species, u16 variant);
+const u8 GetVariantLearnset(u16 species, u16 variant, u16 *moves);
 
 #endif // GUARD_POKEMON_STATS_H

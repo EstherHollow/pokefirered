@@ -1,32 +1,32 @@
 #include "global.h"
 #include "pokemon_stats.h"
 
-u8 GetBaseHP(u16 species) {
+const u8 GetBaseHP(u16 species) {
     return gBaseStats[species].baseHP;
 }
 
-u8 GetBaseAttack(u16 species) {
+const u8 GetBaseAttack(u16 species) {
     return gBaseStats[species].baseAttack;
 }
 
-u8 GetBaseDefense(u16 species) {
+const u8 GetBaseDefense(u16 species) {
     return gBaseStats[species].baseDefense;
 }
 
-u8 GetBaseSpeed(u16 species) {
+const u8 GetBaseSpeed(u16 species) {
     return gBaseStats[species].baseSpeed;
 }
 
-u8 GetBaseSpAttack(u16 species) {
+const u8 GetBaseSpAttack(u16 species) {
     return gBaseStats[species].baseSpAttack;
 }
 
-u8 GetBaseSpDefense(u16 species) {
+const u8 GetBaseSpDefense(u16 species) {
     return gBaseStats[species].baseSpDefense;
 }
 
 
-u8 GetVariantHP(u16 species, u16 variant) {
+const u8 GetVariantHP(u16 species, u16 variant) {
     u32 baseTotal;
     u32 variantTotal;
     u8 numStats;
@@ -79,7 +79,7 @@ u8 GetVariantHP(u16 species, u16 variant) {
     }
 }
 
-u8 GetVariantAttack(u16 species, u16 variant) {
+const u8 GetVariantAttack(u16 species, u16 variant) {
     u32 baseTotal;
     u32 variantTotal;
     u8 numStats;
@@ -132,7 +132,7 @@ u8 GetVariantAttack(u16 species, u16 variant) {
     }
 }
 
-u8 GetVariantDefense(u16 species, u16 variant) {
+const u8 GetVariantDefense(u16 species, u16 variant) {
     u32 baseTotal;
     u32 variantTotal;
     u8 numStats;
@@ -185,7 +185,7 @@ u8 GetVariantDefense(u16 species, u16 variant) {
     }
 }
 
-u8 GetVariantSpeed(u16 species, u16 variant) {
+const u8 GetVariantSpeed(u16 species, u16 variant) {
     u32 baseTotal;
     u32 variantTotal;
     u8 numStats;
@@ -238,7 +238,7 @@ u8 GetVariantSpeed(u16 species, u16 variant) {
     }
 }
 
-u8 GetVariantSpAttack(u16 species, u16 variant) {
+const u8 GetVariantSpAttack(u16 species, u16 variant) {
     u32 baseTotal;
     u32 variantTotal;
     u8 numStats;
@@ -291,7 +291,7 @@ u8 GetVariantSpAttack(u16 species, u16 variant) {
     }
 }
 
-u8 GetVariantSpDefense(u16 species, u16 variant) {
+const u8 GetVariantSpDefense(u16 species, u16 variant) {
     u32 baseTotal;
     u32 variantTotal;
     u8 numStats;
@@ -344,7 +344,7 @@ u8 GetVariantSpDefense(u16 species, u16 variant) {
     }
 }
 
-u8 GetVariantType1(u16 species, u16 variant) {
+const u8 GetVariantType1(u16 species, u16 variant) {
     if ((gVariantStats[species][variant].variantFlags & VARIANT_FLAG_TYPE) > 0) {
         return gVariantStats[species][variant].type1;
     }
@@ -353,7 +353,7 @@ u8 GetVariantType1(u16 species, u16 variant) {
     }
 }
 
-u8 GetVariantType2(u16 species, u16 variant) {
+const u8 GetVariantType2(u16 species, u16 variant) {
     if ((gVariantStats[species][variant].variantFlags & VARIANT_FLAG_TYPE) > 0) {
         return gVariantStats[species][variant].type2;
     }
@@ -362,9 +362,9 @@ u8 GetVariantType2(u16 species, u16 variant) {
     }
 }
 
-u8 GetVariantLearnset(u16 species, u16 variant, u16 *learnset) {
+const u8 GetVariantLearnset(u16 species, u16 variant, u16 *learnset) {
     u8 count = 0;
-    u8 baseIndex = 0;
+    u16 baseIndex = 0;
     u16 variantIndex = 0;
     u16 baseLevel;
     u16 variantLevel;

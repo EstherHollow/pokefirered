@@ -113,6 +113,9 @@ static const struct TrainerMonNoItemDefaultMoves sParty_LeaderWallace[] = {DUMMY
 static const struct TrainerMonNoItemDefaultMoves sParty_EliteFourGlacia[] = {DUMMY_TRAINER_MON};
 static const struct TrainerMonNoItemDefaultMoves sParty_EliteFourDrake[] = {DUMMY_TRAINER_MON};
 
+#define VARIANT_ONE_TONE(palette) ((palette) | (palette << 3) | (palette << 6) | (palette << 9))
+#define VARIANT_TWO_TONE(palette1, palette2) ((palette1) | (palette2 << 3) | (palette1 << 6) | (palette2 << 9))
+
 // Start of actual trainer data
 static const struct TrainerMonNoItemDefaultMoves sParty_YoungsterBen[] = {
         {
@@ -6481,7 +6484,7 @@ static const struct TrainerMonNoItemCustomMoves sParty_LeaderBrock[] = {
                 .iv = MAX_IVS,
                 .lvl = 14,
                 .species = SPECIES_ONIX,
-                .variant = PALETTE_ONIX_BLUE,
+                .variant = VARIANT_ONE_TONE(PALETTE_ONIX_BLUE),
                 .moves = {MOVE_TACKLE, MOVE_BIND, MOVE_ROCK_TOMB, MOVE_NONE},
         },
 };

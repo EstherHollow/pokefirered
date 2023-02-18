@@ -6339,12 +6339,10 @@ u16 GenerateMonVariant(u16 species, u32 variantSeed) {
         palettes[SUBPALETTE_SQUIRTLE_MOUTH] = palettes[SUBPALETTE_SQUIRTLE_SHELL];
         break;
     default:
-        // By default, select 1 of the species' sprites.
         if (spriteCount > 1) {
             sprite = spriteSeed % spriteCount;
         }
 
-        // By default, select 1 of the species' palettes and set it to all 4 slots.
         if (paletteCount > 1) {
             paletteSeed = paletteSeed0 ^ paletteSeed1 ^ paletteSeed2 ^ paletteSeed3;
             palette = paletteSeed % paletteCount;
