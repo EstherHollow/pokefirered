@@ -711,6 +711,7 @@ extern const u8 gNameChoice_Green[];
 extern const u8 gNameChoice_Red[];
 extern const u8 gNameChoice_Fire[];
 extern const u8 gNameChoice_Leaf[];
+extern const u8 gNameChoice_Blue[];
 extern const u8 gNameChoice_Gary[];
 extern const u8 gNameChoice_Kaz[];
 extern const u8 gNameChoice_Toru[];
