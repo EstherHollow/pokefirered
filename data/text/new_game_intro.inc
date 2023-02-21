@@ -13,6 +13,9 @@ gNameChoice_Leaf::
 gNameChoice_Fire::
     .string "FIRE$"
 
+gNameChoice_Blue::
+    .string "BLUE$"
+
 gNameChoice_Gary::
     .string "GARY$"
 

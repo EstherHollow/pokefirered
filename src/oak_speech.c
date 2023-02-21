@@ -594,7 +594,7 @@ static const u8 *const sMaleNameChoices[] =
 #elif defined(LEAFGREEN)
     gNameChoice_Green,
     gNameChoice_Leaf,
-    gNameChoice_Gary,
+    gNameChoice_Ash,
     gNameChoice_Kaz,
     gNameChoice_Toru,
 #endif
@@ -645,13 +645,13 @@ static const u8 *const sFemaleNameChoices[] =
 static const u8 *const sRivalNameChoices[] =
 {
 #if defined(FIRERED)
-    gNameChoice_Green,
+    gNameChoice_Blue,
     gNameChoice_Gary,
     gNameChoice_Kaz,
     gNameChoice_Toru
 #elif defined(LEAFGREEN)
-    gNameChoice_Red,
-    gNameChoice_Ash,
+    gNameChoice_Blue,
+    gNameChoice_Gary,
     gNameChoice_Kene,
     gNameChoice_Geki
 #endif
