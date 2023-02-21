@@ -65,6 +65,20 @@ ViridianForest_Text_CharliePostBattle::
     .string "BUG POKéMON evolve quickly.\n"
     .string "They're a lot of fun!$"
 
+ViridianForest_Text_TeraIntro::
+    .string "I can't find one!\p"
+    .string "I can't find a pikachu anywhere!$"
+
+ViridianForest_Text_TeraDefeat::
+    .string "If I had a pikachu,\n"
+    .string "I would have won!$"
+
+ViridianForest_Text_TeraPostBattle::
+    .string "Some pokemon are harder to find\n"
+    .string "than others.\p"
+    .string "Finding one with your favorite\n"
+    .string "color is even harder.$"
+
 ViridianForest_Text_RanOutOfPokeBalls::
     .string "I was throwing POKé BALLS to\n"
     .string "catch POKéMON, and I ran out.\p"

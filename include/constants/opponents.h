@@ -751,7 +751,9 @@
 //       only space for 25 additional trainers before trainer flag space overflows.
 //       MAX_TRAINERS_COUNT can be increased but will take up additional saveblock space
 
-#define NUM_TRAINERS                             743
+#define TRAINER_LASS_TERA                        743
+
+#define NUM_TRAINERS                             744
 #define MAX_TRAINERS_COUNT                       768
 
 #endif  // GUARD_CONSTANTS_OPPONENTS_H

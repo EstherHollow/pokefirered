@@ -122,7 +122,9 @@ const struct VariantStats gVariantStats[][8] =
         [SPECIES_GASTLY] = {0},
         [SPECIES_HAUNTER] = {0},
         [SPECIES_GENGAR] = {0},
-        [SPECIES_ONIX] = {0},
+        [SPECIES_ONIX] = {
+                [PALETTE_ONIX_CRYSTAL] = VARIANT_ALTER_TYPE(TYPE_ROCK, TYPE_FAIRY),
+        },
         [SPECIES_DROWZEE] = {0},
         [SPECIES_HYPNO] = {0},
         [SPECIES_KRABBY] = {0},
