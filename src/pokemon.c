@@ -6475,9 +6475,6 @@ u16 GenerateMonVariant(u16 species, u32 variantSeed) {
     u16 palettes[4] = {0, 0, 0, 0};
     u16 variant;
 
-    u16 paletteSeed;
-    u8 palette;
-
     switch (species) {
     case SPECIES_BULBASAUR:
         palettes[SUBPALETTE_BULBASAUR_BODY] = paletteSeed0 % (paletteCount - 1) + 1;
@@ -6498,14 +6495,11 @@ u16 GenerateMonVariant(u16 species, u32 variantSeed) {
         if (spriteCount > 1) {
             sprite = spriteSeed % spriteCount;
         }
-
         if (paletteCount > 1) {
-            paletteSeed = paletteSeed0 ^ paletteSeed1 ^ paletteSeed2 ^ paletteSeed3;
-            palette = paletteSeed % paletteCount;
-            palettes[0] = palette;
-            palettes[1] = palette;
-            palettes[2] = palette;
-            palettes[3] = palette;
+            palettes[0] = paletteSeed0 % paletteCount;
+            palettes[1] = paletteSeed1 % paletteCount;
+            palettes[2] = paletteSeed2 % paletteCount;
+            palettes[3] = paletteSeed3 % paletteCount;
         }
         break;
     }

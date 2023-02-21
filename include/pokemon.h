@@ -12,7 +12,7 @@ struct PokemonVariant
     u16 palette2:3;
     u16 palette3:3;
     u16 palette4:3;
-    u16 filter:2;
+    u16 sparkle:2;
 };
 
 struct PokemonSubstruct0

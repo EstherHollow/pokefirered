@@ -11,8 +11,7 @@
                 "normal",
                 "red",
                 "green",
-                "blue",
-                "pink"
+                "blue"
             ],
             "subpalettes": [
                 {
@@ -36,8 +35,7 @@
                 "normal",
                 "red",
                 "green",
-                "blue",
-                "white"
+                "blue"
             ],
             "subpalettes": [
                 {
@@ -61,8 +59,7 @@
                 "normal",
                 "red",
                 "green",
-                "blue",
-                "pink"
+                "blue"
             ],
             "subpalettes": [
                 {
@@ -83,26 +80,66 @@
             "index": 10,
             "species": "caterpie",
             "palettes": [
+                "green"
+            ]
+        },
+        {
+            "index": 11,
+            "species": "metapod",
+            "palettes": [
+                "yellow",
                 "green",
+                "blue"
+            ]
+        },
+        {
+            "index": 12,
+            "species": "butterfree",
+            "palettes": [
+                "white",
+                "red",
+                "green",
+                "cyan",
                 "blue",
-                "orange"
+                "pink"
             ]
         },
         {
             "index": 13,
             "species": "weedle",
             "palettes": [
-                "yellow",
+                "orange"
+            ]
+        },
+        {
+            "index": 14,
+            "species": "kakuna",
+            "palettes": [
                 "red",
-                "purple"
+                "orange",
+                "yellow"
+            ]
+        },
+        {
+            "index": 15,
+            "species": "beedrill",
+            "palettes": [
+                "pink",
+                "red",
+                "tangelo",
+                "orange",
+                "gold",
+                "yellow"
             ]
         },
         {
             "index": 16,
             "species": "pidgey",
             "palettes": [
-                "yellow",
+                "brown",
                 "red",
+                "orange",
+                "yellow",
                 "blue"
             ]
         },
@@ -110,8 +147,10 @@
             "index": 19,
             "species": "rattata",
             "palettes": [
-                "purple",
                 "brown",
+                "red",
+                "purple",
+                "blue",
                 "white"
             ]
         },
@@ -139,6 +178,9 @@
             "species": "geodude",
             "palettes": [
                 "white",
+                "green",
+                "brown",
+                "brown2",
                 "orange",
                 "red"
             ]
@@ -147,9 +189,10 @@
             "index": 95,
             "species": "onix",
             "palettes": [
-                "white",
-                "yellow",
-                "blue"
+                "bronze",
+                "silver",
+                "gold",
+                "crystal"
             ],
             "subpalettes": [
                 {
@@ -166,9 +209,14 @@
             "index": 114,
             "species": "tangela",
             "palettes": [
-                "blue",
+                "red",
+                "orange",
+                "lime",
                 "green",
-                "red"
+                "teal",
+                "blue",
+                "indigo",
+                "purple"
             ],
             "subpalettes": [
                 {
@@ -189,8 +237,8 @@
             "index": 147,
             "species": "dratini",
             "palettes": [
-                "purple",
                 "blue",
+                "purple",
                 "red",
                 "black"
             ]
@@ -200,6 +248,7 @@
             "species": "hoothoot",
             "palettes": [
                 "brown",
+                "dark_brown",
                 "black",
                 "white"
             ]
@@ -210,7 +259,8 @@
             "palettes": [
                 "green",
                 "blue",
-                "brown"
+                "brown",
+                "yellow"
             ],
             "subpalettes": [
                 {
@@ -235,8 +285,10 @@
             "index": 183,
             "species": "marill",
             "palettes": [
-                "blue",
                 "purple",
+                "blue",
+                "light_blue",
+                "green",
                 "white",
                 "yellow"
             ]
@@ -249,23 +301,10 @@
                 "beta"
             ],
             "palettes": [
-                "red",
+                "violet",
                 "pink",
-                "purple"
-            ],
-            "subpalettes": [
-                {
-                    "name": "body",
-                    "indexes": [2, 3, 4, 5, 15]
-                },
-                {
-                    "name": "leaves",
-                    "indexes": [7, 8, 9, 10]
-                },
-                {
-                    "name": "eyes",
-                    "indexes": [12, 13]
-                }
+                "red",
+                "orange"
             ]
         },
         {
@@ -273,8 +312,9 @@
             "species": "shuckle",
             "palettes": [
                 "red",
+                "yellow",
                 "blue",
-                "yellow"
+                "purple"
             ],
             "subpalettes": [
                 {
@@ -292,42 +332,23 @@
             "species": "houndour",
             "palettes": [
                 "black",
-                "blue",
                 "red",
-                "yellow"
-            ]
-        },
-        {
-            "index": 283,
-            "species": "surskit",
-            "palettes": [
+                "purple",
                 "blue",
-                "green",
                 "yellow"
-            ],
-            "subpalettes": [
-                {
-                    "name": "body",
-                    "indexes": [1, 2, 3, 4, 8, 12]
-                },
-                {
-                    "name": "hat",
-                    "indexes": [5, 6, 7, 11]
-                },
-                {
-                    "name": "cheeks",
-                    "indexes": [9, 10]
-                }
             ]
         },
         {
             "index": 263,
             "species": "zigzagoon",
             "palettes": [
-                "brown",
-                "white",
-                "pink",
-                "green"
+                "chocolate",
+                "caramel",
+                "vanilla",
+                "strawberry",
+                "neopolitan",
+                "mint",
+                "lemon"
             ],
             "subpalettes": [
                 {
@@ -349,23 +370,12 @@
             "species": "ralts",
             "palettes": [
                 "green",
-                "orange",
+                "blue",
                 "pink",
+                "red",
+                "orange",
+                "yellow",
                 "white"
-            ],
-            "subpalettes": [
-                {
-                    "name": "body",
-                    "indexes": [1, 2, 3, 4, 15]
-                },
-                {
-                    "name": "head",
-                    "indexes": [11, 12, 13, 14]
-                },
-                {
-                    "name": "horn",
-                    "indexes": [5, 6, 7, 8]
-                }
             ]
         },
         {
@@ -374,6 +384,7 @@
             "palettes": [
                 "white",
                 "black",
+                "blue",
                 "yellow"
             ]
         }

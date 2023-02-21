@@ -6484,7 +6484,7 @@ static const struct TrainerMonNoItemCustomMoves sParty_LeaderBrock[] = {
                 .iv = MAX_IVS,
                 .lvl = 14,
                 .species = SPECIES_ONIX,
-                .variant = VARIANT_ONE_TONE(PALETTE_ONIX_BLUE),
+                .variant = VARIANT_ONE_TONE(PALETTE_ONIX_CRYSTAL),
                 .moves = {MOVE_TACKLE, MOVE_BIND, MOVE_ROCK_TOMB, MOVE_NONE},
         },
 };
