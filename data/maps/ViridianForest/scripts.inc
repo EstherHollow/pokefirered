@@ -62,3 +62,8 @@ ViridianForest_EventScript_Charlie::
 	trainerbattle_single TRAINER_BUG_CATCHER_CHARLIE, ViridianForest_Text_CharlieIntro, ViridianForest_Text_CharlieDefeat
 	msgbox ViridianForest_Text_CharliePostBattle, MSGBOX_AUTOCLOSE
 	end
+
+ViridianForest_EventScript_Tera::
+    trainerbattle_single TRAINER_LASS_TERA, ViridianForest_Text_TeraIntro, ViridianForest_Text_TeraDefeat
+    msgbox ViridianForest_Text_TeraPostBattle, MSGBOX_AUTOCLOSE
+    end
