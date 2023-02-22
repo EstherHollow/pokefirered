@@ -27,37 +27,38 @@ const u8 GetBaseSpDefense(u16 species) {
 
 
 const u8 GetVariantHP(u16 species, u16 variant) {
+    u16 palette = variant & 0x0007;
     u32 baseTotal;
     u32 variantTotal;
     u8 numStats;
 
-    if ((gVariantStats[species][variant].variantFlags & VARIANT_FLAG_STATS) > 0 && gVariantStats[species][variant].hpMod > 0) {
-        if (gVariantStats[species][variant].hpMod == MAINTAIN_BST) {
+    if ((gVariantStats[species][palette].variantFlags & VARIANT_FLAG_STATS) > 0 && gVariantStats[species][palette].hpMod > 0) {
+        if (gVariantStats[species][palette].hpMod == MAINTAIN_BST) {
             baseTotal = 0;
             variantTotal = 0;
             numStats = 0;
 
-            if (gVariantStats[species][variant].attackMod != MAINTAIN_BST) {
+            if (gVariantStats[species][palette].attackMod != MAINTAIN_BST) {
                 baseTotal += GetBaseAttack(species);
                 variantTotal += GetVariantAttack(species, variant);
                 numStats++;
             }
-            if (gVariantStats[species][variant].defenseMod != MAINTAIN_BST) {
+            if (gVariantStats[species][palette].defenseMod != MAINTAIN_BST) {
                 baseTotal += GetBaseDefense(species);
                 variantTotal += GetVariantDefense(species, variant);
                 numStats++;
             }
-            if (gVariantStats[species][variant].speedMod != MAINTAIN_BST) {
+            if (gVariantStats[species][palette].speedMod != MAINTAIN_BST) {
                 baseTotal += GetBaseSpeed(species);
                 variantTotal += GetVariantSpeed(species, variant);
                 numStats++;
             }
-            if (gVariantStats[species][variant].spAttackMod != MAINTAIN_BST) {
+            if (gVariantStats[species][palette].spAttackMod != MAINTAIN_BST) {
                 baseTotal += GetBaseSpAttack(species);
                 variantTotal += GetVariantSpAttack(species, variant);
                 numStats++;
             }
-            if (gVariantStats[species][variant].spDefenseMod != MAINTAIN_BST) {
+            if (gVariantStats[species][palette].spDefenseMod != MAINTAIN_BST) {
                 baseTotal += GetBaseSpDefense(species);
                 variantTotal += GetVariantSpDefense(species, variant);
                 numStats++;
@@ -71,7 +72,7 @@ const u8 GetVariantHP(u16 species, u16 variant) {
             }
         }
         else {
-            return (GetBaseHP(species) * gVariantStats[species][variant].hpMod) / 100;
+            return (GetBaseHP(species) * gVariantStats[species][palette].hpMod) / 100;
         }
     }
     else {
@@ -80,37 +81,38 @@ const u8 GetVariantHP(u16 species, u16 variant) {
 }
 
 const u8 GetVariantAttack(u16 species, u16 variant) {
+    u16 palette = variant & 0x0007;
     u32 baseTotal;
     u32 variantTotal;
     u8 numStats;
 
-    if ((gVariantStats[species][variant].variantFlags & VARIANT_FLAG_STATS) > 0 && gVariantStats[species][variant].attackMod > 0) {
-        if (gVariantStats[species][variant].attackMod == MAINTAIN_BST) {
+    if ((gVariantStats[species][palette].variantFlags & VARIANT_FLAG_STATS) > 0 && gVariantStats[species][palette].attackMod > 0) {
+        if (gVariantStats[species][palette].attackMod == MAINTAIN_BST) {
             baseTotal = 0;
             variantTotal = 0;
             numStats = 0;
 
-            if (gVariantStats[species][variant].hpMod != MAINTAIN_BST) {
+            if (gVariantStats[species][palette].hpMod != MAINTAIN_BST) {
                 baseTotal += GetBaseHP(species);
                 variantTotal += GetVariantHP(species, variant);
                 numStats++;
             }
-            if (gVariantStats[species][variant].defenseMod != MAINTAIN_BST) {
+            if (gVariantStats[species][palette].defenseMod != MAINTAIN_BST) {
                 baseTotal += GetBaseDefense(species);
                 variantTotal += GetVariantDefense(species, variant);
                 numStats++;
             }
-            if (gVariantStats[species][variant].speedMod != MAINTAIN_BST) {
+            if (gVariantStats[species][palette].speedMod != MAINTAIN_BST) {
                 baseTotal += GetBaseSpeed(species);
                 variantTotal += GetVariantSpeed(species, variant);
                 numStats++;
             }
-            if (gVariantStats[species][variant].spAttackMod != MAINTAIN_BST) {
+            if (gVariantStats[species][palette].spAttackMod != MAINTAIN_BST) {
                 baseTotal += GetBaseSpAttack(species);
                 variantTotal += GetVariantSpAttack(species, variant);
                 numStats++;
             }
-            if (gVariantStats[species][variant].spDefenseMod != MAINTAIN_BST) {
+            if (gVariantStats[species][palette].spDefenseMod != MAINTAIN_BST) {
                 baseTotal += GetBaseSpDefense(species);
                 variantTotal += GetVariantSpDefense(species, variant);
                 numStats++;
@@ -124,7 +126,7 @@ const u8 GetVariantAttack(u16 species, u16 variant) {
             }
         }
         else {
-            return (GetBaseAttack(species) * gVariantStats[species][variant].attackMod) / 100;
+            return (GetBaseAttack(species) * gVariantStats[species][palette].attackMod) / 100;
         }
     }
     else {
@@ -133,37 +135,38 @@ const u8 GetVariantAttack(u16 species, u16 variant) {
 }
 
 const u8 GetVariantDefense(u16 species, u16 variant) {
+    u16 palette = variant & 0x0007;
     u32 baseTotal;
     u32 variantTotal;
     u8 numStats;
 
-    if ((gVariantStats[species][variant].variantFlags & VARIANT_FLAG_STATS) > 0 && gVariantStats[species][variant].defenseMod > 0) {
-        if (gVariantStats[species][variant].defenseMod == MAINTAIN_BST) {
+    if ((gVariantStats[species][palette].variantFlags & VARIANT_FLAG_STATS) > 0 && gVariantStats[species][palette].defenseMod > 0) {
+        if (gVariantStats[species][palette].defenseMod == MAINTAIN_BST) {
             baseTotal = 0;
             variantTotal = 0;
             numStats = 0;
 
-            if (gVariantStats[species][variant].hpMod != MAINTAIN_BST) {
+            if (gVariantStats[species][palette].hpMod != MAINTAIN_BST) {
                 baseTotal += GetBaseHP(species);
                 variantTotal += GetVariantHP(species, variant);
                 numStats++;
             }
-            if (gVariantStats[species][variant].attackMod != MAINTAIN_BST) {
+            if (gVariantStats[species][palette].attackMod != MAINTAIN_BST) {
                 baseTotal += GetBaseAttack(species);
                 variantTotal += GetVariantAttack(species, variant);
                 numStats++;
             }
-            if (gVariantStats[species][variant].speedMod != MAINTAIN_BST) {
+            if (gVariantStats[species][palette].speedMod != MAINTAIN_BST) {
                 baseTotal += GetBaseSpeed(species);
                 variantTotal += GetVariantSpeed(species, variant);
                 numStats++;
             }
-            if (gVariantStats[species][variant].spAttackMod != MAINTAIN_BST) {
+            if (gVariantStats[species][palette].spAttackMod != MAINTAIN_BST) {
                 baseTotal += GetBaseSpAttack(species);
                 variantTotal += GetVariantSpAttack(species, variant);
                 numStats++;
             }
-            if (gVariantStats[species][variant].spDefenseMod != MAINTAIN_BST) {
+            if (gVariantStats[species][palette].spDefenseMod != MAINTAIN_BST) {
                 baseTotal += GetBaseSpDefense(species);
                 variantTotal += GetVariantSpDefense(species, variant);
                 numStats++;
@@ -177,7 +180,7 @@ const u8 GetVariantDefense(u16 species, u16 variant) {
             }
         }
         else {
-            return (GetBaseDefense(species) * gVariantStats[species][variant].defenseMod) / 100;
+            return (GetBaseDefense(species) * gVariantStats[species][palette].defenseMod) / 100;
         }
     }
     else {
@@ -186,37 +189,38 @@ const u8 GetVariantDefense(u16 species, u16 variant) {
 }
 
 const u8 GetVariantSpeed(u16 species, u16 variant) {
+    u16 palette = variant & 0x0007;
     u32 baseTotal;
     u32 variantTotal;
     u8 numStats;
 
-    if ((gVariantStats[species][variant].variantFlags & VARIANT_FLAG_STATS) > 0 && gVariantStats[species][variant].speedMod > 0) {
-        if (gVariantStats[species][variant].speedMod == MAINTAIN_BST) {
+    if ((gVariantStats[species][palette].variantFlags & VARIANT_FLAG_STATS) > 0 && gVariantStats[species][palette].speedMod > 0) {
+        if (gVariantStats[species][palette].speedMod == MAINTAIN_BST) {
             baseTotal = 0;
             variantTotal = 0;
             numStats = 0;
 
-            if (gVariantStats[species][variant].hpMod != MAINTAIN_BST) {
+            if (gVariantStats[species][palette].hpMod != MAINTAIN_BST) {
                 baseTotal += GetBaseHP(species);
                 variantTotal += GetVariantHP(species, variant);
                 numStats++;
             }
-            if (gVariantStats[species][variant].attackMod != MAINTAIN_BST) {
+            if (gVariantStats[species][palette].attackMod != MAINTAIN_BST) {
                 baseTotal += GetBaseAttack(species);
                 variantTotal += GetVariantAttack(species, variant);
                 numStats++;
             }
-            if (gVariantStats[species][variant].defenseMod != MAINTAIN_BST) {
+            if (gVariantStats[species][palette].defenseMod != MAINTAIN_BST) {
                 baseTotal += GetBaseDefense(species);
                 variantTotal += GetVariantDefense(species, variant);
                 numStats++;
             }
-            if (gVariantStats[species][variant].spAttackMod != MAINTAIN_BST) {
+            if (gVariantStats[species][palette].spAttackMod != MAINTAIN_BST) {
                 baseTotal += GetBaseSpAttack(species);
                 variantTotal += GetVariantSpAttack(species, variant);
                 numStats++;
             }
-            if (gVariantStats[species][variant].spDefenseMod != MAINTAIN_BST) {
+            if (gVariantStats[species][palette].spDefenseMod != MAINTAIN_BST) {
                 baseTotal += GetBaseSpDefense(species);
                 variantTotal += GetVariantSpDefense(species, variant);
                 numStats++;
@@ -230,7 +234,7 @@ const u8 GetVariantSpeed(u16 species, u16 variant) {
             }
         }
         else {
-            return (GetBaseSpeed(species) * gVariantStats[species][variant].speedMod) / 100;
+            return (GetBaseSpeed(species) * gVariantStats[species][palette].speedMod) / 100;
         }
     }
     else {
@@ -239,37 +243,38 @@ const u8 GetVariantSpeed(u16 species, u16 variant) {
 }
 
 const u8 GetVariantSpAttack(u16 species, u16 variant) {
+    u16 palette = variant & 0x0007;
     u32 baseTotal;
     u32 variantTotal;
     u8 numStats;
 
-    if ((gVariantStats[species][variant].variantFlags & VARIANT_FLAG_STATS) > 0 && gVariantStats[species][variant].spAttackMod > 0) {
-        if (gVariantStats[species][variant].spAttackMod == MAINTAIN_BST) {
+    if ((gVariantStats[species][palette].variantFlags & VARIANT_FLAG_STATS) > 0 && gVariantStats[species][palette].spAttackMod > 0) {
+        if (gVariantStats[species][palette].spAttackMod == MAINTAIN_BST) {
             baseTotal = 0;
             variantTotal = 0;
             numStats = 0;
 
-            if (gVariantStats[species][variant].hpMod != MAINTAIN_BST) {
+            if (gVariantStats[species][palette].hpMod != MAINTAIN_BST) {
                 baseTotal += GetBaseHP(species);
                 variantTotal += GetVariantHP(species, variant);
                 numStats++;
             }
-            if (gVariantStats[species][variant].attackMod != MAINTAIN_BST) {
+            if (gVariantStats[species][palette].attackMod != MAINTAIN_BST) {
                 baseTotal += GetBaseAttack(species);
                 variantTotal += GetVariantAttack(species, variant);
                 numStats++;
             }
-            if (gVariantStats[species][variant].defenseMod != MAINTAIN_BST) {
+            if (gVariantStats[species][palette].defenseMod != MAINTAIN_BST) {
                 baseTotal += GetBaseDefense(species);
                 variantTotal += GetVariantDefense(species, variant);
                 numStats++;
             }
-            if (gVariantStats[species][variant].speedMod != MAINTAIN_BST) {
+            if (gVariantStats[species][palette].speedMod != MAINTAIN_BST) {
                 baseTotal += GetBaseSpeed(species);
                 variantTotal += GetVariantSpeed(species, variant);
                 numStats++;
             }
-            if (gVariantStats[species][variant].spDefenseMod != MAINTAIN_BST) {
+            if (gVariantStats[species][palette].spDefenseMod != MAINTAIN_BST) {
                 baseTotal += GetBaseSpDefense(species);
                 variantTotal += GetVariantSpDefense(species, variant);
                 numStats++;
@@ -283,7 +288,7 @@ const u8 GetVariantSpAttack(u16 species, u16 variant) {
             }
         }
         else {
-            return (GetBaseSpAttack(species) * gVariantStats[species][variant].spAttackMod) / 100;
+            return (GetBaseSpAttack(species) * gVariantStats[species][palette].spAttackMod) / 100;
         }
     }
     else {
@@ -292,37 +297,38 @@ const u8 GetVariantSpAttack(u16 species, u16 variant) {
 }
 
 const u8 GetVariantSpDefense(u16 species, u16 variant) {
+    u16 palette = variant & 0x0007;
     u32 baseTotal;
     u32 variantTotal;
     u8 numStats;
 
-    if ((gVariantStats[species][variant].variantFlags & VARIANT_FLAG_STATS) > 0 && gVariantStats[species][variant].spDefenseMod > 0) {
-        if (gVariantStats[species][variant].spDefenseMod == MAINTAIN_BST) {
+    if ((gVariantStats[species][palette].variantFlags & VARIANT_FLAG_STATS) > 0 && gVariantStats[species][palette].spDefenseMod > 0) {
+        if (gVariantStats[species][palette].spDefenseMod == MAINTAIN_BST) {
             baseTotal = 0;
             variantTotal = 0;
             numStats = 0;
 
-            if (gVariantStats[species][variant].hpMod != MAINTAIN_BST) {
+            if (gVariantStats[species][palette].hpMod != MAINTAIN_BST) {
                 baseTotal += GetBaseHP(species);
                 variantTotal += GetVariantHP(species, variant);
                 numStats++;
             }
-            if (gVariantStats[species][variant].attackMod != MAINTAIN_BST) {
+            if (gVariantStats[species][palette].attackMod != MAINTAIN_BST) {
                 baseTotal += GetBaseAttack(species);
                 variantTotal += GetVariantAttack(species, variant);
                 numStats++;
             }
-            if (gVariantStats[species][variant].defenseMod != MAINTAIN_BST) {
+            if (gVariantStats[species][palette].defenseMod != MAINTAIN_BST) {
                 baseTotal += GetBaseDefense(species);
                 variantTotal += GetVariantDefense(species, variant);
                 numStats++;
             }
-            if (gVariantStats[species][variant].speedMod != MAINTAIN_BST) {
+            if (gVariantStats[species][palette].speedMod != MAINTAIN_BST) {
                 baseTotal += GetBaseSpeed(species);
                 variantTotal += GetVariantSpeed(species, variant);
                 numStats++;
             }
-            if (gVariantStats[species][variant].spAttackMod != MAINTAIN_BST) {
+            if (gVariantStats[species][palette].spAttackMod != MAINTAIN_BST) {
                 baseTotal += GetBaseSpAttack(species);
                 variantTotal += GetVariantSpAttack(species, variant);
                 numStats++;
@@ -336,7 +342,7 @@ const u8 GetVariantSpDefense(u16 species, u16 variant) {
             }
         }
         else {
-            return (GetBaseSpDefense(species) * gVariantStats[species][variant].spDefenseMod) / 100;
+            return (GetBaseSpDefense(species) * gVariantStats[species][palette].spDefenseMod) / 100;
         }
     }
     else {
@@ -345,8 +351,9 @@ const u8 GetVariantSpDefense(u16 species, u16 variant) {
 }
 
 const u8 GetVariantType1(u16 species, u16 variant) {
-    if ((gVariantStats[species][variant].variantFlags & VARIANT_FLAG_TYPE) > 0) {
-        return gVariantStats[species][variant].type1;
+    u16 palette = variant & 0x0007;
+    if ((gVariantStats[species][palette].variantFlags & VARIANT_FLAG_TYPE) > 0) {
+        return gVariantStats[species][palette].type1;
     }
     else {
         return gBaseStats[species].type1;
@@ -354,8 +361,9 @@ const u8 GetVariantType1(u16 species, u16 variant) {
 }
 
 const u8 GetVariantType2(u16 species, u16 variant) {
-    if ((gVariantStats[species][variant].variantFlags & VARIANT_FLAG_TYPE) > 0) {
-        return gVariantStats[species][variant].type2;
+    u16 palette = variant & 0x0007;
+    if ((gVariantStats[species][palette].variantFlags & VARIANT_FLAG_TYPE) > 0) {
+        return gVariantStats[species][palette].type2;
     }
     else {
         return gBaseStats[species].type2;
@@ -363,6 +371,7 @@ const u8 GetVariantType2(u16 species, u16 variant) {
 }
 
 const u8 GetVariantLearnset(u16 species, u16 variant, u16 *learnset) {
+    u16 palette = variant & 0x0007;
     u8 count = 0;
     u16 baseIndex = 0;
     u16 variantIndex = 0;
@@ -370,19 +379,19 @@ const u8 GetVariantLearnset(u16 species, u16 variant, u16 *learnset) {
     u16 variantLevel;
     int i;
 
-    if ((gVariantStats[species][variant].variantFlags & VARIANT_FLAG_LEARNSET) > 0) {
+    if ((gVariantStats[species][palette].variantFlags & VARIANT_FLAG_LEARNSET) > 0) {
         for (i = 0; i < 24; i++) {
-            if (gLevelUpLearnsets[species][baseIndex] == 0xFFFF && gVariantStats[species][variant].learnset[variantIndex] == 0xFFFF) {
+            if (gLevelUpLearnsets[species][baseIndex] == 0xFFFF && gVariantStats[species][palette].learnset[variantIndex] == 0xFFFF) {
                 break;
             }
             baseLevel = gLevelUpLearnsets[species][baseIndex] & 0xFE00;
-            variantLevel = gVariantStats[species][variant].learnset[variantIndex] & 0xFE00;
+            variantLevel = gVariantStats[species][palette].learnset[variantIndex] & 0xFE00;
 
             if (baseLevel < variantLevel) {
                 learnset[count++] = gLevelUpLearnsets[species][baseIndex++];
             }
             else {
-                learnset[count++] = gVariantStats[species][variant].learnset[variantIndex++];
+                learnset[count++] = gVariantStats[species][palette].learnset[variantIndex++];
             }
         }
     }

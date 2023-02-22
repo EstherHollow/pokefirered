@@ -1070,7 +1070,7 @@ static void SetDisplayMonData(void *pokemon, u8 mode)
             gStorage->displayMonMarkings = GetBoxMonData(boxMon, MON_DATA_MARKINGS);
             gStorage->displayMonVariant = GetBoxMonData(boxMon, MON_DATA_VARIANT);
             gStorage->displayMonPersonality = GetBoxMonData(boxMon, MON_DATA_PERSONALITY);
-            gStorage->displayMonPalette = GetMonPaletteFromVariant(gStorage->displayMonSpecies, gStorage->displayMonPersonality);
+            gStorage->displayMonPalette = GetMonPaletteFromVariant(gStorage->displayMonSpecies, gStorage->displayMonVariant);
             gender = GetGenderFromSpeciesAndPersonality(gStorage->displayMonSpecies, gStorage->displayMonPersonality);
             gStorage->displayMonItemId = GetBoxMonData(boxMon, MON_DATA_HELD_ITEM);
         }
