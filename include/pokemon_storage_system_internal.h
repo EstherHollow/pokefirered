@@ -378,7 +378,6 @@ struct PokemonStorageSystemData
     u8 cursorPrevPartyPos;
     u8 cursorFlipTimer;
     u8 cursorPalNums[2];
-    const u16 *displayMonPalette;
     u32 displayMonPersonality;
     u16 displayMonSpecies;
     u16 displayMonVariant;
