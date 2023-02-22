@@ -6385,25 +6385,24 @@ u16 GenerateMonVariant(u16 species, u32 variantSeed) {
 
     case SPECIES_PIDGEY:
         WEIGHTED_VALUE(PALETTE_PIDGEY_BROWN, 3);
-        WEIGHTED_VALUE(PALETTE_PIDGEY_RED, 3);
-        WEIGHTED_VALUE(PALETTE_PIDGEY_ORANGE, 3);
-        WEIGHTED_VALUE(PALETTE_PIDGEY_YELLOW, 3);
+        WEIGHTED_VALUE(PALETTE_PIDGEY_RED, 2);
+        WEIGHTED_VALUE(PALETTE_PIDGEY_YELLOW, 2);
         WEIGHTED_VALUE(PALETTE_PIDGEY_BLUE, 1);
         variant = VARIANT_ONE_TONE(GetWeightedResult(variantSeed, values, weights));
         break;
 
     case SPECIES_RATTATA:
-        WEIGHTED_VALUE(PALETTE_RATTATA_BROWN, 3);
-        WEIGHTED_VALUE(PALETTE_RATTATA_RED, 3);
-        WEIGHTED_VALUE(PALETTE_RATTATA_PURPLE, 3);
-        WEIGHTED_VALUE(PALETTE_RATTATA_BLUE, 3);
+        WEIGHTED_VALUE(PALETTE_RATTATA_BROWN, 2);
+        WEIGHTED_VALUE(PALETTE_RATTATA_RED, 2);
+        WEIGHTED_VALUE(PALETTE_RATTATA_PURPLE, 2);
+        WEIGHTED_VALUE(PALETTE_RATTATA_BLUE, 2);
         WEIGHTED_VALUE(PALETTE_RATTATA_WHITE, 1);
         variant = VARIANT_ONE_TONE(GetWeightedResult(variantSeed, values, weights));
         break;
 
     case SPECIES_PIKACHU:
-        WEIGHTED_VALUE(PALETTE_PIKACHU_YELLOW, 9);
-        WEIGHTED_VALUE(PALETTE_PIKACHU_ORANGE, 6);
+        WEIGHTED_VALUE(PALETTE_PIKACHU_YELLOW, 5);
+        WEIGHTED_VALUE(PALETTE_PIKACHU_ORANGE, 3);
         WEIGHTED_VALUE(PALETTE_PIKACHU_RED, 3);
         WEIGHTED_VALUE(PALETTE_PIKACHU_BLUE, 1);
         variant = VARIANT_ONE_TONE(GetWeightedResult(variantSeed, values, weights));
@@ -6421,11 +6420,11 @@ u16 GenerateMonVariant(u16 species, u32 variantSeed) {
 //     case SPECIES_GEODUDE:
 
     case SPECIES_ONIX:
-        WEIGHTED_VALUE(PALETTE_ONIX_BRONZE, 64);
-        WEIGHTED_VALUE(PALETTE_ONIX_SILVER, 16);
-        WEIGHTED_VALUE(PALETTE_ONIX_GOLD, 4);
+        WEIGHTED_VALUE(PALETTE_ONIX_BRONZE, 8);
+        WEIGHTED_VALUE(PALETTE_ONIX_SILVER, 4);
+        WEIGHTED_VALUE(PALETTE_ONIX_GOLD, 2);
         WEIGHTED_VALUE(PALETTE_ONIX_CRYSTAL, 1);
-        if (variantSeed % 101 == 0) {
+        if (variantSeed % 19 == 0) {
             palettes[0] = GetWeightedResult(variantSeed, values, weights);
             palettes[1] = paletteSeed1 % paletteCount;
             variant = VARIANT_TWO_TONE(palettes[0], palettes[1]);
@@ -6530,8 +6529,7 @@ u16 GenerateMonVariant(u16 species, u32 variantSeed) {
 //    case SPECIES_SPINARAK:
 
     case SPECIES_MARILL:
-        WEIGHTED_VALUE(PALETTE_MARILL_PURPLE, 9);
-        WEIGHTED_VALUE(PALETTE_MARILL_BLUE, 6);
+        WEIGHTED_VALUE(PALETTE_MARILL_BLUE, 5);
         WEIGHTED_VALUE(PALETTE_MARILL_LIGHT_BLUE, 3);
         WEIGHTED_VALUE(PALETTE_MARILL_GREEN, 2);
         WEIGHTED_VALUE(PALETTE_MARILL_WHITE, 1);
@@ -6565,10 +6563,10 @@ u16 GenerateMonVariant(u16 species, u32 variantSeed) {
         break;
 
     case SPECIES_RALTS:
-        WEIGHTED_VALUE(PALETTE_RALTS_GREEN, 20);
-        WEIGHTED_VALUE(PALETTE_RALTS_BLUE, 18);
-        WEIGHTED_VALUE(PALETTE_RALTS_PINK, 8);
-        WEIGHTED_VALUE(PALETTE_RALTS_RED, 7);
+        WEIGHTED_VALUE(PALETTE_RALTS_GREEN, 9);
+        WEIGHTED_VALUE(PALETTE_RALTS_BLUE, 8);
+        WEIGHTED_VALUE(PALETTE_RALTS_PINK, 6);
+        WEIGHTED_VALUE(PALETTE_RALTS_RED, 5);
         WEIGHTED_VALUE(PALETTE_RALTS_ORANGE, 3);
         WEIGHTED_VALUE(PALETTE_RALTS_YELLOW, 2);
         WEIGHTED_VALUE(PALETTE_RALTS_WHITE, 1);
@@ -6777,24 +6775,25 @@ const struct SpritePalette *GetMonPaletteStructStandard(u16 species, u16 variant
     return &dynamicPalette;
 }
 
+#define MIX_COLOR_BY_WEIGHT(index) (palette1->data[index] * (100 - weight) / 100) + (palette2->data[index] * weight / 100)
 const struct SpritePalette *MixPalettes(const struct SpritePalette *palette1, const struct SpritePalette *palette2, u16 weight) {
     const u16 data[16] = {
-            (palette1->data[0] * (100 - weight) / 100) + (palette2->data[0] * weight / 100),
-            (palette1->data[1] * (100 - weight) / 100) + (palette2->data[1] * weight / 100),
-            (palette1->data[2] * (100 - weight) / 100) + (palette2->data[2] * weight / 100),
-            (palette1->data[3] * (100 - weight) / 100) + (palette2->data[3] * weight / 100),
-            (palette1->data[4] * (100 - weight) / 100) + (palette2->data[4] * weight / 100),
-            (palette1->data[5] * (100 - weight) / 100) + (palette2->data[5] * weight / 100),
-            (palette1->data[6] * (100 - weight) / 100) + (palette2->data[6] * weight / 100),
-            (palette1->data[7] * (100 - weight) / 100) + (palette2->data[7] * weight / 100),
-            (palette1->data[8] * (100 - weight) / 100) + (palette2->data[8] * weight / 100),
-            (palette1->data[9] * (100 - weight) / 100) + (palette2->data[9] * weight / 100),
-            (palette1->data[10] * (100 - weight) / 100) + (palette2->data[10] * weight / 100),
-            (palette1->data[11] * (100 - weight) / 100) + (palette2->data[11] * weight / 100),
-            (palette1->data[12] * (100 - weight) / 100) + (palette2->data[12] * weight / 100),
-            (palette1->data[13] * (100 - weight) / 100) + (palette2->data[13] * weight / 100),
-            (palette1->data[14] * (100 - weight) / 100) + (palette2->data[14] * weight / 100),
-            (palette1->data[15] * (100 - weight) / 100) + (palette2->data[15] * weight / 100),
+            MIX_COLOR_BY_WEIGHT(0),
+            MIX_COLOR_BY_WEIGHT(1),
+            MIX_COLOR_BY_WEIGHT(2),
+            MIX_COLOR_BY_WEIGHT(3),
+            MIX_COLOR_BY_WEIGHT(4),
+            MIX_COLOR_BY_WEIGHT(5),
+            MIX_COLOR_BY_WEIGHT(6),
+            MIX_COLOR_BY_WEIGHT(7),
+            MIX_COLOR_BY_WEIGHT(8),
+            MIX_COLOR_BY_WEIGHT(9),
+            MIX_COLOR_BY_WEIGHT(10),
+            MIX_COLOR_BY_WEIGHT(11),
+            MIX_COLOR_BY_WEIGHT(12),
+            MIX_COLOR_BY_WEIGHT(13),
+            MIX_COLOR_BY_WEIGHT(14),
+            MIX_COLOR_BY_WEIGHT(15),
     };
 
     struct SpritePalette dynamicPaletteBuffer = {

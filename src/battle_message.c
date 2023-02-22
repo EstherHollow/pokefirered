@@ -2788,7 +2788,7 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId) {
         if (gBattleTypeFlags & BATTLE_TYPE_LINK)
             speed = 1;
         else
-            speed = GetTextSpeedSetting();
+            speed = GetTextSpeedFrameDelay();
         gTextFlags.canABSpeedUpPrint = TRUE;
     }
     else

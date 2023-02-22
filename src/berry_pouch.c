@@ -1484,7 +1484,7 @@ void DisplayItemMessageInBerryPouch(u8 taskId, u8 fontId, const u8 * str, TaskFu
 {
     if (sVariableWindowIds[5] == 0xFF)
         sVariableWindowIds[5] = AddWindow(&sWindowTemplates_Variable[5]);
-    DisplayMessageAndContinueTask(taskId, sVariableWindowIds[5], 0x013, 0xD, fontId, GetTextSpeedSetting(), str, followUpFunc);
+    DisplayMessageAndContinueTask(taskId, sVariableWindowIds[5], 0x013, 0xD, fontId, GetTextSpeedFrameDelay(), str, followUpFunc);
     ScheduleBgCopyTilemapToVram(2);
 }
 

@@ -386,7 +386,7 @@ void PSA_PrintMessage(u8 messageId)
     struct PokemonSpecialAnimScene * scene = PSA_GetSceneWork();
     u16 itemId = PSA_GetItemId();
     u16 strWidth = 0;
-    u8 textSpeed = GetTextSpeedSetting();
+    u8 textSpeed = GetTextSpeedFrameDelay();
     struct Pokemon * pokemon = PSA_GetPokemon();
     u16 level;
     u8 *str;

@@ -24,11 +24,16 @@ const u16 gMenuMessageWindow_Gfx[] = INCBIN_U16("graphics/text_window/menu_messa
 
 const u16 gStandardMenuPalette[] = INCBIN_U16("graphics/interface/std_menu.gbapal");
 
-static const u8 sTextSpeedFrameDelays[] =
-{
-    [OPTIONS_TEXT_SPEED_SLOW] = 8,
-    [OPTIONS_TEXT_SPEED_MID]  = 4,
-    [OPTIONS_TEXT_SPEED_FAST] = 1
+static const u8 sTextSpeedFrameDelays[] ={
+        [OPTIONS_TEXT_SPEED_SLOW] = 2,
+        [OPTIONS_TEXT_SPEED_MID]  = 1,
+        [OPTIONS_TEXT_SPEED_FAST] = 1
+};
+
+static const u8 sTextSpeedCharRepeats[] = {
+        [OPTIONS_TEXT_SPEED_SLOW] = 1,
+        [OPTIONS_TEXT_SPEED_MID]  = 1,
+        [OPTIONS_TEXT_SPEED_FAST] = 4
 };
 
 static const struct WindowTemplate sStandardTextBox_WindowTemplates[] = 
@@ -428,17 +433,17 @@ void AddTextPrinterDiffStyle(bool8 allowSkippingDelayWithButtonPress)
     gTextFlags.canABSpeedUpPrint = allowSkippingDelayWithButtonPress;    
     color = ContextNpcGetTextColor();
     if (color == NPC_TEXT_COLOR_MALE)
-        AddTextPrinterParameterized2(0, FONT_MALE, gStringVar4, GetTextSpeedSetting(), nptr, TEXT_COLOR_BLUE, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+        AddTextPrinterParameterized2(0, FONT_MALE, gStringVar4, GetTextSpeedFrameDelay(), nptr, TEXT_COLOR_BLUE, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
     else if (color == NPC_TEXT_COLOR_FEMALE)
-        AddTextPrinterParameterized2(0, FONT_FEMALE, gStringVar4, GetTextSpeedSetting(), nptr, TEXT_COLOR_RED, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+        AddTextPrinterParameterized2(0, FONT_FEMALE, gStringVar4, GetTextSpeedFrameDelay(), nptr, TEXT_COLOR_RED, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
     else // NPC_TEXT_COLOR_MON / NPC_TEXT_COLOR_NEUTRAL
-        AddTextPrinterParameterized2(0, FONT_NORMAL, gStringVar4, GetTextSpeedSetting(), nptr, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+        AddTextPrinterParameterized2(0, FONT_NORMAL, gStringVar4, GetTextSpeedFrameDelay(), nptr, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
 }
 
 void AddTextPrinterForMessage(bool8 allowSkippingDelayWithButtonPress)
 {
     gTextFlags.canABSpeedUpPrint = allowSkippingDelayWithButtonPress;
-    AddTextPrinterParameterized2(0, FONT_NORMAL, gStringVar4, GetTextSpeedSetting(), NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+    AddTextPrinterParameterized2(0, FONT_NORMAL, gStringVar4, GetTextSpeedFrameDelay(), NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
 }
 
 void AddTextPrinterWithCustomSpeedForMessage(bool8 allowSkippingDelayWithButtonPress, u8 speed)
@@ -641,7 +646,7 @@ static u16 GetStdPalColor(u8 colorNum)
 void DisplayItemMessageOnField(u8 taskId, u8 fontId, const u8 *string, TaskFunc callback)
 {
     LoadStdWindowFrameGfx();
-    DisplayMessageAndContinueTask(taskId, 0, DLG_WINDOW_BASE_TILE_NUM, DLG_WINDOW_PALETTE_NUM, fontId, GetTextSpeedSetting(), string, callback);
+    DisplayMessageAndContinueTask(taskId, 0, DLG_WINDOW_BASE_TILE_NUM, DLG_WINDOW_PALETTE_NUM, fontId, GetTextSpeedFrameDelay(), string, callback);
     CopyWindowToVram(0, COPYWIN_FULL);
 }
 
@@ -655,12 +660,18 @@ void DisplayYesNoMenuDefaultNo(void)
     CreateYesNoMenu(&sYesNo_WindowTemplate, FONT_NORMAL, 0, 2, STD_WINDOW_BASE_TILE_NUM, STD_WINDOW_PALETTE_NUM, 1);
 }
 
-u8 GetTextSpeedSetting(void)
-{
-    u32 speed;
-    if (gSaveBlock2Ptr->optionsTextSpeed > OPTIONS_TEXT_SPEED_FAST)
+u8 GetTextSpeedFrameDelay(void) {
+    if (gSaveBlock2Ptr->optionsTextSpeed > OPTIONS_TEXT_SPEED_FAST) {
         gSaveBlock2Ptr->optionsTextSpeed = OPTIONS_TEXT_SPEED_MID;
+    }
     return sTextSpeedFrameDelays[gSaveBlock2Ptr->optionsTextSpeed];
+}
+
+u8 GetTextSpeedCharRepeats(void) {
+    if (gSaveBlock2Ptr->optionsTextSpeed > OPTIONS_TEXT_SPEED_FAST) {
+        gSaveBlock2Ptr->optionsTextSpeed = OPTIONS_TEXT_SPEED_MID;
+    }
+    return sTextSpeedCharRepeats[gSaveBlock2Ptr->optionsTextSpeed];
 }
 
 u8 CreateStartMenuWindow(u8 height)
