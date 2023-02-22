@@ -13,7 +13,8 @@ struct PokemonVariant
     u16 palette2:3;
     u16 palette3:3;
     u16 palette4:3;
-    u16 sparkle:2;
+    u16 sparkle:1;
+    u16 zero:1;
 };
 
 struct PokemonSubstruct0
@@ -480,6 +481,7 @@ void OakSpeechNidoranFFreeResources(void);
 void *OakSpeechNidoranFGetBuffer(u8 bufferId);
 
 bool8 IsTrainerRival(u16 trainerId);
+u8 GetWeightedResult(u32 random, u8 *values, u8 *weights);
 u16 GenerateMonVariant(u16 species, u32 variantSeed);
 
 const u32 *GetMonFrontPicFromVariant(u16 species, u16 variant);
@@ -493,5 +495,7 @@ const u16 *GetMonPalette(struct Pokemon *mon);
 const u16 *GetMonPaletteFromVariant(u16 species, u16 variant);
 const struct SpritePalette *GetMonPaletteStruct(struct Pokemon *mon);
 const struct SpritePalette *GetMonPaletteStructFromVariant(u16 species, u16 variant);
+const struct SpritePalette *GetMonPaletteStructStandard(u16 species, u16 variant);
+const struct SpritePalette *MixPalettes(const struct SpritePalette *palette1, const struct SpritePalette *palette2, u16 weight);
 
 #endif // GUARD_POKEMON_H

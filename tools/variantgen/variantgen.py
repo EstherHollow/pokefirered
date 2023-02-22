@@ -44,7 +44,10 @@ def write_variant_constants(file, json_data):
     write("")
     
     write("#define VARIANT_DEFAULT 0")
-    write("#define VARIANT_RANDOM  8")
+    write("#define VARIANT_RANDOM  0xFFFF")
+    write("")
+    write("#define VARIANT_ONE_TONE(palette) ((palette) | (palette << 3) | (palette << 6) | (palette << 9))")
+    write("#define VARIANT_TWO_TONE(palette1, palette2) ((palette1) | (palette2 << 3) | (palette1 << 6) | (palette2 << 9))")
     write("")
     write("#define SUBPALETTE_ANY 0")
     write("")
