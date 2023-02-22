@@ -756,7 +756,7 @@ static void Task_NewGameScene(u8 taskId)
         LoadPalette(GetTextWindowPalette(2) + 15, 0, 2);
         break;
     case 5:
-        sOakSpeechResources->textSpeed = GetTextSpeedSetting();
+        sOakSpeechResources->textSpeed = GetTextSpeedFrameDelay();
         gTextFlags.canABSpeedUpPrint = TRUE;
         DecompressAndCopyTileDataToVram(1, sControlsGuide_PikachuIntro_Background_Tiles, 0, 0, 0);
         break;
