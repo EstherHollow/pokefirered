@@ -2230,8 +2230,9 @@ static void CreateDisplayMonSprite(void)
     u16 tileStart;
     u8 palSlot;
     u8 spriteId;
+    const u16 *paletteData = GetMonPaletteFromVariant(gStorage->displayMonSpecies, gStorage->displayMonVariant);
     struct SpriteSheet sheet = {gStorage->tileBuffer, MON_PIC_SIZE, GFXTAG_DISPLAY_MON};
-    struct SpritePalette palette = {gStorage->displayMonPalette, PALTAG_DISPLAY_MON};
+    struct SpritePalette palette = {paletteData, PALTAG_DISPLAY_MON};
     struct SpriteTemplate template = sSpriteTemplate_DisplayMon;
 
     for (i = 0; i < MON_PIC_SIZE; i++)
@@ -2267,6 +2268,8 @@ static void CreateDisplayMonSprite(void)
 
 static void LoadDisplayMonGfx(u16 species, u16 variant, u32 personality)
 {
+    const u16 *paletteData;
+
     if (gStorage->displayMonSprite == NULL)
         return;
 
@@ -2274,7 +2277,8 @@ static void LoadDisplayMonGfx(u16 species, u16 variant, u32 personality)
     {
         HandleLoadSpecialPokePic(GetMonFrontPicStructFromVariant(species, variant), gStorage->tileBuffer, species, variant, personality);
         CpuCopy32(gStorage->tileBuffer, gStorage->displayMonTilePtr, 0x800);
-        LoadPalette(gStorage->displayMonPalette, gStorage->displayMonPalOffset, 0x20);
+        paletteData = GetMonPaletteFromVariant(gStorage->displayMonSpecies, gStorage->displayMonVariant);
+        LoadPalette(paletteData, gStorage->displayMonPalOffset, 0x20);
         gStorage->displayMonSprite->invisible = FALSE;
     }
     else
