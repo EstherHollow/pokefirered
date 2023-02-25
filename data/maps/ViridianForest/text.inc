@@ -13,13 +13,13 @@ ViridianForest_Text_RickDefeat::
     .string "No!\nCATERPIE can't hack it!$"
 
 ViridianForest_Text_RickPostBattle::
-    .string "Ssh! You'll scare the bugs away.\n"
-    .string "Another time, okay?$"
+    .string "Hey, I think one of my CATERPIE\n"
+    .string "is different.$"
 
 ViridianForest_Text_DougIntro::
     .string "Yo!\n"
-    .string "You can't jam out if you're a\l"
-    .string "POKéMON TRAINER!$"
+    .string "TRAINER battles are always\l"
+    .string "double battles!$"
 
 ViridianForest_Text_DougDefeat::
     .string "Huh?\n"
@@ -55,29 +55,30 @@ ViridianForest_Text_AnthonyPostBattle::
     .string "I lost some of my allowance…$"
 
 ViridianForest_Text_CharlieIntro::
-    .string "Did you know that POKéMON evolve?$"
+    .string "Did you know there's more than\n"
+    .string "CATERPIE and WEEDLE in the forest?$"
 
 ViridianForest_Text_CharlieDefeat::
     .string "Oh!\n"
     .string "I lost!$"
 
 ViridianForest_Text_CharliePostBattle::
-    .string "BUG POKéMON evolve quickly.\n"
-    .string "They're a lot of fun!$"
+    .string "It turns out HOPPIP doesn't have\n"
+    .string "attacking moves.$"
 
 ViridianForest_Text_TeraIntro::
     .string "I can't find one!\p"
-    .string "I can't find a pikachu anywhere!$"
+    .string "I can't find a PIKACHU anywhere!$"
 
 ViridianForest_Text_TeraDefeat::
-    .string "If I had a pikachu,\n"
+    .string "If I had a PIKACHU,\n"
     .string "I would have won!$"
 
 ViridianForest_Text_TeraPostBattle::
-    .string "Some pokemon are harder to find\n"
+    .string "Some POKéMON are harder to find\n"
     .string "than others.\p"
-    .string "Finding one with your favorite\n"
-    .string "color is even harder.$"
+    .string "Finding one of your favorite color\n"
+    .string "is even harder.$"
 
 ViridianForest_Text_RanOutOfPokeBalls::
     .string "I was throwing POKé BALLS to\n"
@@ -92,6 +93,7 @@ ViridianForest_Text_AvoidGrassyAreasWhenWeak::
     .string "from grassy areas!$"
 
 ViridianForest_Text_UseAntidoteForPoison::
+    .string "TRAINER TIPS\p"
     .string "For poison, use ANTIDOTE!\n"
     .string "Get it at POKéMON MARTS!$"
 

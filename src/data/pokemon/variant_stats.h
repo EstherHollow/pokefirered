@@ -2,25 +2,38 @@
 #define LEVEL_UP_END 0xFFFF
 
 #define VARIANT_ALTER_STATS(h, a, d, s, sa, sd) {   \
-        .variantFlags = VARIANT_FLAG_STATS,         \
-        .hpMod = h,                                 \
-        .attackMod = a,                             \
-        .defenseMod = d,                            \
-        .speedMod = s,                              \
-        .spAttackMod = sa,                          \
-        .spDefenseMod = sd,                         \
+        .flags = VARIANT_FLAG_STATS,                \
+        .hp = h,                                    \
+        .attack = a,                                \
+        .defense = d,                               \
+        .speed = s,                                 \
+        .spAttack = sa,                             \
+        .spDefense = sd,                            \
 }
 
 #define VARIANT_ALTER_TYPE(t1, t2) {                \
-        .variantFlags = VARIANT_FLAG_TYPE,          \
+        .flags = VARIANT_FLAG_TYPE,                 \
         .type1 = t1,                                \
         .type2 = t2,                                \
 }
 
-#define VARIANT_ALTER_LEARNSET(lvl, move) {         \
-        .variantFlags = VARIANT_FLAG_LEARNSET,      \
+#define VARIANT_ADD_MOVE(lvl, move) {               \
+        .flags = VARIANT_FLAG_LEARNSET,             \
         .learnset = {                               \
                 LEVEL_UP_MOVE(lvl, move),           \
+                LEVEL_UP_END,                       \
+        },                                          \
+        .unlearnset = {LEVEL_UP_END},               \
+}
+
+#define VARIANT_SUBSTITUTE_MOVE(sub, lvl, move) {   \
+        .flags = VARIANT_FLAG_LEARNSET,             \
+        .learnset = {                               \
+                LEVEL_UP_MOVE(lvl, move),           \
+                LEVEL_UP_END,                       \
+        },                                          \
+        .unlearnset = {                             \
+                LEVEL_UP_MOVE(0, sub),              \
                 LEVEL_UP_END,                       \
         },                                          \
 }
@@ -37,16 +50,47 @@ const struct VariantStats gVariantStats[][8] =
         [SPECIES_SQUIRTLE] = {0},
         [SPECIES_WARTORTLE] = {0},
         [SPECIES_BLASTOISE] = {0},
-        [SPECIES_CATERPIE] = {0},
+        [SPECIES_CATERPIE] = {
+                [PALETTE_CATERPIE_BLACK] = {
+                        .flags = VARIANT_FLAG_STATS | VARIANT_FLAG_TYPE | VARIANT_FLAG_LEARNSET | VARIANT_FLAG_EVOLUTION,
+                        .hp = 50,
+                        .attack = 60,
+                        .defense = 45,
+                        .speed = 70,
+                        .spAttack = 80,
+                        .spDefense = 80,
+                        .type1 = TYPE_BUG,
+                        .type2 = TYPE_DARK,
+                        .learnset = {
+                                LEVEL_UP_MOVE(10, MOVE_CONFUSION),
+                                LEVEL_UP_MOVE(14, MOVE_FAKE_TEARS),
+                                LEVEL_UP_MOVE(21, MOVE_FAINT_ATTACK),
+                                LEVEL_UP_MOVE(25, MOVE_TORMENT),
+                                LEVEL_UP_MOVE(34, MOVE_SHADOW_BALL),
+                                LEVEL_UP_MOVE(41, MOVE_SIGNAL_BEAM),
+                                LEVEL_UP_MOVE(45, MOVE_MEMENTO),
+                                LEVEL_UP_END,
+                        },
+                        .unlearnset = {LEVEL_UP_END},
+                        .evolutions = {0},
+                },
+        },
         [SPECIES_METAPOD] = {0},
         [SPECIES_BUTTERFREE] = {0},
         [SPECIES_WEEDLE] = {0},
         [SPECIES_KAKUNA] = {0},
         [SPECIES_BEEDRILL] = {0},
-        [SPECIES_PIDGEY] = {0},
+        [SPECIES_PIDGEY] = {
+                [PALETTE_PIDGEY_BROWN] = VARIANT_ALTER_TYPE(TYPE_NORMAL, TYPE_FLYING),
+                [PALETTE_PIDGEY_RED] = VARIANT_ALTER_STATS(UNCHANGED, 60, MAINTAIN_BST, UNCHANGED, UNCHANGED, UNCHANGED),
+                [PALETTE_PIDGEY_BLUE] = VARIANT_ALTER_STATS(UNCHANGED, UNCHANGED, 65, MAINTAIN_BST, UNCHANGED, UNCHANGED),
+                [PALETTE_PIDGEY_YELLOW] = VARIANT_ALTER_STATS(UNCHANGED, MAINTAIN_BST, MAINTAIN_BST, 72, UNCHANGED, UNCHANGED),
+        },
         [SPECIES_PIDGEOTTO] = {0},
         [SPECIES_PIDGEOT] = {0},
-        [SPECIES_RATTATA] = {0},
+        [SPECIES_RATTATA] = {
+                [PALETTE_RATTATA_WHITE] = VARIANT_SUBSTITUTE_MOVE(MOVE_TACKLE, 1, MOVE_FALSE_SWIPE),
+        },
         [SPECIES_RATICATE] = {0},
         [SPECIES_SPEAROW] = {0},
         [SPECIES_FEAROW] = {0},
@@ -212,7 +256,9 @@ const struct VariantStats gVariantStats[][8] =
         [SPECIES_FLAAFFY] = {0},
         [SPECIES_AMPHAROS] = {0},
         [SPECIES_BELLOSSOM] = {0},
-        [SPECIES_MARILL] = {0},
+        [SPECIES_MARILL] = {
+                [PALETTE_MARILL_YELLOW] = VARIANT_ADD_MOVE(1, MOVE_THUNDER_SHOCK),
+        },
         [SPECIES_AZUMARILL] = {0},
         [SPECIES_SUDOWOODO] = {0},
         [SPECIES_POLITOED] = {0},
@@ -421,7 +467,9 @@ const struct VariantStats gVariantStats[][8] =
         [SPECIES_CRADILY] = {0},
         [SPECIES_ANORITH] = {0},
         [SPECIES_ARMALDO] = {0},
-        [SPECIES_RALTS] = {0},
+        [SPECIES_RALTS] = {
+                [PALETTE_RALTS_WHITE] = VARIANT_ALTER_TYPE(TYPE_PSYCHIC, TYPE_GHOST),
+        },
         [SPECIES_KIRLIA] = {0},
         [SPECIES_GARDEVOIR] = {0},
         [SPECIES_BAGON] = {0},

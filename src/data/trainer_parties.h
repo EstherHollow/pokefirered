@@ -123,7 +123,7 @@ static const struct TrainerMonNoItemDefaultMoves sParty_RivalOaksLabSquirtle[] =
                 .iv = 0,
                 .lvl = 5,
                 .species = SPECIES_SQUIRTLE,
-                .variant = VARIANT_RANDOM,
+                .variant = VARIANT_FROM_GAME_VERSION,
         },
 };
 static const struct TrainerMonNoItemDefaultMoves sParty_RivalOaksLabBulbasaur[] = {
@@ -131,7 +131,7 @@ static const struct TrainerMonNoItemDefaultMoves sParty_RivalOaksLabBulbasaur[] 
                 .iv = 0,
                 .lvl = 5,
                 .species = SPECIES_BULBASAUR,
-                .variant = VARIANT_RANDOM,
+                .variant = VARIANT_FROM_GAME_VERSION,
         },
 };
 static const struct TrainerMonNoItemDefaultMoves sParty_RivalOaksLabCharmander[] = {
@@ -139,7 +139,7 @@ static const struct TrainerMonNoItemDefaultMoves sParty_RivalOaksLabCharmander[]
                 .iv = 0,
                 .lvl = 5,
                 .species = SPECIES_CHARMANDER,
-                .variant = VARIANT_RANDOM,
+                .variant = VARIANT_FROM_GAME_VERSION,
         },
 };
 static const struct TrainerMonNoItemDefaultMoves sParty_RivalRoute22EarlySquirtle[] = {
@@ -157,7 +157,7 @@ static const struct TrainerMonNoItemDefaultMoves sParty_RivalRoute22EarlySquirtl
                 .iv = DEFAULT_IVS,
                 .lvl = 9,
                 .species = SPECIES_SQUIRTLE,
-                .variant = VARIANT_RANDOM,
+                .variant = VARIANT_FROM_GAME_VERSION,
         },
 };
 static const struct TrainerMonNoItemDefaultMoves sParty_RivalRoute22EarlyBulbasaur[] = {
@@ -175,7 +175,7 @@ static const struct TrainerMonNoItemDefaultMoves sParty_RivalRoute22EarlyBulbasa
                 .iv = DEFAULT_IVS,
                 .lvl = 9,
                 .species = SPECIES_BULBASAUR,
-                .variant = VARIANT_RANDOM,
+                .variant = VARIANT_FROM_GAME_VERSION,
         },
 };
 static const struct TrainerMonNoItemDefaultMoves sParty_RivalRoute22EarlyCharmander[] = {
@@ -193,7 +193,7 @@ static const struct TrainerMonNoItemDefaultMoves sParty_RivalRoute22EarlyCharman
                 .iv = DEFAULT_IVS,
                 .lvl = 9,
                 .species = SPECIES_CHARMANDER,
-                .variant = VARIANT_RANDOM,
+                .variant = VARIANT_FROM_GAME_VERSION,
         },
 };
 
@@ -203,14 +203,14 @@ static const struct TrainerMonNoItemDefaultMoves sParty_RivalRoute22EarlyCharman
 static const struct TrainerMonNoItemDefaultMoves sParty_BugCatcherRick[] = {
         {
                 .iv = 0,
-                .lvl = 7,
+                .lvl = 5,
                 .species = SPECIES_CATERPIE,
-                .variant = VARIANT_RANDOM,
+                .variant = VARIANT_ONE_TONE(0),
         },{
                 .iv = 0,
-                .lvl = 7,
-                .species = SPECIES_WEEDLE,
-                .variant = VARIANT_RANDOM,
+                .lvl = 5,
+                .species = SPECIES_CATERPIE,
+                .variant = VARIANT_ONE_TONE(NUM_PALETTES_BUTTERFREE),
         },
 };
 static const struct TrainerMonNoItemDefaultMoves sParty_BugCatcherDoug[] = {
@@ -239,13 +239,8 @@ static const struct TrainerMonNoItemDefaultMoves sParty_BugCatcherDoug[] = {
 static const struct TrainerMonNoItemDefaultMoves sParty_BugCatcherAnthony[] = {
         {
                 .iv = 0,
-                .lvl = 8,
-                .species = SPECIES_HOPPIP,
-                .variant = VARIANT_RANDOM,
-        },{
-                .iv = 0,
-                .lvl = 7,
-                .species = SPECIES_CATERPIE,
+                .lvl = 10,
+                .species = SPECIES_RATTATA,
                 .variant = VARIANT_RANDOM,
         },{
                 .iv = 0,
@@ -257,7 +252,7 @@ static const struct TrainerMonNoItemDefaultMoves sParty_BugCatcherAnthony[] = {
 static const struct TrainerMonNoItemDefaultMoves sParty_BugCatcherCharlie[] = {
         {
                 .iv = 0,
-                .lvl = 9,
+                .lvl = 7,
                 .species = SPECIES_HOOTHOOT,
                 .variant = VARIANT_RANDOM,
         },{
@@ -267,8 +262,8 @@ static const struct TrainerMonNoItemDefaultMoves sParty_BugCatcherCharlie[] = {
                 .variant = VARIANT_RANDOM,
         },{
                 .iv = 0,
-                .lvl = 10,
-                .species = SPECIES_TANGELA,
+                .lvl = 9,
+                .species = SPECIES_HOPPIP,
                 .variant = VARIANT_RANDOM,
         },
 };

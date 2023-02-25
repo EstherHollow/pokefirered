@@ -1844,22 +1844,10 @@ void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, 
 
 void CreateMonWithFlags(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u32 flags)
 {
-    u16 variant;
-
-    if (flags & MON_FLAG_IS_STARTER)
-    {
-#if defined(FIRERED)
-        variant = VARIANT_ONE_TONE(1);
-#elif defined(LEAFGREEN)
-        variant = VARIANT_ONE_TONE(2);
-#else
-        variant = VARIANT_ONE_TONE(3);
-#endif
-
-        CreateMon(mon, species, level, fixedIV, 0, 0, GetPlayerId(), variant, 0);
+    if (flags & MON_FLAG_IS_STARTER) {
+        CreateMon(mon, species, level, fixedIV, 0, 0, GetPlayerId(), VARIANT_FROM_GAME_VERSION, 0);
     }
-    else
-    {
+    else {
         CreatePlayerMon(mon, species, level, fixedIV, 0, 0);
     }
 }
@@ -4950,8 +4938,9 @@ static u8 GetNatureFromPersonality(u32 personality)
 u16 GetEvolutionTargetSpecies(struct Pokemon *mon, u8 type, u16 evolutionItem)
 {
     int i;
-    u16 targetSpecies = 0;
+    u16 targetSpecies = SPECIES_NONE;
     u16 species = GetMonData(mon, MON_DATA_SPECIES, NULL);
+    u16 variant = GetMonData(mon, MON_DATA_VARIANT, NULL);
     u16 heldItem = GetMonData(mon, MON_DATA_HELD_ITEM, NULL);
     u32 personality = GetMonData(mon, MON_DATA_PERSONALITY, NULL);
     u8 level;
@@ -4959,6 +4948,7 @@ u16 GetEvolutionTargetSpecies(struct Pokemon *mon, u8 type, u16 evolutionItem)
     u8 beauty = GetMonData(mon, MON_DATA_BEAUTY, NULL);
     u16 upperPersonality = personality >> 16;
     u8 holdEffect;
+    struct Evolution evolution;
 
     if (heldItem == ITEM_ENIGMA_BERRY)
         holdEffect = gSaveBlock1Ptr->enigmaBerry.holdEffect;
@@ -4974,84 +4964,86 @@ u16 GetEvolutionTargetSpecies(struct Pokemon *mon, u8 type, u16 evolutionItem)
         level = GetMonData(mon, MON_DATA_LEVEL, NULL);
         friendship = GetMonData(mon, MON_DATA_FRIENDSHIP, NULL);
 
-        for (i = 0; i < 5; i++)
+        for (i = 0; i < EVOS_PER_MON; i++)
         {
-            switch (gEvolutionTable[species][i].method)
+            evolution = GetVariantEvolutions(species, variant)[i];
+            switch (evolution.method)
             {
             case EVO_FRIENDSHIP:
                 if (friendship >= 220)
-                    targetSpecies = gEvolutionTable[species][i].targetSpecies;
+                    targetSpecies = evolution.targetSpecies;
                 break;
             // FR/LG removed the time of day evolutions due to having no RTC.
             case EVO_FRIENDSHIP_DAY:
                 /*
                 RtcCalcLocalTime();
                 if (gLocalTime.hours >= 12 && gLocalTime.hours < 24 && friendship >= 220)
-                    targetSpecies = gEvolutionTable[species][i].targetSpecies;
+                    targetSpecies = evolution.targetSpecies;
                 */
                 break;
             case EVO_FRIENDSHIP_NIGHT:
                 /*
                 RtcCalcLocalTime();
                 if (gLocalTime.hours >= 0 && gLocalTime.hours < 12 && friendship >= 220)
-                    targetSpecies = gEvolutionTable[species][i].targetSpecies;
+                    targetSpecies = evolution.targetSpecies;
                 */
                 break;
             case EVO_LEVEL:
-                if (gEvolutionTable[species][i].param <= level)
-                    targetSpecies = gEvolutionTable[species][i].targetSpecies;
+                if (evolution.param <= level)
+                    targetSpecies = evolution.targetSpecies;
                 break;
             case EVO_LEVEL_ATK_GT_DEF:
-                if (gEvolutionTable[species][i].param <= level)
+                if (evolution.param <= level)
                     if (GetMonData(mon, MON_DATA_ATK, NULL) > GetMonData(mon, MON_DATA_DEF, NULL))
-                        targetSpecies = gEvolutionTable[species][i].targetSpecies;
+                        targetSpecies = evolution.targetSpecies;
                 break;
             case EVO_LEVEL_ATK_EQ_DEF:
-                if (gEvolutionTable[species][i].param <= level)
+                if (evolution.param <= level)
                     if (GetMonData(mon, MON_DATA_ATK, NULL) == GetMonData(mon, MON_DATA_DEF, NULL))
-                        targetSpecies = gEvolutionTable[species][i].targetSpecies;
+                        targetSpecies = evolution.targetSpecies;
                 break;
             case EVO_LEVEL_ATK_LT_DEF:
-                if (gEvolutionTable[species][i].param <= level)
+                if (evolution.param <= level)
                     if (GetMonData(mon, MON_DATA_ATK, NULL) < GetMonData(mon, MON_DATA_DEF, NULL))
-                        targetSpecies = gEvolutionTable[species][i].targetSpecies;
+                        targetSpecies = evolution.targetSpecies;
                 break;
             case EVO_LEVEL_SILCOON:
-                if (gEvolutionTable[species][i].param <= level && (upperPersonality % 10) <= 4)
-                    targetSpecies = gEvolutionTable[species][i].targetSpecies;
+                if (evolution.param <= level && (upperPersonality % 10) <= 4)
+                    targetSpecies = evolution.targetSpecies;
                 break;
             case EVO_LEVEL_CASCOON:
-                if (gEvolutionTable[species][i].param <= level && (upperPersonality % 10) > 4)
-                    targetSpecies = gEvolutionTable[species][i].targetSpecies;
+                if (evolution.param <= level && (upperPersonality % 10) > 4)
+                    targetSpecies = evolution.targetSpecies;
                 break;
             case EVO_LEVEL_NINJASK:
-                if (gEvolutionTable[species][i].param <= level)
-                    targetSpecies = gEvolutionTable[species][i].targetSpecies;
+                if (evolution.param <= level)
+                    targetSpecies = evolution.targetSpecies;
                 break;
             case EVO_BEAUTY:
-                if (gEvolutionTable[species][i].param <= beauty)
-                    targetSpecies = gEvolutionTable[species][i].targetSpecies;
+                if (evolution.param <= beauty)
+                    targetSpecies = evolution.targetSpecies;
                 break;
             }
         }
         break;
     case EVO_MODE_TRADE:
-        for (i = 0; i < 5; i++)
+        for (i = 0; i < EVOS_PER_MON; i++)
         {
-            switch (gEvolutionTable[species][i].method)
+            evolution = GetVariantEvolutions(species, variant)[i];
+            switch (evolution.method)
             {
             case EVO_TRADE:
-                targetSpecies = gEvolutionTable[species][i].targetSpecies;
+                targetSpecies = evolution.targetSpecies;
                 break;
             case EVO_TRADE_ITEM:
-                if (gEvolutionTable[species][i].param == heldItem)
+                if (evolution.param == heldItem)
                 {
-                    targetSpecies = gEvolutionTable[species][i].targetSpecies;
+                    targetSpecies = evolution.targetSpecies;
                     if (IsNationalPokedexEnabled() || targetSpecies <= KANTO_SPECIES_END)
                     {
                         heldItem = 0;
                         SetMonData(mon, MON_DATA_HELD_ITEM, &heldItem);
-                        targetSpecies = gEvolutionTable[species][i].targetSpecies;
+                        targetSpecies = evolution.targetSpecies;
                     }
                 }
                 break;
@@ -5060,12 +5052,12 @@ u16 GetEvolutionTargetSpecies(struct Pokemon *mon, u8 type, u16 evolutionItem)
         break;
     case EVO_MODE_ITEM_USE:
     case EVO_MODE_ITEM_CHECK:
-        for (i = 0; i < 5; i++)
+        for (i = 0; i < EVOS_PER_MON; i++)
         {
-            if (gEvolutionTable[species][i].method == EVO_ITEM
-             && gEvolutionTable[species][i].param == evolutionItem)
+            evolution = GetVariantEvolutions(species, variant)[i];
+            if (evolution.method == EVO_ITEM && evolution.param == evolutionItem)
             {
-                targetSpecies = gEvolutionTable[species][i].targetSpecies;
+                targetSpecies = evolution.targetSpecies;
                 break;
             }
         }
@@ -6332,11 +6324,11 @@ u8 GetWeightedResult(u32 random, u8 *values, u8 *weights) {
 
 #define WEIGHTED_VALUE(value, weight) values[index] = value; weights[index] = weight; index++;
 u16 GenerateMonVariant(u16 species, u32 variantSeed) {
-    u16 paletteSeed0 =  (variantSeed & 0x0000003F);
-    u16 paletteSeed1 =  (variantSeed & 0x00000FC0) >> 6;
-    u16 paletteSeed2 =  (variantSeed & 0x0003F000) >> 12;
-    u16 paletteSeed3 =  (variantSeed & 0x00FC0000) >> 18;
-    u16 spriteSeed =    (variantSeed & 0xFF000000) >> 24;
+    u16 paletteSeed0 =  (variantSeed & 0x0000007F);
+    u16 paletteSeed1 =  (variantSeed & 0x00003F80) >> 7;
+    u16 paletteSeed2 =  (variantSeed & 0x001FC000) >> 14;
+    u16 paletteSeed3 =  (variantSeed & 0x0FE00000) >> 21;
+    u16 spriteSeed =    (variantSeed & 0xF0000000) >> 28;
 
     u8 index = 0;
     u8 values[8] = {0, 0, 0, 0, 0, 0, 0, 0};
@@ -6369,9 +6361,26 @@ u16 GenerateMonVariant(u16 species, u32 variantSeed) {
         break;
 
     case SPECIES_CATERPIE:
+        if (variantSeed % 10 == 0) {
+            variant = VARIANT_ONE_TONE(PALETTE_CATERPIE_BLACK);
+            break;
+        }
+        // fall-through
     case SPECIES_METAPOD:
     case SPECIES_BUTTERFREE:
-        variant = VARIANT_ONE_TONE(variantSeed % NUM_PALETTES_BUTTERFREE);
+        palettes[0] = PALETTE_CATERPIE_GREEN;
+        palettes[2] = variantSeed % NUM_PALETTES_BUTTERFREE;
+        switch (palettes[2]) {
+        case PALETTE_BUTTERFREE_WHITE:
+        case PALETTE_BUTTERFREE_RED:
+            palettes[1] = PALETTE_METAPOD_YELLOW;
+        case PALETTE_BUTTERFREE_GREEN:
+        case PALETTE_BUTTERFREE_CYAN:
+            palettes[1] = PALETTE_METAPOD_GREEN;
+        case PALETTE_BUTTERFREE_BLUE:
+        case PALETTE_BUTTERFREE_PINK:
+            palettes[1] = PALETTE_METAPOD_BLUE;
+        }
         break;
 
     case SPECIES_WEEDLE:
@@ -6390,7 +6399,6 @@ u16 GenerateMonVariant(u16 species, u32 variantSeed) {
 
     case SPECIES_RATTATA:
         WEIGHTED_VALUE(PALETTE_RATTATA_BROWN, 2);
-        WEIGHTED_VALUE(PALETTE_RATTATA_RED, 2);
         WEIGHTED_VALUE(PALETTE_RATTATA_PURPLE, 2);
         WEIGHTED_VALUE(PALETTE_RATTATA_BLUE, 2);
         WEIGHTED_VALUE(PALETTE_RATTATA_WHITE, 1);
@@ -6406,20 +6414,17 @@ u16 GenerateMonVariant(u16 species, u32 variantSeed) {
         break;
 
     case SPECIES_MANKEY:
-        if (paletteSeed1 % 2 == 0) {
-            variant = VARIANT_ONE_TONE(PALETTE_MANKEY_RED);
-        }
-        else {
-            variant = VARIANT_ONE_TONE(PALETTE_MANKEY_WHITE);
-        }
+        WEIGHTED_VALUE(PALETTE_MANKEY_RED, 1);
+        WEIGHTED_VALUE(PALETTE_MANKEY_WHITE, 1);
+        variant = VARIANT_ONE_TONE(GetWeightedResult(variantSeed, values, weights));
         break;
 
 //     case SPECIES_GEODUDE:
 
     case SPECIES_ONIX:
-        WEIGHTED_VALUE(PALETTE_ONIX_BRONZE, 8);
-        WEIGHTED_VALUE(PALETTE_ONIX_SILVER, 4);
-        WEIGHTED_VALUE(PALETTE_ONIX_GOLD, 2);
+        WEIGHTED_VALUE(PALETTE_ONIX_BRONZE, 9);
+        WEIGHTED_VALUE(PALETTE_ONIX_SILVER, 6);
+        WEIGHTED_VALUE(PALETTE_ONIX_GOLD, 3);
         WEIGHTED_VALUE(PALETTE_ONIX_CRYSTAL, 1);
         if (variantSeed % 19 == 0) {
             palettes[0] = GetWeightedResult(variantSeed, values, weights);
@@ -6431,93 +6436,7 @@ u16 GenerateMonVariant(u16 species, u32 variantSeed) {
         }
         break;
 
-    case SPECIES_TANGELA:
-        palettes[0] = paletteSeed0 % paletteCount;
-        switch (palettes[0]) {
-        case PALETTE_TANGELA_RED:
-            WEIGHTED_VALUE(PALETTE_TANGELA_RED, 4);
-            WEIGHTED_VALUE(PALETTE_TANGELA_ORANGE, 16);
-            WEIGHTED_VALUE(PALETTE_TANGELA_LIME, 1);
-            WEIGHTED_VALUE(PALETTE_TANGELA_GREEN, 1);
-            WEIGHTED_VALUE(PALETTE_TANGELA_TEAL, 1);
-            WEIGHTED_VALUE(PALETTE_TANGELA_BLUE, 1);
-            WEIGHTED_VALUE(PALETTE_TANGELA_INDIGO, 8);
-            WEIGHTED_VALUE(PALETTE_TANGELA_PURPLE, 8);
-            break;
-        case PALETTE_TANGELA_ORANGE:
-            WEIGHTED_VALUE(PALETTE_TANGELA_RED, 16);
-            WEIGHTED_VALUE(PALETTE_TANGELA_ORANGE, 4);
-            WEIGHTED_VALUE(PALETTE_TANGELA_LIME, 1);
-            WEIGHTED_VALUE(PALETTE_TANGELA_GREEN, 1);
-            WEIGHTED_VALUE(PALETTE_TANGELA_TEAL, 1);
-            WEIGHTED_VALUE(PALETTE_TANGELA_BLUE, 1);
-            WEIGHTED_VALUE(PALETTE_TANGELA_INDIGO, 1);
-            WEIGHTED_VALUE(PALETTE_TANGELA_PURPLE, 1);
-            break;
-        case PALETTE_TANGELA_LIME:
-            WEIGHTED_VALUE(PALETTE_TANGELA_RED, 1);
-            WEIGHTED_VALUE(PALETTE_TANGELA_ORANGE, 1);
-            WEIGHTED_VALUE(PALETTE_TANGELA_LIME, 4);
-            WEIGHTED_VALUE(PALETTE_TANGELA_GREEN, 16);
-            WEIGHTED_VALUE(PALETTE_TANGELA_TEAL, 8);
-            WEIGHTED_VALUE(PALETTE_TANGELA_BLUE, 8);
-            WEIGHTED_VALUE(PALETTE_TANGELA_INDIGO, 1);
-            WEIGHTED_VALUE(PALETTE_TANGELA_PURPLE, 1);
-            break;
-        case PALETTE_TANGELA_GREEN:
-            WEIGHTED_VALUE(PALETTE_TANGELA_RED, 1);
-            WEIGHTED_VALUE(PALETTE_TANGELA_ORANGE, 1);
-            WEIGHTED_VALUE(PALETTE_TANGELA_LIME, 16);
-            WEIGHTED_VALUE(PALETTE_TANGELA_GREEN, 4);
-            WEIGHTED_VALUE(PALETTE_TANGELA_TEAL, 16);
-            WEIGHTED_VALUE(PALETTE_TANGELA_BLUE, 8);
-            WEIGHTED_VALUE(PALETTE_TANGELA_INDIGO, 1);
-            WEIGHTED_VALUE(PALETTE_TANGELA_PURPLE, 1);
-            break;
-        case PALETTE_TANGELA_TEAL:
-            WEIGHTED_VALUE(PALETTE_TANGELA_RED, 1);
-            WEIGHTED_VALUE(PALETTE_TANGELA_ORANGE, 1);
-            WEIGHTED_VALUE(PALETTE_TANGELA_LIME, 8);
-            WEIGHTED_VALUE(PALETTE_TANGELA_GREEN, 16);
-            WEIGHTED_VALUE(PALETTE_TANGELA_TEAL, 4);
-            WEIGHTED_VALUE(PALETTE_TANGELA_BLUE, 16);
-            WEIGHTED_VALUE(PALETTE_TANGELA_INDIGO, 8);
-            WEIGHTED_VALUE(PALETTE_TANGELA_PURPLE, 1);
-            break;
-        case PALETTE_TANGELA_BLUE:
-            WEIGHTED_VALUE(PALETTE_TANGELA_RED, 1);
-            WEIGHTED_VALUE(PALETTE_TANGELA_ORANGE, 1);
-            WEIGHTED_VALUE(PALETTE_TANGELA_LIME, 8);
-            WEIGHTED_VALUE(PALETTE_TANGELA_GREEN, 8);
-            WEIGHTED_VALUE(PALETTE_TANGELA_TEAL, 16);
-            WEIGHTED_VALUE(PALETTE_TANGELA_BLUE, 4);
-            WEIGHTED_VALUE(PALETTE_TANGELA_INDIGO, 16);
-            WEIGHTED_VALUE(PALETTE_TANGELA_PURPLE, 16);
-            break;
-        case PALETTE_TANGELA_INDIGO:
-            WEIGHTED_VALUE(PALETTE_TANGELA_RED, 8);
-            WEIGHTED_VALUE(PALETTE_TANGELA_ORANGE, 1);
-            WEIGHTED_VALUE(PALETTE_TANGELA_LIME, 1);
-            WEIGHTED_VALUE(PALETTE_TANGELA_GREEN, 1);
-            WEIGHTED_VALUE(PALETTE_TANGELA_TEAL, 8);
-            WEIGHTED_VALUE(PALETTE_TANGELA_BLUE, 16);
-            WEIGHTED_VALUE(PALETTE_TANGELA_INDIGO, 4);
-            WEIGHTED_VALUE(PALETTE_TANGELA_PURPLE, 16);
-            break;
-        case PALETTE_TANGELA_PURPLE:
-            WEIGHTED_VALUE(PALETTE_TANGELA_RED, 8);
-            WEIGHTED_VALUE(PALETTE_TANGELA_ORANGE, 1);
-            WEIGHTED_VALUE(PALETTE_TANGELA_LIME, 1);
-            WEIGHTED_VALUE(PALETTE_TANGELA_GREEN, 1);
-            WEIGHTED_VALUE(PALETTE_TANGELA_TEAL, 1);
-            WEIGHTED_VALUE(PALETTE_TANGELA_BLUE, 16);
-            WEIGHTED_VALUE(PALETTE_TANGELA_INDIGO, 16);
-            WEIGHTED_VALUE(PALETTE_TANGELA_PURPLE, 4);
-            break;
-        }
-        palettes[1] = GetWeightedResult(variantSeed, values, weights);
-        variant = VARIANT_TWO_TONE(palettes[0], palettes[1]);
-        break;
+//    case SPECIES_TANGELA:
 
 //    case SPECIES_DRATINI:
 
@@ -6527,9 +6446,10 @@ u16 GenerateMonVariant(u16 species, u32 variantSeed) {
 
     case SPECIES_MARILL:
         WEIGHTED_VALUE(PALETTE_MARILL_BLUE, 5);
-        WEIGHTED_VALUE(PALETTE_MARILL_LIGHT_BLUE, 3);
-        WEIGHTED_VALUE(PALETTE_MARILL_GREEN, 2);
-        WEIGHTED_VALUE(PALETTE_MARILL_WHITE, 1);
+        WEIGHTED_VALUE(PALETTE_MARILL_SKY, 5);
+        WEIGHTED_VALUE(PALETTE_MARILL_PURPLE, 4);
+        WEIGHTED_VALUE(PALETTE_MARILL_GREEN, 4);
+        WEIGHTED_VALUE(PALETTE_MARILL_YELLOW, 1);
         variant = VARIANT_ONE_TONE(GetWeightedResult(variantSeed, values, weights));
         break;
 
@@ -6542,27 +6462,24 @@ u16 GenerateMonVariant(u16 species, u32 variantSeed) {
     case SPECIES_HOUNDOUR:
         WEIGHTED_VALUE(PALETTE_HOUNDOUR_BLACK, 3);
         WEIGHTED_VALUE(PALETTE_HOUNDOUR_RED, 3);
-        WEIGHTED_VALUE(PALETTE_HOUNDOUR_PURPLE, 3);
         WEIGHTED_VALUE(PALETTE_HOUNDOUR_BLUE, 3);
         WEIGHTED_VALUE(PALETTE_HOUNDOUR_YELLOW, 1);
         variant = VARIANT_ONE_TONE(GetWeightedResult(variantSeed, values, weights));
         break;
 
     case SPECIES_ZIGZAGOON:
-        WEIGHTED_VALUE(PALETTE_ZIGZAGOON_CHOCOLATE, 51);
-        WEIGHTED_VALUE(PALETTE_ZIGZAGOON_CARAMEL, 33);
-        WEIGHTED_VALUE(PALETTE_ZIGZAGOON_VANILLA, 23);
-        WEIGHTED_VALUE(PALETTE_ZIGZAGOON_STRAWBERRY, 43);
-        WEIGHTED_VALUE(PALETTE_ZIGZAGOON_NEOPOLITAN, 30);
-        WEIGHTED_VALUE(PALETTE_ZIGZAGOON_MINT, 33);
-        WEIGHTED_VALUE(PALETTE_ZIGZAGOON_LEMON, 7);
+        WEIGHTED_VALUE(PALETTE_ZIGZAGOON_CHOCOLATE, 4);
+        WEIGHTED_VALUE(PALETTE_ZIGZAGOON_CARAMEL, 4);
+        WEIGHTED_VALUE(PALETTE_ZIGZAGOON_VANILLA, 4);
+        WEIGHTED_VALUE(PALETTE_ZIGZAGOON_STRAWBERRY, 1);
+        WEIGHTED_VALUE(PALETTE_ZIGZAGOON_MINT, 1);
+        WEIGHTED_VALUE(PALETTE_ZIGZAGOON_LEMON, 1);
         variant = VARIANT_ONE_TONE(GetWeightedResult(variantSeed, values, weights));
         break;
 
     case SPECIES_RALTS:
         WEIGHTED_VALUE(PALETTE_RALTS_GREEN, 9);
         WEIGHTED_VALUE(PALETTE_RALTS_BLUE, 8);
-        WEIGHTED_VALUE(PALETTE_RALTS_PINK, 6);
         WEIGHTED_VALUE(PALETTE_RALTS_RED, 5);
         WEIGHTED_VALUE(PALETTE_RALTS_ORANGE, 3);
         WEIGHTED_VALUE(PALETTE_RALTS_YELLOW, 2);
@@ -6590,18 +6507,19 @@ u16 GenerateMonVariant(u16 species, u32 variantSeed) {
     }
 
     DebugPrintf("GenerateMonVariant speciesName: %S", gSpeciesNames[species]);
-    DebugPrintf("GenerateMonVariant paletteSeeds: 0x%x, 0x%x, 0x%x, 0x%x spriteSeed: 0x%x",
+    DebugPrintf("GenerateMonVariant variantSeed: 0x%x", variantSeed);
+    DebugPrintf("GenerateMonVariant paletteSeeds: [0x%x, 0x%x, 0x%x, 0x%x] spriteSeed: 0x%x",
             paletteSeed0,
             paletteSeed1,
             paletteSeed2,
             paletteSeed3,
             spriteSeed);
-    DebugPrintf("GenerateMonVariant palettes: %d, %d, %d, %d sprite: %d",
-            palettes[0],
-            palettes[1],
-            palettes[2],
-            palettes[3],
-            sprite);
+    DebugPrintf("GenerateMonVariant palettes: [%d, %d, %d, %d] sprite: %d",
+            (variant & 0x0007),
+            (variant & 0x0038) >> 3,
+            (variant & 0x01C0) >> 6,
+            (variant & 0x0E00) >> 9,
+            (variant & 0x3000) >> 12);
     DebugPrintf("GenerateMonVariant variant: 0x%x", variant);
     return variant;
 }
@@ -6668,24 +6586,13 @@ const struct SpritePalette *GetMonPaletteStructFromVariant(u16 species, u16 vari
 //    case SPECIES_SQUIRTLE:
 
     case SPECIES_CATERPIE:
-        return &gMonPaletteTable[SPECIES_CATERPIE][PALETTE_CATERPIE_GREEN];
+        return &gMonPaletteTable[SPECIES_CATERPIE][palettes[0]];
 
     case SPECIES_METAPOD:
-        switch (palettes[0]) {
-        case PALETTE_BUTTERFREE_WHITE:
-        case PALETTE_BUTTERFREE_RED:
-            return &gMonPaletteTable[SPECIES_METAPOD][PALETTE_METAPOD_YELLOW];
-        case PALETTE_BUTTERFREE_GREEN:
-        case PALETTE_BUTTERFREE_CYAN:
-            return &gMonPaletteTable[SPECIES_METAPOD][PALETTE_METAPOD_GREEN];
-        case PALETTE_BUTTERFREE_BLUE:
-        case PALETTE_BUTTERFREE_PINK:
-            return &gMonPaletteTable[SPECIES_METAPOD][PALETTE_METAPOD_BLUE];
-        }
+        return &gMonPaletteTable[SPECIES_METAPOD][palettes[1]];
 
     case SPECIES_BUTTERFREE:
-        return &gMonPaletteTable[SPECIES_BUTTERFREE][palettes[0]];
-        break;
+        return &gMonPaletteTable[SPECIES_BUTTERFREE][palettes[2]];
 
     case SPECIES_WEEDLE:
         return &gMonPaletteTable[SPECIES_WEEDLE][PALETTE_WEEDLE_ORANGE];
@@ -6705,7 +6612,6 @@ const struct SpritePalette *GetMonPaletteStructFromVariant(u16 species, u16 vari
 
     case SPECIES_BEEDRILL:
         return &gMonPaletteTable[SPECIES_BEEDRILL][palettes[0]];
-        break;
 
 //    case SPECIES_PIDGEY:
 //    case SPECIES_RATTATA:
@@ -6713,7 +6619,6 @@ const struct SpritePalette *GetMonPaletteStructFromVariant(u16 species, u16 vari
 
     case SPECIES_MANKEY:
         return &gMonPaletteTable[SPECIES_MANKEY][PALETTE_MANKEY_YELLOW];
-        break;
 
 //    case SPECIES_GEODUDE:
 //    case SPECIES_ONIX:
@@ -6772,25 +6677,25 @@ const struct SpritePalette *GetMonPaletteStructStandard(u16 species, u16 variant
     return &dynamicPalette;
 }
 
-#define MIX_COLOR_BY_WEIGHT(index) (palette1->data[index] * (100 - weight) / 100) + (palette2->data[index] * weight / 100)
+#define MIX_COLORS_BY_WEIGHT(index) MixColors(palette1->data[index], palette2->data[index], weight)
 const struct SpritePalette *MixPalettes(const struct SpritePalette *palette1, const struct SpritePalette *palette2, u16 weight) {
     const u16 data[16] = {
-            MIX_COLOR_BY_WEIGHT(0),
-            MIX_COLOR_BY_WEIGHT(1),
-            MIX_COLOR_BY_WEIGHT(2),
-            MIX_COLOR_BY_WEIGHT(3),
-            MIX_COLOR_BY_WEIGHT(4),
-            MIX_COLOR_BY_WEIGHT(5),
-            MIX_COLOR_BY_WEIGHT(6),
-            MIX_COLOR_BY_WEIGHT(7),
-            MIX_COLOR_BY_WEIGHT(8),
-            MIX_COLOR_BY_WEIGHT(9),
-            MIX_COLOR_BY_WEIGHT(10),
-            MIX_COLOR_BY_WEIGHT(11),
-            MIX_COLOR_BY_WEIGHT(12),
-            MIX_COLOR_BY_WEIGHT(13),
-            MIX_COLOR_BY_WEIGHT(14),
-            MIX_COLOR_BY_WEIGHT(15),
+            MIX_COLORS_BY_WEIGHT(0),
+            MIX_COLORS_BY_WEIGHT(1),
+            MIX_COLORS_BY_WEIGHT(2),
+            MIX_COLORS_BY_WEIGHT(3),
+            MIX_COLORS_BY_WEIGHT(4),
+            MIX_COLORS_BY_WEIGHT(5),
+            MIX_COLORS_BY_WEIGHT(6),
+            MIX_COLORS_BY_WEIGHT(7),
+            MIX_COLORS_BY_WEIGHT(8),
+            MIX_COLORS_BY_WEIGHT(9),
+            MIX_COLORS_BY_WEIGHT(10),
+            MIX_COLORS_BY_WEIGHT(11),
+            MIX_COLORS_BY_WEIGHT(12),
+            MIX_COLORS_BY_WEIGHT(13),
+            MIX_COLORS_BY_WEIGHT(14),
+            MIX_COLORS_BY_WEIGHT(15),
     };
 
     struct SpritePalette dynamicPaletteBuffer = {
@@ -6800,4 +6705,23 @@ const struct SpritePalette *MixPalettes(const struct SpritePalette *palette1, co
 
     dynamicPalette = dynamicPaletteBuffer;
     return &dynamicPalette;
+}
+
+u16 MixColors(u16 color1, u16 color2, u16 weight2) {
+    u16 r1, g1, b1, r2, g2, b2, r3, g3, b3;
+    u16 weight1 = 100 - weight2;
+
+    r1 = (color1 & 0x001F);
+    g1 = (color1 & 0x03E0) >> 5;
+    b1 = (color1 & 0x7C00) >> 10;
+
+    r2 = (color2 & 0x001F);
+    g2 = (color2 & 0x03E0) >> 5;
+    b2 = (color2 & 0x7C00) >> 10;
+
+    r3 = ((r1 * weight1) + (r2 * weight2)) / 100;
+    g3 = ((g1 * weight1) + (g2 * weight2)) / 100;
+    b3 = ((b1 * weight1) + (b2 * weight2)) / 100;
+
+    return r3 | (g3 << 5) | (b3 << 10);
 }

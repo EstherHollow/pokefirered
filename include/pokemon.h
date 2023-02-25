@@ -9,10 +9,10 @@
 struct PokemonVariant
 {
     u16 sprite:2;
+    u16 palette0:3;
     u16 palette1:3;
     u16 palette2:3;
     u16 palette3:3;
-    u16 palette4:3;
     u16 sparkle:1;
     u16 zero:1;
 };
@@ -498,5 +498,6 @@ const struct SpritePalette *GetMonPaletteStruct(struct Pokemon *mon);
 const struct SpritePalette *GetMonPaletteStructFromVariant(u16 species, u16 variant);
 const struct SpritePalette *GetMonPaletteStructStandard(u16 species, u16 variant);
 const struct SpritePalette *MixPalettes(const struct SpritePalette *palette1, const struct SpritePalette *palette2, u16 weight);
+u16 MixColors(u16 color1, u16 color2, u16 weight);
 
 #endif // GUARD_POKEMON_H

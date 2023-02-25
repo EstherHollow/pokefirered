@@ -8,9 +8,9 @@ ViridianCity_House_Text_MyDaddyLovesMonsToo::
     .string "My daddy loves POKéMON, too.$"
 
 ViridianCity_House_Text_Speary::
-    .string "SPEARY: Tetweet!$"
+    .string "BRITNEY: Tetweet!$"
 
 ViridianCity_House_Text_SpearowNameSpeary::
     .string "SPEAROW\n"
-    .string "Name: SPEARY$"
+    .string "Name: BRITNEY$"
 
