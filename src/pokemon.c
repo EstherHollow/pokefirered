@@ -6769,6 +6769,7 @@ const struct SpritePalette *GetMonPaletteStructFromVariant(u16 species, u16 vari
 //    case SPECIES_PIDGEY:
 //    case SPECIES_RATTATA:
 //    case SPECIES_PIKACHU:
+//    case SPECIES_NIDORAN_F:
 
     case SPECIES_MANKEY:
         return &gMonPaletteTable[SPECIES_MANKEY][PALETTE_MANKEY_YELLOW];

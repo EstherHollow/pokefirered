@@ -63,32 +63,33 @@ def write_variant_constants(file, json_data):
     
     for species in json_data["variant_data"]:
         species_name = species["species"]
+        species_constant = to_constant(species_name)
         
         try:
             sprites = species["sprites"]
             for i, sprite_name in enumerate(sprites):
-                write(f"#define SPRITE_{species_name.upper()}_{sprite_name.upper()} {i}")
-            write(f"#define NUM_SPRITES_{species_name.upper()} {len(sprites)}")
+                write(f"#define SPRITE_{species_constant}_{sprite_name.upper()} {i}")
+            write(f"#define NUM_SPRITES_{species_constant} {len(sprites)}")
         except KeyError:
-            write(f"#define SPRITE_{species_name.upper()}_NORMAL 0")
-            write(f"#define NUM_SPRITES_{species_name.upper()} 1")
+            write(f"#define SPRITE_{species_constant}_NORMAL 0")
+            write(f"#define NUM_SPRITES_{species_constant} 1")
         write("")
         
         try:
             palettes = species["palettes"]
             for i, palette_name in enumerate(palettes):
-                write(f"#define PALETTE_{species_name.upper()}_{palette_name.upper()} {i}")
-            write(f"#define NUM_PALETTES_{species_name.upper()} {len(palettes)}")
+                write(f"#define PALETTE_{species_constant}_{palette_name.upper()} {i}")
+            write(f"#define NUM_PALETTES_{species_constant} {len(palettes)}")
         except KeyError:
-            write(f"#define PALETTE_{species_name.upper()}_NORMAL 0")
-            write(f"#define NUM_PALETTES_{species_name.upper()} 1")
+            write(f"#define PALETTE_{species_constant}_NORMAL 0")
+            write(f"#define NUM_PALETTES_{species_constant} 1")
         write("")
         
         try:
             subpalettes = species["subpalettes"]
             for i, subpalette in enumerate(subpalettes):
                 subpalette_name = subpalette["name"]
-                write(f"#define SUBPALETTE_{species_name.upper()}_{subpalette_name.upper()} {i}")
+                write(f"#define SUBPALETTE_{species_constant}_{subpalette_name.upper()} {i}")
         except KeyError:
             write(f"// No sub-palettes defined for {species_name}")
         
@@ -110,7 +111,8 @@ def write_variant_tables(file, json_data):
     write(f"static const u8 {sprite_count_label}[NUM_SPECIES] = {{")
     for species in json_data["variant_data"]:
         species_name = species["species"]
-        write(f"{tab}SPECIES_SPRITE_COUNT({species_name.upper()}),")
+        species_constant = to_constant(species_name)
+        write(f"{tab}SPECIES_SPRITE_COUNT({species_constant}),")
     write(f"}};")
     write("")
     
@@ -120,7 +122,8 @@ def write_variant_tables(file, json_data):
     write(f"static const u8 {palette_count_label}[NUM_SPECIES] = {{")
     for species in json_data["variant_data"]:
         species_name = species["species"]
-        write(f"{tab}SPECIES_PALETTE_COUNT({species_name.upper()}),")
+        species_constant = to_constant(species_name)
+        write(f"{tab}SPECIES_PALETTE_COUNT({species_constant}),")
     write(f"}};")
     write("")
     
@@ -128,7 +131,8 @@ def write_variant_tables(file, json_data):
     write(f"static const u8 {subpalette_map_label}[NUM_SPECIES][16] = {{")
     for species in json_data["variant_data"]:
         species_name = species["species"]
-        write(f"{tab}[SPECIES_{species_name.upper()}] = {{")
+        species_constant = to_constant(species_name)
+        write(f"{tab}[SPECIES_{species_constant}] = {{")
         
         try:
             subpalettes = species["subpalettes"]
@@ -298,12 +302,13 @@ def to_variable(species_name):
     return species_name
 
 def to_constant(species_name):
-    if species_name == "Nidoran F": return "NIDORAN_F"
-    if species_name == "Nidoran M": return "NIDORAN_M"
-    if species_name == "Farfetch'd": return "FARFETCHD"
-    if species_name == "Mr. Mime": return "MR_MIME"
-    if species_name == "Unown": return "UNOWN"
-    if species_name == "Ho-Oh": return "HO_OH"
+    species_label = to_label(species_name)
+    if species_label == "nidoran f": return "NIDORAN_F"
+    if species_label == "nidoran m": return "NIDORAN_M"
+    if species_label == "farfetch'd": return "FARFETCHD"
+    if species_label == "mr. mime": return "MR_MIME"
+    if species_label == "unown": return "UNOWN"
+    if species_label == "ho-oh": return "HO_OH"
     return species_name.upper()
 
 def to_directory(species_index, species_name):
