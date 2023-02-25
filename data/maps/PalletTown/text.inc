@@ -16,9 +16,8 @@ PalletTown_Text_RaisingMonsToo::
     .string "protect me.$"
 
 PalletTown_Text_CanStoreItemsAndMonsInPC::
-    .string "Technology is incredible!\p"
-    .string "You can now store and recall items\n"
-    .string "and POKéMON as data via PC.$"
+    .string "Everything is moddable!\p"
+    .string "Even the words I'm speaking!$"
 
 PalletTown_Text_OakPokemonResearchLab::
     .string "OAK POKéMON RESEARCH LAB$"

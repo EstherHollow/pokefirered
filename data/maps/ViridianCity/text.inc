@@ -19,16 +19,16 @@ ViridianCity_Text_OhOkayThen::
     .string "Oh, okay then!$"
 
 ViridianCity_Text_ExplainCaterpieWeedle::
-    .string "CATERPIE has no poison,\n"
-    .string "but WEEDLE does.\p"
-    .string "Watch that your POKéMON aren't\n"
-    .string "stabbed by WEEDLE's POISON STING.$"
+    .string "CATERPIE is always green,\n"
+    .string "and WEEDLE is yellow.\p"
+    .string "You have to evolve them to see\n"
+    .string "their true colors!$"
 
 ViridianCity_Text_GrandpaHasntHadCoffeeYet::
     .string "Oh, Grandpa!\n"
-    .string "Don't be so mean!\p"
+    .string "Why are you like this!\p"
     .string "I'm so sorry.\n"
-    .string "He hasn't had his coffee yet.$"
+    .string "He's still drunk from last night.$"
 
 ViridianCity_Text_GoShoppingInPewterOccasionally::
     .string "I go shopping in PEWTER CITY\n"
@@ -105,17 +105,17 @@ ViridianCity_Text_CitySign::
 
 ViridianCity_Text_CatchMonsForEasierBattles::
     .string "TRAINER TIPS\p"
-    .string "Catch POKéMON and expand your\n"
-    .string "collection.\p"
-    .string "The more you have, the easier it\n"
-    .string "is to battle.$"
+    .string "Catch POKéMON and keep them in\n"
+    .string "your party.\p"
+    .string "They gain experience just\n"
+    .string "by sticking with you.$"
 
 ViridianCity_Text_MovesLimitedByPP::
     .string "TRAINER TIPS\p"
-    .string "The battle moves of POKéMON are\n"
-    .string "limited by their POWER POINTS, PP.\p"
-    .string "To replenish PP, rest your tired\n"
-    .string "POKéMON at a POKéMON CENTER.$"
+    .string "If your POKéMON is too strong,\n"
+    .string "they won't gain experience.\p"
+    .string "Challenge yourself by fighting\n"
+    .string "stronger POKéMON.$"
 
 ViridianCity_Text_GymSign::
     .string "VIRIDIAN CITY POKéMON GYM$"

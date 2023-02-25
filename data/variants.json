@@ -80,7 +80,8 @@
             "index": 10,
             "species": "caterpie",
             "palettes": [
-                "green"
+                "green",
+                "black"
             ]
         },
         {
@@ -108,7 +109,8 @@
             "index": 13,
             "species": "weedle",
             "palettes": [
-                "orange"
+                "orange",
+                "purple"
             ]
         },
         {
@@ -138,7 +140,6 @@
             "palettes": [
                 "brown",
                 "red",
-                "orange",
                 "yellow",
                 "blue"
             ]
@@ -148,7 +149,6 @@
             "species": "rattata",
             "palettes": [
                 "brown",
-                "red",
                 "purple",
                 "blue",
                 "white"
@@ -180,9 +180,8 @@
                 "white",
                 "green",
                 "brown",
-                "brown2",
-                "orange",
-                "red"
+                "gray",
+                "orange"
             ]
         },
         {
@@ -215,7 +214,6 @@
                 "green",
                 "teal",
                 "blue",
-                "indigo",
                 "purple"
             ],
             "subpalettes": [
@@ -248,7 +246,6 @@
             "species": "hoothoot",
             "palettes": [
                 "brown",
-                "dark_brown",
                 "black",
                 "white"
             ]
@@ -258,14 +255,12 @@
             "species": "spinarak",
             "palettes": [
                 "green",
-                "blue",
-                "brown",
-                "yellow"
+                "blue"
             ],
             "subpalettes": [
                 {
                     "name": "body",
-                    "indexes": [2, 3, 4, 5, 6]
+                    "indexes": [1, 2, 3, 4, 5, 6, 13, 14, 15]
                 },
                 {
                     "name": "legs",
@@ -274,10 +269,6 @@
                 {
                     "name": "fangs",
                     "indexes": [10, 11, 12]
-                },
-                {
-                    "name": "eyes",
-                    "indexes": [1, 13, 14, 15]
                 }
             ]
         },
@@ -287,10 +278,10 @@
             "palettes": [
                 "purple",
                 "blue",
-                "light_blue",
+                "sky",
                 "green",
-                "white",
-                "yellow"
+                "yellow",
+                "pink"
             ]
         },
         {
@@ -333,7 +324,6 @@
             "palettes": [
                 "black",
                 "red",
-                "purple",
                 "blue",
                 "yellow"
             ]
@@ -346,23 +336,8 @@
                 "caramel",
                 "vanilla",
                 "strawberry",
-                "neopolitan",
                 "mint",
                 "lemon"
-            ],
-            "subpalettes": [
-                {
-                    "name": "body_dark",
-                    "indexes": [1, 2, 3, 4, 6, 7, 14, 15]
-                },
-                {
-                    "name": "body_light",
-                    "indexes": [5, 8, 9, 13]
-                },
-                {
-                    "name": "eyes",
-                    "indexes": [10, 11, 12]
-                }
             ]
         },
         {
@@ -371,7 +346,6 @@
             "palettes": [
                 "green",
                 "blue",
-                "pink",
                 "red",
                 "orange",
                 "yellow",

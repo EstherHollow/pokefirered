@@ -46,8 +46,17 @@ def write_variant_constants(file, json_data):
     write("#define VARIANT_DEFAULT 0")
     write("#define VARIANT_RANDOM  0xFFFF")
     write("")
-    write("#define VARIANT_ONE_TONE(palette) ((palette) | (palette << 3) | (palette << 6) | (palette << 9))")
-    write("#define VARIANT_TWO_TONE(palette1, palette2) ((palette1) | (palette2 << 3) | (palette1 << 6) | (palette2 << 9))")
+    write("#define VARIANT_FOUR_TONE(palette0, palette1, palette2, palette3) ((palette0) | (palette1 << 3) | (palette2 << 6) | (palette3 << 9))")
+    write("#define VARIANT_TWO_TONE(palette0, palette1) VARIANT_FOUR_TONE(palette0, palette1, palette0, palette1)")
+    write("#define VARIANT_ONE_TONE(palette) VARIANT_FOUR_TONE(palette, palette, palette, palette)")
+    write("")
+    write("#if defined(FIRERED)")
+    write("#define VARIANT_FROM_GAME_VERSION VARIANT_ONE_TONE(1)")
+    write("#elif defined(LEAFGREEN)")
+    write("#define VARIANT_FROM_GAME_VERSION VARIANT_ONE_TONE(2)")
+    write("#else")
+    write("#define VARIANT_FROM_GAME_VERSION VARIANT_ONE_TONE(3)")
+    write("#endif")
     write("")
     write("#define SUBPALETTE_ANY 0")
     write("")
@@ -81,7 +90,7 @@ def write_variant_constants(file, json_data):
                 subpalette_name = subpalette["name"]
                 write(f"#define SUBPALETTE_{species_name.upper()}_{subpalette_name.upper()} {i}")
         except KeyError:
-            write(f"// No subpalettes defined for {species_name}")
+            write(f"// No sub-palettes defined for {species_name}")
         
         write("")
     
