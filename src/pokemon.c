@@ -6607,7 +6607,7 @@ const struct SpritePalette *GetMonPaletteStructFromVariant(u16 species, u16 vari
     case SPECIES_WEEDLE:
         return &gMonPaletteTable[SPECIES_WEEDLE][palettes[0]];
     case SPECIES_KAKUNA:
-        return &gMonPaletteTable[SPECIES_WEEDLE][palettes[1]];
+        return &gMonPaletteTable[SPECIES_KAKUNA][palettes[1]];
     case SPECIES_BEEDRILL:
         return &gMonPaletteTable[SPECIES_BEEDRILL][palettes[2]];
 
