@@ -7,6 +7,9 @@ const u8 GetPrimaryPalette(u16 species, u16 variant) {
     case SPECIES_CATERPIE: index = 0; break;
     case SPECIES_METAPOD: index = 1; break;
     case SPECIES_BUTTERFREE: index = 2; break;
+    case SPECIES_WEEDLE: index = 0; break;
+    case SPECIES_KAKUNA: index = 1; break;
+    case SPECIES_BEEDRILL: index = 2; break;
     }
     switch (index) {
     case 0: return (variant & 0x0007);

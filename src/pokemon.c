@@ -6386,7 +6386,19 @@ u16 GenerateMonVariant(u16 species, u32 variantSeed) {
     case SPECIES_WEEDLE:
     case SPECIES_KAKUNA:
     case SPECIES_BEEDRILL:
-        variant = VARIANT_ONE_TONE(variantSeed % NUM_PALETTES_BEEDRILL);
+        palettes[0] = PALETTE_WEEDLE_ORANGE;
+        palettes[2] = variantSeed % NUM_PALETTES_BEEDRILL;
+        switch (palettes[2]) {
+        case PALETTE_BEEDRILL_PINK:
+        case PALETTE_BEEDRILL_RED:
+            palettes[1] = PALETTE_KAKUNA_RED;
+        case PALETTE_BEEDRILL_TANGELO:
+        case PALETTE_BEEDRILL_ORANGE:
+            palettes[1] = PALETTE_KAKUNA_ORANGE;
+        case PALETTE_BEEDRILL_GOLD:
+        case PALETTE_BEEDRILL_YELLOW:
+            palettes[1] = PALETTE_KAKUNA_YELLOW;
+        }
         break;
 
     case SPECIES_PIDGEY:
@@ -6587,31 +6599,17 @@ const struct SpritePalette *GetMonPaletteStructFromVariant(u16 species, u16 vari
 
     case SPECIES_CATERPIE:
         return &gMonPaletteTable[SPECIES_CATERPIE][palettes[0]];
-
     case SPECIES_METAPOD:
         return &gMonPaletteTable[SPECIES_METAPOD][palettes[1]];
-
     case SPECIES_BUTTERFREE:
         return &gMonPaletteTable[SPECIES_BUTTERFREE][palettes[2]];
 
     case SPECIES_WEEDLE:
-        return &gMonPaletteTable[SPECIES_WEEDLE][PALETTE_WEEDLE_ORANGE];
-
+        return &gMonPaletteTable[SPECIES_WEEDLE][palettes[0]];
     case SPECIES_KAKUNA:
-        switch (palettes[0]) {
-        case PALETTE_BEEDRILL_PINK:
-        case PALETTE_BEEDRILL_RED:
-            return &gMonPaletteTable[SPECIES_KAKUNA][PALETTE_KAKUNA_RED];
-        case PALETTE_BEEDRILL_TANGELO:
-        case PALETTE_BEEDRILL_ORANGE:
-            return &gMonPaletteTable[SPECIES_KAKUNA][PALETTE_KAKUNA_ORANGE];
-        case PALETTE_BEEDRILL_GOLD:
-        case PALETTE_BEEDRILL_YELLOW:
-            return &gMonPaletteTable[SPECIES_KAKUNA][PALETTE_KAKUNA_YELLOW];
-        }
-
+        return &gMonPaletteTable[SPECIES_WEEDLE][palettes[1]];
     case SPECIES_BEEDRILL:
-        return &gMonPaletteTable[SPECIES_BEEDRILL][palettes[0]];
+        return &gMonPaletteTable[SPECIES_BEEDRILL][palettes[2]];
 
 //    case SPECIES_PIDGEY:
 //    case SPECIES_RATTATA:
