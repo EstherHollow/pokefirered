@@ -51,6 +51,7 @@ static bool8 FieldEffectCmd_loadtiles_callnative(const u8 **script, u32 *result)
 static bool8 FieldEffectCmd_loadfadedpal_callnative(const u8 **script, u32 *result);
 static void FieldEffectScript_LoadTiles(const u8 **script);
 static void FieldEffectScript_LoadFadedPal(const u8 **script);
+static void FieldEffectScript_LoadFadedPalGeneralIndex(const u8 **script);
 static void FieldEffectScript_LoadPal(const u8 **script);
 static void FieldEffectScript_CallNative(const u8 **script, u32 *result);
 static void FieldEffectFreeTilesIfUnused(u16 tilesTag);
@@ -417,7 +418,7 @@ static bool8 FieldEffectCmd_loadtiles_callnative(const u8 **script, u32 *result)
 static bool8 FieldEffectCmd_loadfadedpal_callnative(const u8 **script, u32 *result)
 {
     (*script)++;
-    FieldEffectScript_LoadFadedPal(script);
+    FieldEffectScript_LoadFadedPalGeneralIndex(script);
     FieldEffectScript_CallNative(script, result);
     return TRUE;
 }
@@ -466,6 +467,23 @@ static void FieldEffectScript_LoadFadedPal(const u8 **script)
         ApplyGlobalFieldPaletteTint(IndexOfSpritePaletteTag(spritePalette->tag));
     UpdateSpritePaletteWithWeather(IndexOfSpritePaletteTag(spritePalette->tag));
     *script += sizeof(u32);
+}
+
+static void FieldEffectScript_LoadFadedPalGeneralIndex(const u8 **script)
+{
+    u32 paletteId = FieldEffectScript_ReadWord(script);
+    const struct SpritePalette spritePalette = {
+            .data = gMapHeader.mapLayout->secondaryTileset->palettes[(paletteId == 0) ? FLDEFF_PAL_INDEX_0 : FLDEFF_PAL_INDEX_1],
+            .tag = (paletteId == 0) ? FLDEFF_PAL_TAG_GENERAL_0 : FLDEFF_PAL_TAG_GENERAL_1,
+    };
+    u8 idx = IndexOfSpritePaletteTag(spritePalette.tag);
+    LoadSpritePalette(&spritePalette);
+    if (idx == 0xFF)
+        ApplyGlobalFieldPaletteTint(IndexOfSpritePaletteTag(spritePalette.tag));
+    UpdateSpritePaletteWithWeather(IndexOfSpritePaletteTag(spritePalette.tag));
+    *script += sizeof(u32);
+
+    DebugPrintf("DEBUG paletteId: 0x%x", paletteId);
 }
 
 static void FieldEffectScript_LoadPal(const u8 **script)
@@ -606,6 +624,22 @@ static u8 AddNewGameBirchObject(s16 x, s16 y, u8 subpriority)
 
 u8 CreateMonSprite_PicBox(u16 species, s16 x, s16 y, u8 subpriority)
 {
+//    u16 variant;
+//    u16 spriteId;
+//
+//    switch(species) {
+//    case SPECIES_BULBASAUR:
+//    case SPECIES_CHARMANDER:
+//    case SPECIES_SQUIRTLE:
+//        variant = VARIANT_FROM_GAME_VERSION;
+//        break;
+//    default:
+//        variant = VARIANT_DEFAULT;
+//        break;
+//    }
+//
+//    spriteId = CreateMonPicSprite_HandleDeoxys(species, variant, 0x8000, TRUE, x, y, 0, gMonPaletteTable[species][0].tag);
+
     u16 spriteId = CreateMonPicSprite_HandleDeoxys(species, 0, 0x8000, TRUE, x, y, 0, gMonPaletteTable[species][0].tag);
     PreservePaletteInWeather(IndexOfSpritePaletteTag(gMonPaletteTable[species][0].tag) + 0x10);
     if (spriteId == 0xFFFF)
