@@ -964,6 +964,37 @@ void LoadMapTilesetPalettes(const struct MapHeader *mapHeader) {
         MixColors(fromTileset->palettes[index][15], toTileset->palettes[index][15], weight),    \
 }
 
+void LoadFieldEffectPalette(u8 paletteIndex, u16 tag) {
+    const struct PaletteTransition *transition = gMapHeader.transition;
+    s32 i;
+
+    if (transition->axis != NO_TRANSITION) {
+        const struct MapHeader *fromHeader = Overworld_GetMapHeaderByGroupAndId(transition->fromGroup, transition->fromNum);
+        const struct MapHeader *toHeader = Overworld_GetMapHeaderByGroupAndId(transition->toGroup, transition->toNum);
+        const struct Tileset *fromTileset = fromHeader->mapLayout->secondaryTileset;
+        const struct Tileset *toTileset = toHeader->mapLayout->secondaryTileset;
+
+        u16 weight = transition->axis == AXIS_HORIZONTAL ?
+                max(0, min(gSaveBlock1Ptr->pos.x, gMapHeader.mapLayout->width)) * 100 / gMapHeader.mapLayout->width :
+                max(0, min(gSaveBlock1Ptr->pos.y, gMapHeader.mapLayout->height)) * 100 / gMapHeader.mapLayout->height;
+
+        const u16 data[16] = MIX_PALETTE_DATA(paletteIndex);
+        const struct SpritePalette spritePalette = {
+                .data = data,
+                .tag = tag,
+        };
+        FreeSpritePaletteByTag(tag);
+        LoadSpritePalette(&spritePalette);
+    }
+    else {
+        const struct SpritePalette spritePalette = {
+                .data = gMapHeader.mapLayout->secondaryTileset->palettes[paletteIndex],
+                .tag = tag,
+        };
+        LoadSpritePalette(&spritePalette);
+    }
+}
+
 void LoadTransitionPalettes(const struct MapHeader *mapHeader) {
     const struct PaletteTransition *transition = mapHeader->transition;
     const struct MapHeader *fromHeader = Overworld_GetMapHeaderByGroupAndId(transition->fromGroup, transition->fromNum);
@@ -971,9 +1002,9 @@ void LoadTransitionPalettes(const struct MapHeader *mapHeader) {
     const struct Tileset *fromTileset = fromHeader->mapLayout->secondaryTileset;
     const struct Tileset *toTileset = toHeader->mapLayout->secondaryTileset;
 
-    u16 weight = gMapHeader.transition->axis == AXIS_HORIZONTAL ?
-            max(0, min(gSaveBlock1Ptr->pos.x, gMapHeader.mapLayout->width)) * 100 / gMapHeader.mapLayout->width :
-            max(0, min(gSaveBlock1Ptr->pos.y, gMapHeader.mapLayout->height)) * 100 / gMapHeader.mapLayout->height;
+    u16 weight = transition->axis == AXIS_HORIZONTAL ?
+            max(0, min(gSaveBlock1Ptr->pos.x, mapHeader->mapLayout->width)) * 100 / mapHeader->mapLayout->width :
+            max(0, min(gSaveBlock1Ptr->pos.y, mapHeader->mapLayout->height)) * 100 / mapHeader->mapLayout->height;
 
     const u16 data[][16] = {
             MIX_PALETTE_DATA(0),

@@ -50,6 +50,7 @@ void MapGridSetMetatileImpassabilityAt(s32 x, s32 y, bool32 arg2);
 bool8 CameraMove(s32 x, s32 y);
 void CopyMapTilesetsToVram(struct MapLayout const * mapLayout);
 void LoadMapTilesetPalettes(const struct MapHeader *mapHeader);
+void LoadFieldEffectPalette(u8 paletteIndex, u16 tag);
 void LoadTransitionPalettes();
 void InitMap(void);
 void CopySecondaryTilesetToVramUsingHeap(const struct MapLayout * mapLayout);
