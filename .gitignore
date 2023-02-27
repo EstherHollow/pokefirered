@@ -53,6 +53,8 @@ src/data/region_map/porymap_config.json
 src/data/pokemon/variant_tables.h
 src/data/graphics/pokemon.h
 include/constants/variants.h
+transition.inc
+transitions.inc
 tags
 tools/agbcc
 tools/binutils

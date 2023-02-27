@@ -22,6 +22,11 @@
 #define MAP_OFFSET_W (MAP_OFFSET * 2 + 1)
 #define MAP_OFFSET_H (MAP_OFFSET * 2)
 
+#define NO_TRANSITION   0
+#define AXIS_HORIZONTAL 1
+#define AXIS_VERTICAL   2
+#define PALETTE_TRANSITION_STEPS    3
+
 extern struct BackupMapLayout VMap;
 extern const struct MapLayout Route1_Layout;
 
@@ -44,7 +49,8 @@ u32 MapGridGetMetatileAttributeAt(s16 x, s16 y, u8 attributeType);
 void MapGridSetMetatileImpassabilityAt(s32 x, s32 y, bool32 arg2);
 bool8 CameraMove(s32 x, s32 y);
 void CopyMapTilesetsToVram(struct MapLayout const * mapLayout);
-void LoadMapTilesetPalettes(struct MapLayout const * mapLayout);
+void LoadMapTilesetPalettes(const struct MapHeader *mapHeader);
+void LoadTransitionPalettes();
 void InitMap(void);
 void CopySecondaryTilesetToVramUsingHeap(const struct MapLayout * mapLayout);
 void InitMapFromSavedGame(void);
