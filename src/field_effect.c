@@ -482,8 +482,6 @@ static void FieldEffectScript_LoadFadedPalGeneralIndex(const u8 **script)
         ApplyGlobalFieldPaletteTint(IndexOfSpritePaletteTag(spritePalette.tag));
     UpdateSpritePaletteWithWeather(IndexOfSpritePaletteTag(spritePalette.tag));
     *script += sizeof(u32);
-
-    DebugPrintf("DEBUG paletteId: 0x%x", paletteId);
 }
 
 static void FieldEffectScript_LoadPal(const u8 **script)

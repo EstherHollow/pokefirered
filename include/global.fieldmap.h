@@ -169,25 +169,35 @@ struct MapConnections
     struct MapConnection *connections;
 };
 
+struct PaletteTransition
+{
+    u8 axis;
+    u8 fromGroup;
+    u8 fromNum;
+    u8 toGroup;
+    u8 toNum;
+};
+
 struct MapHeader
 {
     /* 0x00 */ const struct MapLayout *mapLayout;
     /* 0x04 */ const struct MapEvents *events;
     /* 0x08 */ const u8 *mapScripts;
     /* 0x0C */ const struct MapConnections *connections;
-    /* 0x10 */ u16 music;
-    /* 0x12 */ u16 mapLayoutId;
-    /* 0x14 */ u8 regionMapSectionId;
-    /* 0x15 */ u8 cave;
-    /* 0x16 */ u8 weather;
-    /* 0x17 */ u8 mapType;
+    /* 0x10 */ const struct PaletteTransition *transition;
+    /* 0x14 */ u16 music;
+    /* 0x16 */ u16 mapLayoutId;
+    /* 0x1A */ u8 regionMapSectionId;
+    /* 0x19 */ u8 cave;
+    /* 0x1A */ u8 weather;
+    /* 0x1B */ u8 mapType;
                // fields correspond to the arguments in the map_header_flags macro
-    /* 0x18 */ bool8 bikingAllowed;
-    /* 0x19 */ bool8 allowEscaping:1; // Escape Rope and Dig
+    /* 0x1C */ bool8 bikingAllowed;
+    /* 0x1D */ bool8 allowEscaping:1; // Escape Rope and Dig
                bool8 allowRunning:1;
                bool8 showMapName:6; // the last 5 bits are unused
-    /* 0x1A */ s8 floorNum;
-    /* 0x1B */ u8 battleType;
+    /* 0x1E */ s8 floorNum;
+    /* 0x1F */ u8 battleType;
 };
 
 struct ObjectEvent

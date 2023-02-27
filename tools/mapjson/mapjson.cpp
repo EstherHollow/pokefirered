@@ -101,6 +101,8 @@ string generate_map_header_text(Json map_data, Json layouts_data) {
     else
         text << "\t.4byte 0x0\n";
 
+    text << "\t.4byte " << map_data["name"].string_value() << "_PaletteTransition\n";
+
     text << "\t.2byte " << map_data["music"].string_value() << "\n"
          << "\t.2byte " << layout["id"].string_value() << "\n"
          << "\t.byte "  << map_data["region_map_section"].string_value() << "\n"
@@ -153,6 +155,20 @@ string generate_map_connections_text(Json map_data) {
     text << "\n" << map_data["name"].string_value() << "_MapConnections::\n"
          << "\t.4byte " << map_data["connections"].array_items().size() << "\n"
          << "\t.4byte " << map_data["name"].string_value() << "_MapConnectionsList\n\n";
+
+    return text.str();
+}
+
+string generate_map_transition_text(Json map_data) {
+    ostringstream text;
+    text << "@\n@ DO NOT MODIFY THIS FILE! It is auto-generated from data/maps/"
+         << map_data["name"].string_value()
+         << "/map.json\n@\n\n";
+
+    text << map_data["name"].string_value() << "_PaletteTransition::\n";
+    text << "\t.byte NO_TRANSITION\n";
+    text << "\tmap 0\n";
+    text << "\tmap 0\n\n";
 
     return text.str();
 }
@@ -419,11 +435,13 @@ void process_map(string map_filepath, string layouts_filepath) {
     string events_text = version == "firered" ? generate_firered_map_events_text(map_data)
                                               : generate_map_events_text(map_data);
     string connections_text = generate_map_connections_text(map_data);
+    string transition_text = generate_map_transition_text(map_data);
 
     string files_dir = get_directory_name(map_filepath);
     write_text_file(files_dir + "header.inc", header_text);
     write_text_file(files_dir + "events.inc", events_text);
     write_text_file(files_dir + "connections.inc", connections_text);
+    write_text_file(files_dir + "transition.inc", transition_text);
 }
 
 string generate_groups_text(Json groups_data) {
@@ -477,6 +495,23 @@ string generate_connections_text(Json groups_data) {
 
     for (Json map_name : map_names)
         text << "\t.include \"data/maps/" << map_name.string_value() << "/connections.inc\"\n";
+
+    return text.str();
+}
+
+string generate_transitions_text(Json groups_data) {
+    vector<string> map_names;
+
+    for (auto &group : groups_data["group_order"].array_items())
+    for (auto map_name : groups_data[group.string_value()].array_items())
+        map_names.push_back(map_name.string_value());
+
+    ostringstream text;
+
+    text << "@\n@ DO NOT MODIFY THIS FILE! It is auto-generated from data/maps/map_groups.json\n@\n\n";
+
+    for (string map_name : map_names)
+        text << "\t.include \"data/maps/" << map_name << "/transition.inc\"\n";
 
     return text.str();
 }
@@ -567,6 +602,7 @@ void process_groups(string groups_filepath) {
 
     string groups_text = generate_groups_text(groups_data);
     string connections_text = generate_connections_text(groups_data);
+    string transitions_text = generate_transitions_text(groups_data);
     string headers_text = generate_headers_text(groups_data);
     string events_text = generate_events_text(groups_data);
     string map_header_text = generate_map_constants_text(groups_filepath, groups_data);
@@ -576,6 +612,7 @@ void process_groups(string groups_filepath) {
 
     write_text_file(file_dir + "groups.inc", groups_text);
     write_text_file(file_dir + "connections.inc", connections_text);
+    write_text_file(file_dir + "transitions.inc", transitions_text);
     write_text_file(file_dir + "headers.inc", headers_text);
     write_text_file(file_dir + "events.inc", events_text);
     write_text_file(file_dir + ".." + s + ".." + s + "include" + s + "constants" + s + "map_groups.h", map_header_text);

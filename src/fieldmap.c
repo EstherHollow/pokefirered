@@ -664,6 +664,19 @@ bool8 CameraMove(s32 x, s32 y)
     {
         gSaveBlock1Ptr->pos.x += x;
         gSaveBlock1Ptr->pos.y += y;
+
+        if (gMapHeader.transition->axis != NO_TRANSITION) {
+            if ((   gMapHeader.transition->axis == AXIS_HORIZONTAL &&
+                    gSaveBlock1Ptr->pos.x % PALETTE_TRANSITION_STEPS == 0 &&
+                    x != 0
+                    ) || (
+                    gMapHeader.transition->axis == AXIS_VERTICAL &&
+                    gSaveBlock1Ptr->pos.y % PALETTE_TRANSITION_STEPS == 0 &&
+                    y != 0
+                )) {
+                LoadTransitionPalettes(&gMapHeader);
+            }
+        }
     }
     else
     {
@@ -918,10 +931,88 @@ void CopyMapTilesetsToVram(struct MapLayout const *mapLayout)
     }
 }
 
-void LoadMapTilesetPalettes(struct MapLayout const *mapLayout)
-{
-    if (mapLayout)
-    {
-        LoadTilesetPalette(mapLayout->secondaryTileset, 0, NUM_PALS_TOTAL * 16 * 2);
+void LoadMapTilesetPalettes(const struct MapHeader *mapHeader) {
+    const struct PaletteTransition *transition = mapHeader->transition;
+    const struct MapLayout *mapLayout = mapHeader->mapLayout;
+
+    if (transition->axis == NO_TRANSITION) {
+        if (mapLayout) {
+            LoadTilesetPalette(mapLayout->secondaryTileset, 0, NUM_PALS_TOTAL * 16 * 2);
+        }
     }
+    else {
+        LoadTransitionPalettes(mapHeader);
+    }
+}
+
+#define MIX_PALETTE_DATA(index) {                                                               \
+        MixColors(fromTileset->palettes[index][0], toTileset->palettes[index][0], weight),      \
+        MixColors(fromTileset->palettes[index][1], toTileset->palettes[index][1], weight),      \
+        MixColors(fromTileset->palettes[index][2], toTileset->palettes[index][2], weight),      \
+        MixColors(fromTileset->palettes[index][3], toTileset->palettes[index][3], weight),      \
+        MixColors(fromTileset->palettes[index][4], toTileset->palettes[index][4], weight),      \
+        MixColors(fromTileset->palettes[index][5], toTileset->palettes[index][5], weight),      \
+        MixColors(fromTileset->palettes[index][6], toTileset->palettes[index][6], weight),      \
+        MixColors(fromTileset->palettes[index][7], toTileset->palettes[index][7], weight),      \
+        MixColors(fromTileset->palettes[index][8], toTileset->palettes[index][8], weight),      \
+        MixColors(fromTileset->palettes[index][9], toTileset->palettes[index][9], weight),      \
+        MixColors(fromTileset->palettes[index][10], toTileset->palettes[index][10], weight),    \
+        MixColors(fromTileset->palettes[index][11], toTileset->palettes[index][11], weight),    \
+        MixColors(fromTileset->palettes[index][12], toTileset->palettes[index][12], weight),    \
+        MixColors(fromTileset->palettes[index][13], toTileset->palettes[index][13], weight),    \
+        MixColors(fromTileset->palettes[index][14], toTileset->palettes[index][14], weight),    \
+        MixColors(fromTileset->palettes[index][15], toTileset->palettes[index][15], weight),    \
+}
+
+void LoadTransitionPalettes(const struct MapHeader *mapHeader) {
+    const struct PaletteTransition *transition = mapHeader->transition;
+    const struct MapHeader *fromHeader = Overworld_GetMapHeaderByGroupAndId(transition->fromGroup, transition->fromNum);
+    const struct MapHeader *toHeader = Overworld_GetMapHeaderByGroupAndId(transition->toGroup, transition->toNum);
+    const struct Tileset *fromTileset = fromHeader->mapLayout->secondaryTileset;
+    const struct Tileset *toTileset = toHeader->mapLayout->secondaryTileset;
+
+    u16 weight = gMapHeader.transition->axis == AXIS_HORIZONTAL ?
+            max(0, min(gSaveBlock1Ptr->pos.x, gMapHeader.mapLayout->width)) * 100 / gMapHeader.mapLayout->width :
+            max(0, min(gSaveBlock1Ptr->pos.y, gMapHeader.mapLayout->height)) * 100 / gMapHeader.mapLayout->height;
+
+    const u16 data[][16] = {
+            MIX_PALETTE_DATA(0),
+            MIX_PALETTE_DATA(1),
+            MIX_PALETTE_DATA(2),
+            MIX_PALETTE_DATA(3),
+            MIX_PALETTE_DATA(4),
+            MIX_PALETTE_DATA(5),
+            MIX_PALETTE_DATA(6),
+            MIX_PALETTE_DATA(7),
+            MIX_PALETTE_DATA(8),
+            MIX_PALETTE_DATA(9),
+            MIX_PALETTE_DATA(10),
+            MIX_PALETTE_DATA(11),
+            MIX_PALETTE_DATA(12),
+            MIX_PALETTE_DATA(13),
+            MIX_PALETTE_DATA(14),
+            MIX_PALETTE_DATA(15),
+    };
+
+    const struct Tileset newTileset = {
+            .isCompressed = FALSE,
+            .isSecondary = TRUE,
+            .tiles = 0,
+            .palettes = data,
+            .metatiles = 0,
+            .callback = 0,
+            .metatileAttributes = 0,
+    };
+
+    DebugPrintf("LoadTransitionPalettes pos %d,%d axis %d from %d-%d to %d-%d weight %d",
+            gSaveBlock1Ptr->pos.x,
+            gSaveBlock1Ptr->pos.y,
+            transition->axis,
+            transition->fromGroup,
+            transition->fromNum,
+            transition->toGroup,
+            transition->toNum,
+            weight);
+
+    LoadTilesetPalette(&newTileset, 0, NUM_PALS_TOTAL * 16 * 2);
 }
