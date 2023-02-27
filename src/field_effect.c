@@ -472,15 +472,13 @@ static void FieldEffectScript_LoadFadedPal(const u8 **script)
 static void FieldEffectScript_LoadFadedPalGeneralIndex(const u8 **script)
 {
     u32 paletteId = FieldEffectScript_ReadWord(script);
-    const struct SpritePalette spritePalette = {
-            .data = gMapHeader.mapLayout->secondaryTileset->palettes[(paletteId == 0) ? FLDEFF_PAL_INDEX_0 : FLDEFF_PAL_INDEX_1],
-            .tag = (paletteId == 0) ? FLDEFF_PAL_TAG_GENERAL_0 : FLDEFF_PAL_TAG_GENERAL_1,
-    };
-    u8 idx = IndexOfSpritePaletteTag(spritePalette.tag);
-    LoadSpritePalette(&spritePalette);
+    u8 paletteIndex = (paletteId == 0) ? FLDEFF_PAL_INDEX_0 : FLDEFF_PAL_INDEX_1;
+    u16 tag = (paletteId == 0) ? FLDEFF_PAL_TAG_GENERAL_0 : FLDEFF_PAL_TAG_GENERAL_1;
+    u8 idx = IndexOfSpritePaletteTag(tag);
+    LoadFieldEffectPalette(paletteIndex, tag);
     if (idx == 0xFF)
-        ApplyGlobalFieldPaletteTint(IndexOfSpritePaletteTag(spritePalette.tag));
-    UpdateSpritePaletteWithWeather(IndexOfSpritePaletteTag(spritePalette.tag));
+        ApplyGlobalFieldPaletteTint(IndexOfSpritePaletteTag(tag));
+    UpdateSpritePaletteWithWeather(IndexOfSpritePaletteTag(tag));
     *script += sizeof(u32);
 }
 
