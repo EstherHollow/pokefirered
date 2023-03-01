@@ -277,7 +277,7 @@ static const struct TrainerMonNoItemDefaultMoves sParty_LassTera[] = {
                 .iv = 0,
                 .lvl = 9,
                 .species = SPECIES_RALTS,
-                .variant = VARIANT_ONE_TONE(PALETTE_RALTS_ORANGE),
+                .variant = VARIANT_ONE_TONE(PALETTE_RALTS_PUMPKIN),
         },
 };
 static const struct TrainerMonNoItemDefaultMoves sParty_BugCatcherSammy[] = {

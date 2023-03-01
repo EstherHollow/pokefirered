@@ -468,7 +468,7 @@ const struct VariantStats gVariantStats[][8] =
         [SPECIES_ANORITH] = {0},
         [SPECIES_ARMALDO] = {0},
         [SPECIES_RALTS] = {
-                [PALETTE_RALTS_WHITE] = VARIANT_ALTER_TYPE(TYPE_PSYCHIC, TYPE_GHOST),
+                [PALETTE_RALTS_GHOSTLY] = VARIANT_ALTER_TYPE(TYPE_PSYCHIC, TYPE_GHOST),
         },
         [SPECIES_KIRLIA] = {0},
         [SPECIES_GARDEVOIR] = {0},
