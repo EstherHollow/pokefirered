@@ -18,6 +18,7 @@ EWRAM_DATA u16 gWanderingEncounterState = 0;
 
 void UpdateWildEncounters(void) {
     struct ObjectEventTemplate template;
+    s16 cameraX, cameraY;
 
     if (!QL_IS_PLAYBACK_STATE && gWanderingEncounterState >= UPDATE_DELAY) {
         gWanderingEncounterState = 0;
@@ -38,8 +39,10 @@ void UpdateWildEncounters(void) {
                     template.script = 0;
                     template.flagId = 0;
 
-                    DebugPrintf("UpdateWildEncounters spawning localId %d", template.localId);
-                    TrySpawnObjectEventTemplate(&template, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, 0, 0);
+                    GetObjectEventMovingCameraOffset(&cameraX, &cameraY);
+
+                    DebugPrintf("UpdateWildEncounters localId %d");
+                    TrySpawnObjectEventTemplate(&template, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, cameraX, cameraY);
                 }
             }
         }

@@ -248,6 +248,7 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
         localId = GetWanderingEncounterAtPosition(&position);
         if (localId != OBJ_EVENT_ID_NULL_ENCOUNTER && CheckStandardWildEncounter(metatileAttributes) == TRUE)
         {
+            DebugPrintf("ProcessPlayerFieldInput encounter localId %d", localId);
             gInputToStoreInQuestLogMaybe.checkStandardWildEncounter = TRUE;
             RemoveWanderingEncounterByLocalId(localId);
             return TRUE;
@@ -984,6 +985,7 @@ static u8 GetWanderingEncounterAtPosition(struct MapPosition *position) {
 }
 
 static void RemoveWanderingEncounterByLocalId(u8 localId) {
+    DebugPrintf("RemoveWanderingEncounterByLocalId localId %d", localId);
     RemoveObjectEventByLocalIdAndMap(localId, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
 }
 

@@ -69,7 +69,6 @@ static void RemoveObjectEventInternal(struct ObjectEvent *);
 static u16 GetObjectEventFlagIdByObjectEventId(u8);
 static void UpdateObjectEventVisibility(struct ObjectEvent *, struct Sprite *);
 static void MakeObjectTemplateFromObjectEventTemplate(struct ObjectEventTemplate *, struct SpriteTemplate *, const struct SubspriteTable **);
-static void GetObjectEventMovingCameraOffset(s16 *, s16 *);
 static struct ObjectEventTemplate *GetObjectEventTemplateByLocalIdAndMap(u8, u8, u8);
 static void LoadObjectEventPalette(u16);
 static void RemoveObjectEventIfOutsideView(struct ObjectEvent *);
@@ -1524,8 +1523,10 @@ static void RemoveObjectEvent(struct ObjectEvent *objectEvent)
 void RemoveObjectEventByLocalIdAndMap(u8 localId, u8 mapNum, u8 mapGroup)
 {
     u8 objectEventId;
+    DebugPrintf("RemoveObjectEventByLocalIdAndMap localId %d mapNum %d mapGroup %d", localId, mapNum, mapGroup);
     if (!TryGetObjectEventIdByLocalIdAndMap(localId, mapNum, mapGroup, &objectEventId))
     {
+        DebugPrintf("RemoveObjectEventByLocalIdAndMap removing...");
         FlagSet(GetObjectEventFlagIdByObjectEventId(objectEventId));
         RemoveObjectEvent(&gObjectEvents[objectEventId]);
     }
@@ -4837,10 +4838,8 @@ u8 GetCollisionAtCoords(struct ObjectEvent *objectEvent, s16 x, s16 y, u32 dir)
         return COLLISION_IMPASSABLE;
     else if (IsElevationMismatchAt(objectEvent->currentElevation, x, y))
         return COLLISION_ELEVATION_MISMATCH;
-    else if (DoesObjectCollideWithObjectAt(objectEvent, x, y)) {
-        DebugPrintf("GetCollisionAtCoords object collision x %d y %d", x, y);
+    else if (DoesObjectCollideWithObjectAt(objectEvent, x, y))
         return COLLISION_OBJECT_EVENT;
-    }
     return COLLISION_NONE;
 }
 
@@ -4998,6 +4997,14 @@ void GetMapCoordsFromSpritePos(s16 x, s16 y, s16 *destX, s16 *destY)
     *destY = (y - gSaveBlock1Ptr->pos.y) << 4;
     *destX -= gTotalCameraPixelOffsetX;
     *destY -= gTotalCameraPixelOffsetY;
+    // These lines are necessary to correct for when the camera is "off-grid",
+    // such as when the player is moving between tiles.
+    // Normal map event objects don't seem to have this problem, as they are
+    // loaded while the player is still. (I think.)
+    // This is specifically for objects loaded dynamically, such as in particular,
+    // wandering encounters.
+    *destX -= gFieldCamera.x;
+    *destY -= gFieldCamera.y;
 }
 
 void SetSpritePosToMapCoords(s16 mapX, s16 mapY, s16 *destX, s16 *destY)
@@ -5027,7 +5034,7 @@ void SetSpritePosToOffsetMapCoords(s16 *x, s16 *y, s16 dx, s16 dy)
     *y += dy;
 }
 
-static void GetObjectEventMovingCameraOffset(s16 *x, s16 *y)
+void GetObjectEventMovingCameraOffset(s16 *x, s16 *y)
 {
     *x = 0;
     *y = 0;
@@ -5136,7 +5143,6 @@ u8 ObjectEventGetHeldMovementActionId(struct ObjectEvent *objectEvent)
 
 void UpdateObjectEventCurrentMovement(struct ObjectEvent *objectEvent, struct Sprite *sprite, bool8 (*callback)(struct ObjectEvent *, struct Sprite *))
 {
-    //DebugPrintf("UpdateObjectEventCurrentMovement objectEvent->localId %d", objectEvent->localId);
     DoGroundEffects_OnSpawn(objectEvent, sprite);
     TryEnableObjectEventAnim(objectEvent, sprite);
 
