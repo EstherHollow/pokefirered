@@ -47,6 +47,7 @@
 #include "trainer_pokemon_sprites.h"
 #include "vs_seeker.h"
 #include "wild_encounter.h"
+#include "wandering_encounter.h"
 #include "constants/cable_club.h"
 #include "constants/event_objects.h"
 #include "constants/maps.h"
@@ -1456,6 +1457,7 @@ static void OverworldBasic(void)
 {
     ScriptContext_RunScript();
     RunTasks();
+    UpdateWildEncounters();
     AnimateSprites();
     CameraUpdate();
     sub_8115798();

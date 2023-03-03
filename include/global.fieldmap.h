@@ -249,6 +249,7 @@ struct ObjectEvent
              /*25*/ u32 disableJumpLandingGroundEffect:1;
              /*26*/ u32 fixedPriority:1;
              /*27*/ u32 hideReflection:1;
+             /*28*/ u32 isWildEncounter:1;
     /*0x04*/        u8 spriteId;
     /*0x05*/        u8 graphicsId;
     /*0x06*/        u8 movementType;
