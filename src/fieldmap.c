@@ -665,6 +665,10 @@ bool8 CameraMove(s32 x, s32 y)
         gSaveBlock1Ptr->pos.x += x;
         gSaveBlock1Ptr->pos.y += y;
 
+        DebugPrintf("Position %d, %d",
+                gObjectEvents[gPlayerAvatar.objectEventId].currentCoords.x,
+                gObjectEvents[gPlayerAvatar.objectEventId].currentCoords.y);
+
         if (gMapHeader.transition->axis != NO_TRANSITION) {
             if ((   gMapHeader.transition->axis == AXIS_HORIZONTAL &&
                     gSaveBlock1Ptr->pos.x % PALETTE_TRANSITION_STEPS == 0 &&
