@@ -349,8 +349,6 @@ bool8 StandardWildEncounter(u32 currMetatileAttrs, u16 previousMetatileBehavior)
     u16 headerId;
     struct Roamer * roamer;
 
-    DebugPrintf("StandardWildEncounter");
-
 #ifdef DEBUG_NO_ENCOUNTERS
     return FALSE;
 #endif
@@ -363,9 +361,6 @@ bool8 StandardWildEncounter(u32 currMetatileAttrs, u16 previousMetatileBehavior)
     {
         if (ExtractMetatileAttribute(currMetatileAttrs, METATILE_ATTRIBUTE_ENCOUNTER_TYPE) == TILE_ENCOUNTER_LAND)
         {
-            DebugPrintf("StandardWildEncounter prevBehavior %d currBehavior %d",
-                    previousMetatileBehavior,
-                    ExtractMetatileAttribute(currMetatileAttrs, METATILE_ATTRIBUTE_BEHAVIOR));
             if (gWildMonHeaders[headerId].landMonsInfo == NULL)
                 return FALSE;
             // I don't understand comparing the previous and current metatile behavior.
@@ -393,7 +388,6 @@ bool8 StandardWildEncounter(u32 currMetatileAttrs, u16 previousMetatileBehavior)
                 // try a regular wild land encounter
                 if (TryGenerateWildMon(gWildMonHeaders[headerId].landMonsInfo, WILD_AREA_LAND, WILD_CHECK_REPEL) == TRUE)
                 {
-                    DebugPrintf("StandardWildEncounter SUCCESS");
                     StartWildBattle();
                     return TRUE;
                 }
@@ -760,7 +754,6 @@ bool8 TryStandardWildEncounter(u32 currMetatileAttrs)
 {
 //    if (!HandleWildEncounterCooldown(currMetatileAttrs))
 //    {
-//        DebugPrintf("TryStandardWildEncounter ON COOLDOWN");
 //        sWildEncounterData.prevMetatileBehavior = ExtractMetatileAttribute(currMetatileAttrs, METATILE_ATTRIBUTE_BEHAVIOR);
 //        return FALSE;
 //    }
