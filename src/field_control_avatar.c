@@ -25,6 +25,7 @@
 #include "trainer_see.h"
 #include "vs_seeker.h"
 #include "wild_encounter.h"
+#include "wandering_encounter.h"
 #include "constants/songs.h"
 #include "constants/event_bg.h"
 #include "constants/event_objects.h"
@@ -70,6 +71,8 @@ static s8 GetWarpEventAtMapPosition(struct MapHeader * mapHeader, struct MapPosi
 static bool8 TryDoorWarp(struct MapPosition * position, u16 metatileBehavior, u8 playerDirection);
 static s8 GetWarpEventAtPosition(struct MapHeader * mapHeader, u16 x, u16 y, u8 z);
 static const u8 *GetCoordEventScriptAtPosition(struct MapHeader * mapHeader, u16 x, u16 y, u8 z);
+static u8 GetWanderingEncounterAtPosition(struct MapPosition *position);
+static void RemoveWanderingEncounterByLocalId(u8 localId);
 
 struct FieldInput gInputToStoreInQuestLogMaybe;
 
@@ -196,6 +199,7 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
     u8 playerDirection;
     u16 metatileBehavior;
     u32 metatileAttributes;
+    u8 localId;
 
     ResetFacingNpcOrSignpostVars();
     playerDirection = GetPlayerFacingDirection();
@@ -240,11 +244,14 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
             GetPlayerPosition(&position);
             metatileBehavior = MapGridGetMetatileBehaviorAt(position.x, position.y);
         }
-    }
-    if (input->checkStandardWildEncounter && CheckStandardWildEncounter(metatileAttributes) == TRUE)
-    {
-        gInputToStoreInQuestLogMaybe.checkStandardWildEncounter = TRUE;
-        return TRUE;
+
+        localId = GetWanderingEncounterAtPosition(&position);
+        if (localId != OBJ_EVENT_ID_NULL_ENCOUNTER && CheckStandardWildEncounter(metatileAttributes) == TRUE)
+        {
+            gInputToStoreInQuestLogMaybe.checkStandardWildEncounter = TRUE;
+            RemoveWanderingEncounterByLocalId(localId);
+            return TRUE;
+        }
     }
     if (input->heldDirection && input->dpadDirection == playerDirection)
     {
@@ -955,6 +962,29 @@ static bool8 IsArrowWarpMetatileBehavior(u16 metatileBehavior, u8 direction)
         return MetatileBehavior_IsEastArrowWarp(metatileBehavior);
     }
     return FALSE;
+}
+
+static u8 GetWanderingEncounterAtPosition(struct MapPosition *position) {
+    struct ObjectEvent *object;
+    u8 i;
+
+    for (i = 0; i < OBJECT_EVENTS_COUNT; i++) {
+        object = &gObjectEvents[i];
+        if (object->active) {
+            if ((object->currentCoords.x == position->x && object->currentCoords.y == position->y) ||
+                (object->previousCoords.x == position->x && object->previousCoords.y == position->y)) {
+                if (IsWanderEncounterLocalId(object->localId)) {
+                    return object->localId;
+                }
+            }
+        }
+    }
+
+    return OBJ_EVENT_ID_NULL_ENCOUNTER;
+}
+
+static void RemoveWanderingEncounterByLocalId(u8 localId) {
+    RemoveObjectEventByLocalIdAndMap(localId, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
 }
 
 static s8 GetWarpEventAtMapPosition(struct MapHeader *mapHeader, struct MapPosition *position)

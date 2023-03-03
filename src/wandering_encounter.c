@@ -17,66 +17,30 @@
 EWRAM_DATA u16 gWanderingEncounterState = 0;
 
 void UpdateWildEncounters(void) {
-    struct ObjectEventTemplate object = {
-            .localId = 100,
-            .graphicsId = OBJ_EVENT_GFX_WILD_ENCOUNTER,
-            .kind = OBJ_KIND_NORMAL,
-            .x = 0,
-            .y = 0,
-            .objUnion = {
-                    .normal = {
-                            .elevation = 3,
-                            .movementType = MOVEMENT_TYPE_WANDER_AROUND,
-                            .movementRangeX = 4,
-                            .movementRangeY = 4,
-                            .trainerType = TRAINER_TYPE_NONE,
-                            .trainerRange_berryTreeId = 0,
-                    },
-            },
-            .script = 0,
-            .flagId = 0,
-    };
-
-//    u8 x, y;
-
-    // Check if we should spawn another encounter
-    //  Check if this is a valid map
-    //  Check if there are enough existing encounters
-//    if (!QL_IS_PLAYBACK_STATE && CountExistingWildEncounters() < TEMP_MAX_ENCOUNTERS) {
-//        DebugPrintf("UpdateWildEncounters attempt");
-//
-//        // Find a location to spawn
-//        x = gSaveBlock1Ptr->pos.x + 2;
-//        y = gSaveBlock1Ptr->pos.y + 2;
-//
-//        // Create the encounter object
-//        object.x = x;
-//        object.y = y;
-//
-//        // Spawn the encounter object
-//        TrySpawnObjectEventTemplate(&object, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, 0, 0);
-//    }
-
-    struct Coords16 grass;
+    struct ObjectEventTemplate template;
 
     if (!QL_IS_PLAYBACK_STATE && gWanderingEncounterState >= UPDATE_DELAY) {
         gWanderingEncounterState = 0;
-//        CheckAvailableGrass();
 
         if (CountExistingWildEncounters() < MAX_WANDERING_ENCOUNTERS) {
-            FindAvailableGrass(&grass);
-            DebugPrintf("FindAvailableGrass returned %d, %d", grass.x, grass.y);
+            FindAvailableGrass(&template.x, &template.y);
+            if (template.x != 0 && template.y != 0) {
+                template.localId = FindAvailableLocalId();
+                if (template.localId != OBJ_EVENT_ID_NULL_ENCOUNTER) {
+                    template.graphicsId = OBJ_EVENT_GFX_WILD_ENCOUNTER;
+                    template.kind = OBJ_KIND_NORMAL;
+                    template.objUnion.normal.elevation = 3;
+                    template.objUnion.normal.movementType = MOVEMENT_TYPE_WANDER_AROUND;
+                    template.objUnion.normal.movementRangeX = 4;
+                    template.objUnion.normal.movementRangeY = 4;
+                    template.objUnion.normal.trainerType = TRAINER_TYPE_NONE;
+                    template.objUnion.normal.trainerRange_berryTreeId = 0;
+                    template.script = 0;
+                    template.flagId = 0;
 
-            if (grass.x != 0 && grass.y != 0) {
-                object.x = grass.x;
-                object.y = grass.y;
-
-                DebugPrintf("TrySpawnObject");
-                TrySpawnObjectEventTemplate(&object, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, 0, 0);
+                    TrySpawnObjectEventTemplate(&template, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, 0, 0);
+                }
             }
-        }
-        else {
-            DebugPrintf("At max wandering encounters");
         }
     }
     else {
@@ -98,7 +62,7 @@ u8 CountExistingWildEncounters(void) {
     return count;
 }
 
-void FindAvailableGrass(struct Coords16 *coords) {
+void FindAvailableGrass(s16 *x, s16 *y) {
     u16 rangeX = 1, rangeY = 1;
     u32 area = (rangeX * 2 + 1) * (rangeY * 2 + 1);
     u32 index = Random() % area;
@@ -113,11 +77,6 @@ void FindAvailableGrass(struct Coords16 *coords) {
 
     PlayerGetDestCoords(&playerX, &playerY);
 
-    DebugPrintf("FindAvailableGrass bounds x %d <-> %d y %d <-> %d", playerX - rangeX, playerX + rangeX, playerY - rangeY, playerY + rangeY);
-    // NOTES
-    // MapGridGetCollisionAt(x, y)
-    // DoesObjectCollideWithObjectAt(objectEvent, x, y)
-
     for (i = 0; i < attempts; i++) {
         indexX = (index / (rangeX * 2 + 1)) + playerX - rangeX;
         indexY = (index % (rangeX * 2 + 1)) + playerY - rangeY;
@@ -125,8 +84,8 @@ void FindAvailableGrass(struct Coords16 *coords) {
         if (attribute == TILE_ENCOUNTER_LAND) {
             if (MapGridGetCollisionAt(indexX, indexY) == COLLISION_NONE) {
                 if (indexX != playerX && indexY != playerY) {
-                    coords->x = indexX - MAP_OFFSET;
-                    coords->y = indexY - MAP_OFFSET;
+                    *x = indexX - MAP_OFFSET;
+                    *y = indexY - MAP_OFFSET;
                     return;
                 }
             }
@@ -134,33 +93,59 @@ void FindAvailableGrass(struct Coords16 *coords) {
         index = (index + seed) % area;
     }
 
-    coords->x = 0;
-    coords->y = 0;
+    *x = 0;
+    *y = 0;
 }
 
-void CheckAvailableGrass(void) {
-    s16 playerX, playerY;
-    PlayerGetDestCoords(&playerX, &playerY);
+u8 FindAvailableLocalId(void) {
+    bool8 localIds[MAX_WANDERING_ENCOUNTERS] = {0};
+    struct ObjectEvent *object;
+    u8 i;
 
-//    DebugPrintf("CheckAvailableGrass\n%d %d %d\n%d %d %d\n%d %d %d",
-//            MapGridGetMetatileAttributeAt(playerX - 1, playerY - 1, METATILE_ATTRIBUTE_ENCOUNTER_TYPE),
-//            MapGridGetMetatileAttributeAt(playerX, playerY - 1, METATILE_ATTRIBUTE_ENCOUNTER_TYPE),
-//            MapGridGetMetatileAttributeAt(playerX + 1, playerY - 1, METATILE_ATTRIBUTE_ENCOUNTER_TYPE),
-//            MapGridGetMetatileAttributeAt(playerX - 1, playerY, METATILE_ATTRIBUTE_ENCOUNTER_TYPE),
-//            MapGridGetMetatileAttributeAt(playerX, playerY, METATILE_ATTRIBUTE_ENCOUNTER_TYPE),
-//            MapGridGetMetatileAttributeAt(playerX + 1, playerY, METATILE_ATTRIBUTE_ENCOUNTER_TYPE),
-//            MapGridGetMetatileAttributeAt(playerX - 1, playerY + 1, METATILE_ATTRIBUTE_ENCOUNTER_TYPE),
-//            MapGridGetMetatileAttributeAt(playerX, playerY + 1, METATILE_ATTRIBUTE_ENCOUNTER_TYPE),
-//            MapGridGetMetatileAttributeAt(playerX + 1, playerY + 1, METATILE_ATTRIBUTE_ENCOUNTER_TYPE));
+    for (i = 0; i < OBJECT_EVENTS_COUNT; i++) {
+        object = &gObjectEvents[i];
+        if (object->active && object->localId == (OBJ_EVENT_ID_WANDERING_ENCOUNTER + i)) {
+            localIds[i] = 1;
+        }
+    }
 
-    DebugPrintf("MapGridGetCollisionAt\n%d %d %d\n%d %d %d\n%d %d %d",
-            MapGridGetCollisionAt(playerX - 1, playerY - 1),
-            MapGridGetCollisionAt(playerX, playerY - 1),
-            MapGridGetCollisionAt(playerX + 1, playerY - 1),
-            MapGridGetCollisionAt(playerX - 1, playerY),
-            MapGridGetCollisionAt(playerX, playerY),
-            MapGridGetCollisionAt(playerX + 1, playerY),
-            MapGridGetCollisionAt(playerX - 1, playerY + 1),
-            MapGridGetCollisionAt(playerX, playerY + 1),
-            MapGridGetCollisionAt(playerX + 1, playerY + 1));
+    for (i = 0; i < MAX_WANDERING_ENCOUNTERS; i++) {
+        if (localIds[i] == 0) {
+            return OBJ_EVENT_ID_WANDERING_ENCOUNTER + i;
+        }
+    }
+
+    return OBJ_EVENT_ID_NULL_ENCOUNTER;
 }
+
+bool8 IsWanderEncounterLocalId(u8 localId) {
+    return  (localId >= OBJ_EVENT_ID_WANDERING_ENCOUNTER) &&
+            (localId < (OBJ_EVENT_ID_WANDERING_ENCOUNTER + MAX_WANDERING_ENCOUNTERS));
+}
+
+//void CheckAvailableGrass(void) {
+//    s16 playerX, playerY;
+//    PlayerGetDestCoords(&playerX, &playerY);
+//
+////    DebugPrintf("CheckAvailableGrass\n%d %d %d\n%d %d %d\n%d %d %d",
+////            MapGridGetMetatileAttributeAt(playerX - 1, playerY - 1, METATILE_ATTRIBUTE_ENCOUNTER_TYPE),
+////            MapGridGetMetatileAttributeAt(playerX, playerY - 1, METATILE_ATTRIBUTE_ENCOUNTER_TYPE),
+////            MapGridGetMetatileAttributeAt(playerX + 1, playerY - 1, METATILE_ATTRIBUTE_ENCOUNTER_TYPE),
+////            MapGridGetMetatileAttributeAt(playerX - 1, playerY, METATILE_ATTRIBUTE_ENCOUNTER_TYPE),
+////            MapGridGetMetatileAttributeAt(playerX, playerY, METATILE_ATTRIBUTE_ENCOUNTER_TYPE),
+////            MapGridGetMetatileAttributeAt(playerX + 1, playerY, METATILE_ATTRIBUTE_ENCOUNTER_TYPE),
+////            MapGridGetMetatileAttributeAt(playerX - 1, playerY + 1, METATILE_ATTRIBUTE_ENCOUNTER_TYPE),
+////            MapGridGetMetatileAttributeAt(playerX, playerY + 1, METATILE_ATTRIBUTE_ENCOUNTER_TYPE),
+////            MapGridGetMetatileAttributeAt(playerX + 1, playerY + 1, METATILE_ATTRIBUTE_ENCOUNTER_TYPE));
+//
+//    DebugPrintf("MapGridGetCollisionAt\n%d %d %d\n%d %d %d\n%d %d %d",
+//            MapGridGetCollisionAt(playerX - 1, playerY - 1),
+//            MapGridGetCollisionAt(playerX, playerY - 1),
+//            MapGridGetCollisionAt(playerX + 1, playerY - 1),
+//            MapGridGetCollisionAt(playerX - 1, playerY),
+//            MapGridGetCollisionAt(playerX, playerY),
+//            MapGridGetCollisionAt(playerX + 1, playerY),
+//            MapGridGetCollisionAt(playerX - 1, playerY + 1),
+//            MapGridGetCollisionAt(playerX, playerY + 1),
+//            MapGridGetCollisionAt(playerX + 1, playerY + 1));
+//}

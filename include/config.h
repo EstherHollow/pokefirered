@@ -69,6 +69,6 @@
 #endif // MODERN
 
 // Handy configuration options
-#define DEBUG_NO_ENCOUNTERS
+//#define DEBUG_NO_ENCOUNTERS
 
 #endif // GUARD_CONFIG_H

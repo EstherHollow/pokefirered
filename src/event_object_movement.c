@@ -31,6 +31,7 @@ static void UpdateObjectEventSpriteAnimPause(struct ObjectEvent *, struct Sprite
 static bool8 IsCoordOutsideObjectEventMovementRange(struct ObjectEvent *, s16, s16);
 static bool8 IsMetatileDirectionallyImpassable(struct ObjectEvent *, s16, s16, u8);
 static bool8 DoesObjectCollideWithObjectAt(struct ObjectEvent *, s16, s16);
+//static bool8 IsWanderingEncounter(s16 x, s16 y);
 static void CalcWhetherObjectIsOffscreen(struct ObjectEvent *, struct Sprite *);
 static void UpdateObjEventSpriteVisibility(struct ObjectEvent *, struct Sprite *);
 static void ObjectEventUpdateMetatileBehaviors(struct ObjectEvent *);
@@ -4836,8 +4837,10 @@ u8 GetCollisionAtCoords(struct ObjectEvent *objectEvent, s16 x, s16 y, u32 dir)
         return COLLISION_IMPASSABLE;
     else if (IsElevationMismatchAt(objectEvent->currentElevation, x, y))
         return COLLISION_ELEVATION_MISMATCH;
-    else if (DoesObjectCollideWithObjectAt(objectEvent, x, y))
+    else if (DoesObjectCollideWithObjectAt(objectEvent, x, y)) {
+        DebugPrintf("GetCollisionAtCoords object collision x %d y %d", x, y);
         return COLLISION_OBJECT_EVENT;
+    }
     return COLLISION_NONE;
 }
 
@@ -4907,12 +4910,38 @@ static bool8 DoesObjectCollideWithObjectAt(struct ObjectEvent *objectEvent, s16 
             if ((curObject->currentCoords.x == x && curObject->currentCoords.y == y) || (curObject->previousCoords.x == x && curObject->previousCoords.y == y))
             {
                 if (AreElevationsCompatible(objectEvent->currentElevation, curObject->currentElevation))
-                    return TRUE;
+                {
+                    if (curObject->localId < 100 || curObject->localId >= 110)
+                    {
+                        return TRUE;
+                    }
+                }
             }
         }
     }
     return FALSE;
 }
+
+//static bool8 IsWanderingEncounter(s16 x, s16 y)
+//{
+//    u8 i;
+//    struct ObjectEvent *curObject;
+//
+//    for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
+//    {
+//        curObject = &gObjectEvents[i];
+//        if (curObject->active)
+//        {
+//            if ((curObject->currentCoords.x == x && curObject->currentCoords.y == y) || (curObject->previousCoords.x == x && curObject->previousCoords.y == y))
+//            {
+//                if (curObject->localId >= 100 && curObject->localId < 110) {
+//                    return TRUE;
+//                }
+//            }
+//        }
+//    }
+//    return FALSE;
+//}
 
 bool8 IsBerryTreeSparkling(u8 localId, u8 mapNum, u8 mapGroup)
 {
