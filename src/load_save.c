@@ -10,6 +10,7 @@
 #include "berry_powder.h"
 #include "overworld.h"
 #include "quest_log.h"
+#include "wandering_encounter.h"
 
 #define SAVEBLOCK_MOVE_RANGE    128
 
@@ -176,9 +177,13 @@ void LoadPlayerParty(void)
 void SaveObjectEvents(void)
 {
     int i;
+    struct ObjectEvent emptyObject = {0};
 
     for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
-        gSaveBlock1Ptr->objectEvents[i] = gObjectEvents[i];
+        if (!IsWanderingEncounterLocalId(gObjectEvents[i].localId))
+            gSaveBlock1Ptr->objectEvents[i] = gObjectEvents[i];
+        else
+            gSaveBlock1Ptr->objectEvents[i] = emptyObject;
 }
 
 void LoadObjectEvents(void)
