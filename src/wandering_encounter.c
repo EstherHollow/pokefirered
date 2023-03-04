@@ -24,7 +24,7 @@ void UpdateWildEncounters(void) {
         gWanderingEncounterState = 0;
 
         if (CountExistingWildEncounters() < MAX_WANDERING_ENCOUNTERS) {
-            FindAvailableGrass(&template.x, &template.y);
+            FindAvailableSpawnPosition(&template.x, &template.y);
             if (template.x != 0 && template.y != 0) {
                 template.localId = FindAvailableLocalId();
                 if (template.localId != OBJ_EVENT_ID_NULL_ENCOUNTER) {
@@ -40,8 +40,6 @@ void UpdateWildEncounters(void) {
                     template.flagId = 0;
 
                     GetObjectEventMovingCameraOffset(&cameraX, &cameraY);
-
-                    DebugPrintf("UpdateWildEncounters localId %d");
                     TrySpawnObjectEventTemplate(&template, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, cameraX, cameraY);
                 }
             }
@@ -66,7 +64,7 @@ u8 CountExistingWildEncounters(void) {
     return count;
 }
 
-void FindAvailableGrass(s16 *x, s16 *y) {
+void FindAvailableSpawnPosition(s16 *x, s16 *y) {
     u32 area = (WANDERING_ENCOUNTER_RANGE_X * 2 + 1) * (WANDERING_ENCOUNTER_RANGE_Y * 2 + 1);
     u32 index = Random() % area;
 
@@ -83,7 +81,7 @@ void FindAvailableGrass(s16 *x, s16 *y) {
         indexX = (index / (WANDERING_ENCOUNTER_RANGE_X * 2 + 1)) + playerX - WANDERING_ENCOUNTER_RANGE_X;
         indexY = (index % (WANDERING_ENCOUNTER_RANGE_X * 2 + 1)) + playerY - WANDERING_ENCOUNTER_RANGE_Y;
         attribute = MapGridGetMetatileAttributeAt(indexX, indexY, METATILE_ATTRIBUTE_ENCOUNTER_TYPE);
-        if (attribute == TILE_ENCOUNTER_LAND) {
+        if (attribute != TILE_ENCOUNTER_NONE) {
             if (MapGridGetCollisionAt(indexX, indexY) == COLLISION_NONE) {
                 if (indexX != playerX && indexY != playerY) {
                     *x = indexX - MAP_OFFSET;

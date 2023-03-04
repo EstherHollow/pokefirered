@@ -14,7 +14,7 @@ extern u16 gWanderingEncounterState;
 
 void UpdateWildEncounters(void);
 u8 CountExistingWildEncounters(void);
-void FindAvailableGrass(s16 *x, s16 *y);
+void FindAvailableSpawnPosition(s16 *x, s16 *y);
 u8 FindAvailableLocalId(void);
 bool8 IsWanderingEncounterLocalId(u8 localId);
 
