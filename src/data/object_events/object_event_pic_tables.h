@@ -1752,3 +1752,17 @@ static const struct SpriteFrameImage sPicTable_Mom[] = {
     overworld_frame(gObjectEventPic_Mom, 2, 4, 2),
     overworld_frame(gObjectEventPic_Mom, 2, 4, 2),
 };
+
+static const struct SpriteFrameImage sPicTable_Sparkle[] = {
+    overworld_frame(gObjectEventPic_Sparkle, 2, 4, 0),
+    overworld_frame(gObjectEventPic_Sparkle, 2, 4, 0),
+    overworld_frame(gObjectEventPic_Sparkle, 2, 4, 0),
+    overworld_frame(gObjectEventPic_Sparkle, 2, 4, 0),
+    overworld_frame(gObjectEventPic_Sparkle, 2, 4, 0),
+    overworld_frame(gObjectEventPic_Sparkle, 2, 4, 0),
+    overworld_frame(gObjectEventPic_Sparkle, 2, 4, 0),
+    overworld_frame(gObjectEventPic_Sparkle, 2, 4, 0),
+    overworld_frame(gObjectEventPic_Sparkle, 2, 4, 0),
+    overworld_frame(gObjectEventPic_Sparkle, 2, 4, 0),
+    overworld_frame(gObjectEventPic_Sparkle, 2, 4, 0),
+};
