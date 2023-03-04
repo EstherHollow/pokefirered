@@ -3,45 +3,55 @@
 #include "fieldmap.h"
 #include "field_player_avatar.h"
 #include "metatile_behavior.h"
+#include "wandering_encounter.h"
 
 void SetQuestLogObjectEventsData(struct QuestLog * questLog)
 {
     u32 i;
+    struct ObjectEvent emptyObject = {0};
+    struct ObjectEvent *currentObject;
 
     for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
     {
-        questLog->unk_008[i].active = gObjectEvents[i].active;
-        questLog->unk_008[i].triggerGroundEffectsOnStop = gObjectEvents[i].triggerGroundEffectsOnStop;
-        questLog->unk_008[i].disableCoveringGroundEffects = gObjectEvents[i].disableCoveringGroundEffects;
-        questLog->unk_008[i].landingJump = gObjectEvents[i].landingJump;
-        questLog->unk_008[i].frozen = gObjectEvents[i].frozen;
-        questLog->unk_008[i].facingDirectionLocked = gObjectEvents[i].facingDirectionLocked;
-        questLog->unk_008[i].disableAnim = gObjectEvents[i].disableAnim;
-        questLog->unk_008[i].enableAnim = gObjectEvents[i].enableAnim;
-        questLog->unk_008[i].inanimate = gObjectEvents[i].inanimate;
-        questLog->unk_008[i].invisible = gObjectEvents[i].invisible;
-        questLog->unk_008[i].offScreen = gObjectEvents[i].offScreen;
-        questLog->unk_008[i].trackedByCamera = gObjectEvents[i].trackedByCamera;
-        questLog->unk_008[i].isPlayer = gObjectEvents[i].isPlayer;
-        questLog->unk_008[i].spriteAnimPausedBackup = gObjectEvents[i].spriteAnimPausedBackup;
-        questLog->unk_008[i].spriteAffineAnimPausedBackup = gObjectEvents[i].spriteAffineAnimPausedBackup;
-        questLog->unk_008[i].disableJumpLandingGroundEffect = gObjectEvents[i].disableJumpLandingGroundEffect;
-        questLog->unk_008[i].fixedPriority = gObjectEvents[i].fixedPriority;
-        questLog->unk_008[i].mapobj_unk_18 = gObjectEvents[i].facingDirection;
-        questLog->unk_008[i].mapobj_unk_0B_0 = gObjectEvents[i].currentElevation;
-        questLog->unk_008[i].elevation = gObjectEvents[i].previousElevation;
-        questLog->unk_008[i].graphicsId = gObjectEvents[i].graphicsId;
-        questLog->unk_008[i].animPattern = gObjectEvents[i].movementType;
-        questLog->unk_008[i].trainerType = gObjectEvents[i].trainerType;
-        questLog->unk_008[i].localId = gObjectEvents[i].localId;
-        questLog->unk_008[i].mapNum = gObjectEvents[i].mapNum;
-        questLog->unk_008[i].mapGroup = gObjectEvents[i].mapGroup;
-        questLog->unk_008[i].x = gObjectEvents[i].currentCoords.x;
-        questLog->unk_008[i].y = gObjectEvents[i].currentCoords.y;
-        questLog->unk_008[i].trainerRange_berryTreeId = gObjectEvents[i].trainerRange_berryTreeId;
-        questLog->unk_008[i].previousMetatileBehavior = gObjectEvents[i].previousMetatileBehavior;
-        questLog->unk_008[i].directionSequenceIndex = gObjectEvents[i].directionSequenceIndex;
-        questLog->unk_008[i].animId = gObjectEvents[i].playerCopyableMovement;
+        if (!IsWanderingEncounterLocalId(gObjectEvents[i].localId)) {
+            currentObject = &gObjectEvents[i];
+        }
+        else {
+            currentObject = &emptyObject;
+        }
+
+        questLog->unk_008[i].active = currentObject->active;
+        questLog->unk_008[i].triggerGroundEffectsOnStop = currentObject->triggerGroundEffectsOnStop;
+        questLog->unk_008[i].disableCoveringGroundEffects = currentObject->disableCoveringGroundEffects;
+        questLog->unk_008[i].landingJump = currentObject->landingJump;
+        questLog->unk_008[i].frozen = currentObject->frozen;
+        questLog->unk_008[i].facingDirectionLocked = currentObject->facingDirectionLocked;
+        questLog->unk_008[i].disableAnim = currentObject->disableAnim;
+        questLog->unk_008[i].enableAnim = currentObject->enableAnim;
+        questLog->unk_008[i].inanimate = currentObject->inanimate;
+        questLog->unk_008[i].invisible = currentObject->invisible;
+        questLog->unk_008[i].offScreen = currentObject->offScreen;
+        questLog->unk_008[i].trackedByCamera = currentObject->trackedByCamera;
+        questLog->unk_008[i].isPlayer = currentObject->isPlayer;
+        questLog->unk_008[i].spriteAnimPausedBackup = currentObject->spriteAnimPausedBackup;
+        questLog->unk_008[i].spriteAffineAnimPausedBackup = currentObject->spriteAffineAnimPausedBackup;
+        questLog->unk_008[i].disableJumpLandingGroundEffect = currentObject->disableJumpLandingGroundEffect;
+        questLog->unk_008[i].fixedPriority = currentObject->fixedPriority;
+        questLog->unk_008[i].mapobj_unk_18 = currentObject->facingDirection;
+        questLog->unk_008[i].mapobj_unk_0B_0 = currentObject->currentElevation;
+        questLog->unk_008[i].elevation = currentObject->previousElevation;
+        questLog->unk_008[i].graphicsId = currentObject->graphicsId;
+        questLog->unk_008[i].animPattern = currentObject->movementType;
+        questLog->unk_008[i].trainerType = currentObject->trainerType;
+        questLog->unk_008[i].localId = currentObject->localId;
+        questLog->unk_008[i].mapNum = currentObject->mapNum;
+        questLog->unk_008[i].mapGroup = currentObject->mapGroup;
+        questLog->unk_008[i].x = currentObject->currentCoords.x;
+        questLog->unk_008[i].y = currentObject->currentCoords.y;
+        questLog->unk_008[i].trainerRange_berryTreeId = currentObject->trainerRange_berryTreeId;
+        questLog->unk_008[i].previousMetatileBehavior = currentObject->previousMetatileBehavior;
+        questLog->unk_008[i].directionSequenceIndex = currentObject->directionSequenceIndex;
+        questLog->unk_008[i].animId = currentObject->playerCopyableMovement;
     }
 }
 
