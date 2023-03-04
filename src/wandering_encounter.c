@@ -58,7 +58,7 @@ u8 CountExistingWildEncounters(void) {
 
     for (i = 0; i < OBJECT_EVENTS_COUNT; i++) {
         struct ObjectEvent *objectEvent = &gObjectEvents[i];
-        if (objectEvent->active && objectEvent->localId >= 100 && objectEvent->localId <= 110) {
+        if (objectEvent->active && IsWanderingEncounterLocalId(objectEvent->localId)) {
             count++;
         }
     }
@@ -106,7 +106,7 @@ u8 FindAvailableLocalId(void) {
 
     for (i = 0; i < OBJECT_EVENTS_COUNT; i++) {
         object = &gObjectEvents[i];
-        if (object->active && IsWanderEncounterLocalId(object->localId)) {
+        if (object->active && IsWanderingEncounterLocalId(object->localId)) {
             localIds[object->localId - OBJ_EVENT_ID_WANDERING_ENCOUNTER] = 1;
         }
     }
@@ -120,7 +120,7 @@ u8 FindAvailableLocalId(void) {
     return OBJ_EVENT_ID_NULL_ENCOUNTER;
 }
 
-bool8 IsWanderEncounterLocalId(u8 localId) {
-    return  (localId >= OBJ_EVENT_ID_WANDERING_ENCOUNTER) &&
-            (localId < (OBJ_EVENT_ID_WANDERING_ENCOUNTER + MAX_WANDERING_ENCOUNTERS));
+bool8 IsWanderingEncounterLocalId(u8 localId) {
+    return (localId >= OBJ_EVENT_ID_WANDERING_ENCOUNTER) &&
+           (localId < (OBJ_EVENT_ID_WANDERING_ENCOUNTER + MAX_WANDERING_ENCOUNTERS));
 }

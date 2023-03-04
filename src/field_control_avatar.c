@@ -974,7 +974,7 @@ static u8 GetWanderingEncounterAtPosition(struct MapPosition *position) {
         if (object->active) {
             if ((object->currentCoords.x == position->x && object->currentCoords.y == position->y) ||
                 (object->previousCoords.x == position->x && object->previousCoords.y == position->y)) {
-                if (IsWanderEncounterLocalId(object->localId)) {
+                if (IsWanderingEncounterLocalId(object->localId)) {
                     return object->localId;
                 }
             }
