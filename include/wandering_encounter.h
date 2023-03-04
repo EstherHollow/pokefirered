@@ -16,6 +16,6 @@ void UpdateWildEncounters(void);
 u8 CountExistingWildEncounters(void);
 void FindAvailableGrass(s16 *x, s16 *y);
 u8 FindAvailableLocalId(void);
-bool8 IsWanderEncounterLocalId(u8 localId);
+bool8 IsWanderingEncounterLocalId(u8 localId);
 
 #endif // GUARD_WANDERING_ENCOUNTER_H

@@ -15,6 +15,7 @@
 #include "script.h"
 #include "trainer_see.h"
 #include "trig.h"
+#include "wandering_encounter.h"
 #include "constants/maps.h"
 #include "constants/event_object_movement.h"
 #include "constants/event_objects.h"
@@ -4888,59 +4889,46 @@ static bool8 IsCoordOutsideObjectEventMovementRange(struct ObjectEvent *objectEv
 
 static bool8 IsMetatileDirectionallyImpassable(struct ObjectEvent *objectEvent, s16 x, s16 y, u8 direction)
 {
-    if (gOppositeDirectionBlockedMetatileFuncs[direction - 1](objectEvent->currentMetatileBehavior)
-        || gDirectionBlockedMetatileFuncs[direction - 1](MapGridGetMetatileBehaviorAt(x, y)))
-    {
+    u32 currentAttributes;
+    u32 nextAttributes;
+
+    if (gOppositeDirectionBlockedMetatileFuncs[direction - 1](objectEvent->currentMetatileBehavior) ||
+        gDirectionBlockedMetatileFuncs[direction - 1](MapGridGetMetatileBehaviorAt(x, y))) {
         return TRUE;
     }
+    else if (IsWanderingEncounterLocalId(objectEvent->localId)) {
+        currentAttributes = MapGridGetMetatileAttributeAt(
+                objectEvent->currentCoords.x,
+                objectEvent->currentCoords.y,
+                METATILE_ATTRIBUTE_ENCOUNTER_TYPE);
+        nextAttributes = MapGridGetMetatileAttributeAt(x, y, METATILE_ATTRIBUTE_ENCOUNTER_TYPE);
+        return currentAttributes != nextAttributes;
+    }
+
     return FALSE;
 }
 
 static bool8 DoesObjectCollideWithObjectAt(struct ObjectEvent *objectEvent, s16 x, s16 y)
 {
-    u8 i;
     struct ObjectEvent *curObject;
+    u8 i;
 
-    for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
-    {
+    for (i = 0; i < OBJECT_EVENTS_COUNT; i++) {
         curObject = &gObjectEvents[i];
-        if (curObject->active && curObject != objectEvent)
-        {
-            if ((curObject->currentCoords.x == x && curObject->currentCoords.y == y) || (curObject->previousCoords.x == x && curObject->previousCoords.y == y))
-            {
-                if (AreElevationsCompatible(objectEvent->currentElevation, curObject->currentElevation))
-                {
-                    if (curObject->localId < 100 || curObject->localId >= 110)
-                    {
+        if (curObject->active && curObject != objectEvent) {
+            if ((curObject->currentCoords.x == x && curObject->currentCoords.y == y) ||
+                (curObject->previousCoords.x == x && curObject->previousCoords.y == y)) {
+                if (AreElevationsCompatible(objectEvent->currentElevation, curObject->currentElevation)) {
+                    if (!IsWanderingEncounterLocalId(curObject->localId) || objectEvent->localId != OBJ_EVENT_ID_PLAYER) {
                         return TRUE;
                     }
                 }
             }
         }
     }
+
     return FALSE;
 }
-
-//static bool8 IsWanderingEncounter(s16 x, s16 y)
-//{
-//    u8 i;
-//    struct ObjectEvent *curObject;
-//
-//    for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
-//    {
-//        curObject = &gObjectEvents[i];
-//        if (curObject->active)
-//        {
-//            if ((curObject->currentCoords.x == x && curObject->currentCoords.y == y) || (curObject->previousCoords.x == x && curObject->previousCoords.y == y))
-//            {
-//                if (curObject->localId >= 100 && curObject->localId < 110) {
-//                    return TRUE;
-//                }
-//            }
-//        }
-//    }
-//    return FALSE;
-//}
 
 bool8 IsBerryTreeSparkling(u8 localId, u8 mapNum, u8 mapGroup)
 {
