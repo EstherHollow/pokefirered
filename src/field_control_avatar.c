@@ -457,6 +457,10 @@ static const u8 *GetInteractedObjectEventScript(struct MapPosition *position, u8
     if (InUnionRoom() == TRUE && !ObjectEventCheckHeldMovementStatus(&gObjectEvents[objectEventId]))
         return NULL;
 
+    if (IsWanderingEncounterLocalId(gObjectEvents[objectEventId].localId)) {
+        return NULL;
+    }
+
     gSelectedObjectEvent = objectEventId;
     gSpecialVar_LastTalked = gObjectEvents[objectEventId].localId;
     gSpecialVar_Facing = direction;
