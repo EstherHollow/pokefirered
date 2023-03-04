@@ -9,7 +9,7 @@
 #include "berry_powder.h"
 #include "overworld.h"
 #include "quest_log.h"
-#include "wandering_encounter.h"
+#include "wild_encounter.h"
 
 #define SAVEBLOCK_MOVE_RANGE    128
 

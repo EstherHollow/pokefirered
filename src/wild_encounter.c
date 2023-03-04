@@ -1,21 +1,25 @@
 #include "global.h"
-#include "random.h"
-#include "wild_encounter.h"
+
+#include "battle_setup.h"
 #include "event_data.h"
+#include "event_object_movement.h"
+#include "event_scripts.h"
+#include "field_player_avatar.h"
 #include "fieldmap.h"
+#include "link.h"
+#include "metatile_behavior.h"
+#include "overworld.h"
+#include "quest_log.h"
 #include "random.h"
 #include "roamer.h"
-#include "field_player_avatar.h"
-#include "battle_setup.h"
-#include "overworld.h"
-#include "metatile_behavior.h"
-#include "event_scripts.h"
 #include "script.h"
-#include "link.h"
-#include "quest_log.h"
-#include "constants/maps.h"
+#include "wild_encounter.h"
 #include "constants/abilities.h"
+#include "constants/event_object_movement.h"
+#include "constants/event_objects.h"
 #include "constants/items.h"
+#include "constants/maps.h"
+#include "constants/trainer_types.h"
 
 struct WildEncounterData
 {
@@ -29,6 +33,8 @@ struct WildEncounterData
 
 static EWRAM_DATA struct WildEncounterData sWildEncounterData = {};
 static EWRAM_DATA bool8 sWildEncountersDisabled = FALSE;
+
+EWRAM_DATA u16 gWanderingEncounterState = 0;
 
 static bool8 UnlockedTanobyOrAreNotInTanoby(void);
 static u32 GenerateUnownPersonalityByLetter(u8 letter);
@@ -363,16 +369,8 @@ bool8 StandardWildEncounter(u32 currMetatileAttrs, u16 previousMetatileBehavior)
         {
             if (gWildMonHeaders[headerId].landMonsInfo == NULL)
                 return FALSE;
-            // I don't understand comparing the previous and current metatile behavior.
-//            else if (previousMetatileBehavior != ExtractMetatileAttribute(currMetatileAttrs, METATILE_ATTRIBUTE_BEHAVIOR) && !DoGlobalWildEncounterDiceRoll())
-//                return FALSE;
-//            if (DoWildEncounterRateTest(gWildMonHeaders[headerId].landMonsInfo->encounterRate, FALSE) != TRUE)
-//            {
-//                AddToWildEncounterRateBuff(gWildMonHeaders[headerId].landMonsInfo->encounterRate);
-//                return FALSE;
-//            }
 
-            else if (TryStartRoamerEncounter() == TRUE)
+            if (TryStartRoamerEncounter() == TRUE)
             {
                 roamer = &gSaveBlock1Ptr->roamer;
                 if (!IsWildLevelAllowedByRepel(roamer->level))
@@ -402,13 +400,6 @@ bool8 StandardWildEncounter(u32 currMetatileAttrs, u16 previousMetatileBehavior)
         {
             if (gWildMonHeaders[headerId].waterMonsInfo == NULL)
                 return FALSE;
-            else if (previousMetatileBehavior != ExtractMetatileAttribute(currMetatileAttrs, METATILE_ATTRIBUTE_BEHAVIOR) && !DoGlobalWildEncounterDiceRoll())
-                return FALSE;
-            else if (DoWildEncounterRateTest(gWildMonHeaders[headerId].waterMonsInfo->encounterRate, FALSE) != TRUE)
-            {
-                AddToWildEncounterRateBuff(gWildMonHeaders[headerId].waterMonsInfo->encounterRate);
-                return FALSE;
-            }
 
             if (TryStartRoamerEncounter() == TRUE)
             {
@@ -666,98 +657,15 @@ static u16 WildEncounterRandom(void)
     return sWildEncounterData.rngState >> 16;
 }
 
-static u8 GetMapBaseEncounterCooldown(u8 encounterType)
-{
-    u16 headerIdx = GetCurrentMapWildMonHeaderId();
-    if (headerIdx == 0xFFFF)
-        return 0xFF;
-    if (encounterType == TILE_ENCOUNTER_LAND)
-    {
-        if (gWildMonHeaders[headerIdx].landMonsInfo == NULL)
-            return 0xFF;
-        if (gWildMonHeaders[headerIdx].landMonsInfo->encounterRate >= 80)
-            return 0;
-        if (gWildMonHeaders[headerIdx].landMonsInfo->encounterRate < 10)
-            return 8;
-        return 8 - (gWildMonHeaders[headerIdx].landMonsInfo->encounterRate / 10);
-    }
-    if (encounterType == TILE_ENCOUNTER_WATER)
-    {
-        if (gWildMonHeaders[headerIdx].waterMonsInfo == NULL)
-            return 0xFF;
-        if (gWildMonHeaders[headerIdx].waterMonsInfo->encounterRate >= 80)
-            return 0;
-        if (gWildMonHeaders[headerIdx].waterMonsInfo->encounterRate < 10)
-            return 8;
-        return 8 - (gWildMonHeaders[headerIdx].waterMonsInfo->encounterRate / 10);
-    }
-    return 0xFF;
-}
-
 void ResetEncounterRateModifiers(void)
 {
     sWildEncounterData.encounterRateBuff = 0;
     sWildEncounterData.stepsSinceLastEncounter = 0;
 }
 
-static bool8 HandleWildEncounterCooldown(u32 currMetatileAttrs)
-{
-    u8 encounterType = ExtractMetatileAttribute(currMetatileAttrs, METATILE_ATTRIBUTE_ENCOUNTER_TYPE);
-    u32 minSteps;
-    u32 encRate;
-    if (encounterType == TILE_ENCOUNTER_NONE)
-        return FALSE;
-    minSteps = GetMapBaseEncounterCooldown(encounterType);
-    if (minSteps == 0xFF)
-        return FALSE;
-    minSteps *= 256;
-    encRate = 5 * 256;
-    switch (GetFluteEncounterRateModType())
-    {
-    case 1:
-        minSteps -= minSteps / 2;
-        encRate += encRate / 2;
-        break;
-    case 2:
-        minSteps *= 2;
-        encRate /= 2;
-        break;
-    }
-    sWildEncounterData.leadMonHeldItem = GetMonData(&gPlayerParty[0], MON_DATA_HELD_ITEM);
-    if (IsLeadMonHoldingCleanseTag() == TRUE)
-    {
-        minSteps += minSteps / 3;
-        encRate -= encRate / 3;
-    }
-    switch (GetAbilityEncounterRateModType())
-    {
-    case 1:
-        minSteps *= 2;
-        encRate /= 2;
-        break;
-    case 2:
-        minSteps /= 2;
-        encRate *= 2;
-        break;
-    }
-    minSteps /= 256;
-    encRate /= 256;
-    if (sWildEncounterData.stepsSinceLastEncounter >= minSteps)
-        return TRUE;
-    sWildEncounterData.stepsSinceLastEncounter++;
-    if ((Random() % 100) < encRate)
-        return TRUE;
-    return FALSE;
-}
-
 bool8 TryStandardWildEncounter(u32 currMetatileAttrs)
 {
-//    if (!HandleWildEncounterCooldown(currMetatileAttrs))
-//    {
-//        sWildEncounterData.prevMetatileBehavior = ExtractMetatileAttribute(currMetatileAttrs, METATILE_ATTRIBUTE_BEHAVIOR);
-//        return FALSE;
-//    }
-    /*else*/ if (StandardWildEncounter(currMetatileAttrs, sWildEncounterData.prevMetatileBehavior) == TRUE)
+    if (StandardWildEncounter(currMetatileAttrs, sWildEncounterData.prevMetatileBehavior) == TRUE)
     {
         sWildEncounterData.encounterRateBuff = 0;
         sWildEncounterData.stepsSinceLastEncounter = 0;
@@ -777,4 +685,111 @@ static void AddToWildEncounterRateBuff(u8 encounterRate)
         sWildEncounterData.encounterRateBuff += encounterRate;
     else
         sWildEncounterData.encounterRateBuff = 0;
+}
+
+void UpdateWildEncounters(void) {
+    struct ObjectEventTemplate template;
+    s16 cameraX, cameraY;
+
+    if (!QL_IS_PLAYBACK_STATE && gWanderingEncounterState >= WILD_ENCOUNTER_UPDATE_DELAY) {
+        gWanderingEncounterState = 0;
+
+        if (CountExistingWildEncounters() < MAX_WILD_ENCOUNTERS) {
+            FindAvailableSpawnPosition(&template.x, &template.y);
+            if (template.x != 0 && template.y != 0) {
+                template.localId = FindAvailableLocalId();
+                if (template.localId != OBJ_EVENT_ID_NULL_ENCOUNTER) {
+                    template.graphicsId = OBJ_EVENT_GFX_WILD_ENCOUNTER;
+                    template.kind = OBJ_KIND_NORMAL;
+                    template.objUnion.normal.elevation = 3;
+                    template.objUnion.normal.movementType = MOVEMENT_TYPE_WANDER_AROUND;
+                    template.objUnion.normal.movementRangeX = 4;
+                    template.objUnion.normal.movementRangeY = 4;
+                    template.objUnion.normal.trainerType = TRAINER_TYPE_NONE;
+                    template.objUnion.normal.trainerRange_berryTreeId = 0;
+                    template.script = 0;
+                    template.flagId = 0;
+
+                    GetObjectEventMovingCameraOffset(&cameraX, &cameraY);
+                    TrySpawnObjectEventTemplate(&template, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, cameraX, cameraY);
+                }
+            }
+        }
+    }
+    else {
+        gWanderingEncounterState++;
+    }
+}
+
+u8 CountExistingWildEncounters(void) {
+    u8 count = 0;
+    s32 i;
+
+    for (i = 0; i < OBJECT_EVENTS_COUNT; i++) {
+        struct ObjectEvent *objectEvent = &gObjectEvents[i];
+        if (objectEvent->active && IsWanderingEncounterLocalId(objectEvent->localId)) {
+            count++;
+        }
+    }
+
+    return count;
+}
+
+void FindAvailableSpawnPosition(s16 *x, s16 *y) {
+    u32 area = (WILD_ENCOUNTER_RANGE_X * 2 + 1) * (WILD_ENCOUNTER_RANGE_Y * 2 + 1);
+    u32 index = Random() % area;
+
+    u16 seed = 19;
+
+    s16 playerX, playerY;
+    s16 indexX, indexY;
+    u32 attribute;
+    s32 i;
+
+    PlayerGetDestCoords(&playerX, &playerY);
+
+    for (i = 0; i < FIND_SPAWN_ATTEMPTS; i++) {
+        indexX = (index / (WILD_ENCOUNTER_RANGE_X * 2 + 1)) + playerX - WILD_ENCOUNTER_RANGE_X;
+        indexY = (index % (WILD_ENCOUNTER_RANGE_X * 2 + 1)) + playerY - WILD_ENCOUNTER_RANGE_Y;
+        attribute = MapGridGetMetatileAttributeAt(indexX, indexY, METATILE_ATTRIBUTE_ENCOUNTER_TYPE);
+        if (attribute != TILE_ENCOUNTER_NONE) {
+            if (MapGridGetCollisionAt(indexX, indexY) == COLLISION_NONE) {
+                if (indexX != playerX && indexY != playerY) {
+                    *x = indexX - MAP_OFFSET;
+                    *y = indexY - MAP_OFFSET;
+                    return;
+                }
+            }
+        }
+        index = (index + seed) % area;
+    }
+
+    *x = 0;
+    *y = 0;
+}
+
+u8 FindAvailableLocalId(void) {
+    bool8 localIds[MAX_WILD_ENCOUNTERS] = {0};
+    struct ObjectEvent *object;
+    u8 i;
+
+    for (i = 0; i < OBJECT_EVENTS_COUNT; i++) {
+        object = &gObjectEvents[i];
+        if (object->active && IsWanderingEncounterLocalId(object->localId)) {
+            localIds[object->localId - OBJ_EVENT_ID_WILD_ENCOUNTER] = 1;
+        }
+    }
+
+    for (i = 0; i < MAX_WILD_ENCOUNTERS; i++) {
+        if (localIds[i] == 0) {
+            return OBJ_EVENT_ID_WILD_ENCOUNTER + i;
+        }
+    }
+
+    return OBJ_EVENT_ID_NULL_ENCOUNTER;
+}
+
+bool8 IsWanderingEncounterLocalId(u8 localId) {
+    return (localId >= OBJ_EVENT_ID_WILD_ENCOUNTER) &&
+           (localId < (OBJ_EVENT_ID_WILD_ENCOUNTER + MAX_WILD_ENCOUNTERS));
 }
