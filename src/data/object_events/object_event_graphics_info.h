@@ -2926,7 +2926,7 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_SSAnne = {
 
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_WildEncounter = {
     .tileTag = TAG_NONE,
-    .paletteTag = OBJ_EVENT_PAL_TAG_NPC_BLUE,
+    .paletteTag = OBJ_EVENT_PAL_TAG_SPARKLE,
     .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
     .size = 256,
     .width = 16,
@@ -2939,6 +2939,6 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_WildEncounter = {
     .oam = &gObjectEventBaseOam_16x32,
     .subspriteTables = gObjectEventSpriteOamTables_16x32,
     .anims = sAnimTable_Standard,
-    .images = sPicTable_CooltrainerF,
+    .images = sPicTable_Sparkle,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
