@@ -15,7 +15,7 @@
 #include "script.h"
 #include "trainer_see.h"
 #include "trig.h"
-#include "wandering_encounter.h"
+#include "wild_encounter.h"
 #include "constants/maps.h"
 #include "constants/event_object_movement.h"
 #include "constants/event_objects.h"

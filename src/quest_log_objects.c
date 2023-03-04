@@ -3,7 +3,7 @@
 #include "fieldmap.h"
 #include "field_player_avatar.h"
 #include "metatile_behavior.h"
-#include "wandering_encounter.h"
+#include "wild_encounter.h"
 
 void SetQuestLogObjectEventsData(struct QuestLog * questLog)
 {
