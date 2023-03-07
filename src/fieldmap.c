@@ -665,9 +665,9 @@ bool8 CameraMove(s32 x, s32 y)
         gSaveBlock1Ptr->pos.x += x;
         gSaveBlock1Ptr->pos.y += y;
 
-        DebugPrintf("Position %d, %d",
-                gObjectEvents[gPlayerAvatar.objectEventId].currentCoords.x,
-                gObjectEvents[gPlayerAvatar.objectEventId].currentCoords.y);
+//        DebugPrintf("Position %d, %d",
+//                gObjectEvents[gPlayerAvatar.objectEventId].currentCoords.x,
+//                gObjectEvents[gPlayerAvatar.objectEventId].currentCoords.y);
 
         if (gMapHeader.transition->axis != NO_TRANSITION) {
             if ((   gMapHeader.transition->axis == AXIS_HORIZONTAL &&
@@ -1039,15 +1039,15 @@ void LoadTransitionPalettes(const struct MapHeader *mapHeader) {
             .metatileAttributes = 0,
     };
 
-    DebugPrintf("LoadTransitionPalettes pos %d,%d axis %d from %d-%d to %d-%d weight %d",
-            gSaveBlock1Ptr->pos.x,
-            gSaveBlock1Ptr->pos.y,
-            transition->axis,
-            transition->fromGroup,
-            transition->fromNum,
-            transition->toGroup,
-            transition->toNum,
-            weight);
+//    DebugPrintf("LoadTransitionPalettes pos %d,%d axis %d from %d-%d to %d-%d weight %d",
+//            gSaveBlock1Ptr->pos.x,
+//            gSaveBlock1Ptr->pos.y,
+//            transition->axis,
+//            transition->fromGroup,
+//            transition->fromNum,
+//            transition->toGroup,
+//            transition->toNum,
+//            weight);
 
     LoadTilesetPalette(&newTileset, 0, NUM_PALS_TOTAL * 16 * 2);
 }

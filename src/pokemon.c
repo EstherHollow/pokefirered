@@ -6475,20 +6475,18 @@ u8 GetWeightedResult(u32 random, u8 *values, u8 *weights) {
     return values[0];
 }
 
+#define PALETTE_SEED_0 (variantSeed & 0x0000007F)
+#define PALETTE_SEED_1 ((variantSeed & 0x00003F80) >> 7)
+#define PALETTE_SEED_2 ((variantSeed & 0x001FC000) >> 14)
+#define PALETTE_SEED_3 ((variantSeed & 0x0FE00000) >> 21)
+#define SPRITE_SEED    ((variantSeed & 0xF0000000) >> 28)
+#define SPRITE_COUNT   sMonSpriteCount[species]
+#define PALETTE_COUNT  sMonPaletteCount[species]
 #define WEIGHTED_VALUE(value, weight) values[index] = value; weights[index] = weight; index++;
 u16 GenerateMonVariant(u16 species, u32 variantSeed) {
-    u16 paletteSeed0 =  (variantSeed & 0x0000007F);
-    u16 paletteSeed1 =  (variantSeed & 0x00003F80) >> 7;
-    u16 paletteSeed2 =  (variantSeed & 0x001FC000) >> 14;
-    u16 paletteSeed3 =  (variantSeed & 0x0FE00000) >> 21;
-    u16 spriteSeed =    (variantSeed & 0xF0000000) >> 28;
-
     u8 index = 0;
     u8 values[8] = {0, 0, 0, 0, 0, 0, 0, 0};
     u8 weights[8] = {0, 0, 0, 0, 0, 0, 0, 0};
-
-    u8 spriteCount = sMonSpriteCount[species];
-    u8 paletteCount = sMonPaletteCount[species];
 
     u16 sprite = 0;
     u16 palettes[4] = {0, 0, 0, 0};
@@ -6496,25 +6494,13 @@ u16 GenerateMonVariant(u16 species, u32 variantSeed) {
 
     switch (species) {
     case SPECIES_BULBASAUR:
-        palettes[SUBPALETTE_BULBASAUR_BODY] = paletteSeed0 % (paletteCount - 1) + 1;
-        palettes[SUBPALETTE_BULBASAUR_BULB] = paletteSeed1 % (paletteCount - 1) + 1;
-        palettes[SUBPALETTE_BULBASAUR_MOUTH] = palettes[SUBPALETTE_BULBASAUR_BULB];
-        break;
-
     case SPECIES_CHARMANDER:
-        palettes[SUBPALETTE_CHARMANDER_BODY] = paletteSeed0 % (paletteCount - 1) + 1;
-        palettes[SUBPALETTE_CHARMANDER_FLAME] = paletteSeed1 % (paletteCount - 1) + 1;
-        palettes[SUBPALETTE_CHARMANDER_EYES] = paletteSeed2 % (paletteCount - 1) + 1;
-        break;
-
     case SPECIES_SQUIRTLE:
-        palettes[SUBPALETTE_SQUIRTLE_BODY] = paletteSeed0 % (paletteCount - 1) + 1;
-        palettes[SUBPALETTE_SQUIRTLE_SHELL] = paletteSeed1 % (paletteCount - 1) + 1;
-        palettes[SUBPALETTE_SQUIRTLE_MOUTH] = palettes[SUBPALETTE_SQUIRTLE_SHELL];
+        variant = VARIANT_FROM_GAME_VERSION;
         break;
 
     case SPECIES_CATERPIE:
-        if (variantSeed % 10 == 0) {
+        if (PALETTE_SEED_0 % 10 == 0) {
             variant = VARIANT_ONE_TONE(PALETTE_CATERPIE_BLACK);
             break;
         }
@@ -6522,7 +6508,7 @@ u16 GenerateMonVariant(u16 species, u32 variantSeed) {
     case SPECIES_METAPOD:
     case SPECIES_BUTTERFREE:
         palettes[0] = PALETTE_CATERPIE_GREEN;
-        palettes[2] = variantSeed % NUM_PALETTES_BUTTERFREE;
+        palettes[2] = PALETTE_SEED_2 % NUM_PALETTES_BUTTERFREE;
         switch (palettes[2]) {
         case PALETTE_BUTTERFREE_WHITE:
         case PALETTE_BUTTERFREE_RED:
@@ -6540,7 +6526,7 @@ u16 GenerateMonVariant(u16 species, u32 variantSeed) {
     case SPECIES_KAKUNA:
     case SPECIES_BEEDRILL:
         palettes[0] = PALETTE_WEEDLE_ORANGE;
-        palettes[2] = variantSeed % NUM_PALETTES_BEEDRILL;
+        palettes[2] = PALETTE_SEED_2 % NUM_PALETTES_BEEDRILL;
         switch (palettes[2]) {
         case PALETTE_BEEDRILL_PINK:
         case PALETTE_BEEDRILL_RED:
@@ -6555,16 +6541,21 @@ u16 GenerateMonVariant(u16 species, u32 variantSeed) {
         break;
 
     case SPECIES_PIDGEY:
+        WEIGHTED_VALUE(PALETTE_PIDGEY_BLACK, 3);
         WEIGHTED_VALUE(PALETTE_PIDGEY_BROWN, 3);
+        WEIGHTED_VALUE(PALETTE_PIDGEY_PINK, 2);
         WEIGHTED_VALUE(PALETTE_PIDGEY_RED, 2);
+        WEIGHTED_VALUE(PALETTE_PIDGEY_ORANGE, 2);
         WEIGHTED_VALUE(PALETTE_PIDGEY_YELLOW, 2);
         WEIGHTED_VALUE(PALETTE_PIDGEY_BLUE, 1);
         variant = VARIANT_ONE_TONE(GetWeightedResult(variantSeed, values, weights));
         break;
 
     case SPECIES_RATTATA:
-        WEIGHTED_VALUE(PALETTE_RATTATA_BROWN, 2);
-        WEIGHTED_VALUE(PALETTE_RATTATA_PURPLE, 2);
+        WEIGHTED_VALUE(PALETTE_RATTATA_BROWN, 3);
+        WEIGHTED_VALUE(PALETTE_RATTATA_PURPLE, 3);
+        WEIGHTED_VALUE(PALETTE_RATTATA_ORANGE, 2);
+        WEIGHTED_VALUE(PALETTE_RATTATA_RED, 2);
         WEIGHTED_VALUE(PALETTE_RATTATA_BLUE, 2);
         WEIGHTED_VALUE(PALETTE_RATTATA_WHITE, 1);
         variant = VARIANT_ONE_TONE(GetWeightedResult(variantSeed, values, weights));
@@ -6591,9 +6582,9 @@ u16 GenerateMonVariant(u16 species, u32 variantSeed) {
         WEIGHTED_VALUE(PALETTE_ONIX_SILVER, 6);
         WEIGHTED_VALUE(PALETTE_ONIX_GOLD, 3);
         WEIGHTED_VALUE(PALETTE_ONIX_CRYSTAL, 1);
-        if (variantSeed % 19 == 0) {
-            palettes[0] = GetWeightedResult(variantSeed, values, weights);
-            palettes[1] = paletteSeed1 % paletteCount;
+        if (variantSeed % 10 == 0) {
+            palettes[0] = GetWeightedResult(PALETTE_SEED_0, values, weights);
+            palettes[1] = PALETTE_SEED_1 % PALETTE_COUNT;
             variant = VARIANT_TWO_TONE(palettes[0], palettes[1]);
         }
         else {
@@ -6619,8 +6610,6 @@ u16 GenerateMonVariant(u16 species, u32 variantSeed) {
         break;
 
 //    case SPECIES_HOPPIP:
-//    case SPECIES_SKIPLOOM:
-//    case SPECIES_JUMPLUFF:
 
 //    case SPECIES_SHUCKLE:
 
@@ -6645,26 +6634,26 @@ u16 GenerateMonVariant(u16 species, u32 variantSeed) {
     case SPECIES_RALTS:
         WEIGHTED_VALUE(PALETTE_RALTS_GREEN, 9);
         WEIGHTED_VALUE(PALETTE_RALTS_BLUE, 8);
-        WEIGHTED_VALUE(PALETTE_RALTS_PUMPKIN, 5);
-        WEIGHTED_VALUE(PALETTE_RALTS_FULLMOON, 4);
-        WEIGHTED_VALUE(PALETTE_RALTS_SUNSET, 3);
+        WEIGHTED_VALUE(PALETTE_RALTS_BONFIRE, 5);
+        WEIGHTED_VALUE(PALETTE_RALTS_BRONZE, 4);
+        WEIGHTED_VALUE(PALETTE_RALTS_FULLMOON, 3);
         WEIGHTED_VALUE(PALETTE_RALTS_GOLDEN, 2);
-        WEIGHTED_VALUE(PALETTE_RALTS_GHOSTLY, 2);
-        WEIGHTED_VALUE(PALETTE_RALTS_HEARTFUL, 1);
+        WEIGHTED_VALUE(PALETTE_RALTS_PUMPKIN, 3);
+        WEIGHTED_VALUE(PALETTE_RALTS_SUNSET, 3);
         variant = VARIANT_ONE_TONE(GetWeightedResult(variantSeed, values, weights));
         break;
 
 //    case SPECIES_ARON:
 
     default:
-        if (spriteCount > 1) {
-            sprite = spriteSeed % spriteCount;
+        if (SPRITE_COUNT > 1) {
+            sprite = SPRITE_SEED % SPRITE_COUNT;
         }
-        if (paletteCount > 1) {
-            palettes[0] = paletteSeed0 % paletteCount;
-            palettes[1] = paletteSeed1 % paletteCount;
-            palettes[2] = paletteSeed2 % paletteCount;
-            palettes[3] = paletteSeed3 % paletteCount;
+        if (PALETTE_COUNT > 1) {
+            palettes[0] = PALETTE_SEED_0 % PALETTE_COUNT;
+            palettes[1] = PALETTE_SEED_1 % PALETTE_COUNT;
+            palettes[2] = PALETTE_SEED_2 % PALETTE_COUNT;
+            palettes[3] = PALETTE_SEED_3 % PALETTE_COUNT;
         }
         break;
     }
@@ -6673,21 +6662,21 @@ u16 GenerateMonVariant(u16 species, u32 variantSeed) {
         variant = (palettes[0]) | (palettes[1] << 3) | (palettes[2] << 6) | (palettes[3] << 9) | (sprite << 12);
     }
 
-    DebugPrintf("GenerateMonVariant speciesName: %S", gSpeciesNames[species]);
-    DebugPrintf("GenerateMonVariant variantSeed: 0x%x", variantSeed);
-    DebugPrintf("GenerateMonVariant paletteSeeds: [0x%x, 0x%x, 0x%x, 0x%x] spriteSeed: 0x%x",
-            paletteSeed0,
-            paletteSeed1,
-            paletteSeed2,
-            paletteSeed3,
-            spriteSeed);
-    DebugPrintf("GenerateMonVariant palettes: [%d, %d, %d, %d] sprite: %d",
-            (variant & 0x0007),
-            (variant & 0x0038) >> 3,
-            (variant & 0x01C0) >> 6,
-            (variant & 0x0E00) >> 9,
-            (variant & 0x3000) >> 12);
-    DebugPrintf("GenerateMonVariant variant: 0x%x", variant);
+//    DebugPrintf("GenerateMonVariant speciesName: %S", gSpeciesNames[species]);
+//    DebugPrintf("GenerateMonVariant variantSeed: 0x%x", variantSeed);
+//    DebugPrintf("GenerateMonVariant paletteSeeds: [0x%x, 0x%x, 0x%x, 0x%x] spriteSeed: 0x%x",
+//            paletteSeed0,
+//            paletteSeed1,
+//            paletteSeed2,
+//            paletteSeed3,
+//            spriteSeed);
+//    DebugPrintf("GenerateMonVariant palettes: [%d, %d, %d, %d] sprite: %d",
+//            (variant & 0x0007),
+//            (variant & 0x0038) >> 3,
+//            (variant & 0x01C0) >> 6,
+//            (variant & 0x0E00) >> 9,
+//            (variant & 0x3000) >> 12);
+//    DebugPrintf("GenerateMonVariant variant: 0x%x", variant);
     return variant;
 }
 
@@ -6825,7 +6814,7 @@ const struct SpritePalette *GetMonPaletteStructStandard(u16 species, u16 variant
             .tag = species,
     };
 
-    DebugPrintf("GetMonPaletteStructFromVariant variant: 0x%x", variant);
+//    DebugPrintf("GetMonPaletteStructFromVariant variant: 0x%x", variant);
 
     dynamicPalette = dynamicPaletteBuffer;
     return &dynamicPalette;
