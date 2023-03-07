@@ -138,8 +138,11 @@
             "index": 16,
             "species": "pidgey",
             "palettes": [
+                "black",
                 "brown",
                 "red",
+                "pink",
+                "orange",
                 "yellow",
                 "blue"
             ]
@@ -149,6 +152,8 @@
             "species": "rattata",
             "palettes": [
                 "brown",
+                "orange",
+                "red",
                 "purple",
                 "blue",
                 "white"
@@ -255,6 +260,7 @@
             "palettes": [
                 "brown",
                 "black",
+                "red",
                 "white"
             ]
         },
@@ -263,7 +269,9 @@
             "species": "spinarak",
             "palettes": [
                 "green",
-                "blue"
+                "blue",
+                "red",
+                "yellow"
             ],
             "subpalettes": [
                 {
@@ -288,8 +296,7 @@
                 "blue",
                 "sky",
                 "green",
-                "yellow",
-                "pink"
+                "yellow"
             ]
         },
         {
@@ -354,12 +361,12 @@
             "palettes": [
                 "green",
                 "blue",
-                "pumpkin",
-                "sunset",
-                "golden",
-                "heartful",
+                "bonfire",
+                "bronze",
                 "fullmoon",
-                "ghostly"
+                "golden",
+                "pumpkin",
+                "sunset"
             ]
         },
         {
