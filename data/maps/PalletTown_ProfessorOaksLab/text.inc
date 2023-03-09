@@ -68,6 +68,10 @@ PalletTown_ProfessorOaksLab_Text_RivalTellSisNotToGiveYouMap::
     .string "Don't bother coming around to\n"
     .string "my place after this!$"
 
+PalletTown_ProfessorOaksLab_Text_RivalHateToSayIt::
+    .string "{PLAYER}, I hate to say it, but you\n"
+    .string "won't be necessary for this.$"
+
 PalletTown_ProfessorOaksLab_Text_OakThreeMonsChooseOne::
     .string "OAK: {RIVAL}?\n"
     .string "Let me think…\p"
@@ -156,7 +160,8 @@ PalletTown_ProfessorOaksLab_Text_OakCustomBallIOrdered::
 
 PalletTown_ProfessorOaksLab_Text_OakHaveRequestForYouTwo::
     .string "OAK: Oh, right!\n"
-    .string "I have a request for you two.$"
+    .string "I have a request for you two.\p"
+    .string "Come back over here.$"
 
 PalletTown_ProfessorOaksLab_Text_OakPokedexOnDesk::
     .string "On the desk there is my invention,\n"
