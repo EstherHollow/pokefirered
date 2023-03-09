@@ -47,26 +47,9 @@ PalletTown_ProfessorOaksLab_Text_RivalGoToughenMyMon::
     .string "{PLAYER}! Gramps!\n"
     .string "Smell you later!$"
 
-PalletTown_ProfessorOaksLab_Text_RivalGramps::
-    .string "{RIVAL}: Gramps!$"
-
-PalletTown_ProfessorOaksLab_Text_RivalWhatDidYouCallMeFor::
-    .string "{RIVAL}: I almost forgot!\n"
-    .string "What did you call me for?$"
-
 PalletTown_ProfessorOaksLab_Text_RivalLeaveItToMeGramps::
     .string "{RIVAL}: All right, Gramps!\n"
     .string "Leave it all to me!$"
-
-PalletTown_ProfessorOaksLab_Text_RivalTellSisNotToGiveYouMap::
-    .string "{PLAYER}, I hate to say it, but you\n"
-    .string "won't be necessary for this.\p"
-    .string "I know! I'll borrow a TOWN MAP\n"
-    .string "from my sis!\p"
-    .string "I'll tell her not to lend you one,\n"
-    .string "{PLAYER}! Hahaha!\p"
-    .string "Don't bother coming around to\n"
-    .string "my place after this!$"
 
 PalletTown_ProfessorOaksLab_Text_RivalHateToSayIt::
     .string "{PLAYER}, I hate to say it, but you\n"
