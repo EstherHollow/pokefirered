@@ -1,8 +1,6 @@
 .set LOCALID_CLERK, 1
 
 ViridianCity_Mart_MapScripts::
-	map_script MAP_SCRIPT_ON_LOAD, ViridianCity_Mart_OnLoad
-	map_script MAP_SCRIPT_ON_FRAME_TABLE, ViridianCity_Mart_OnFrame
 	.byte 0
 
 ViridianCity_Mart_OnLoad::
