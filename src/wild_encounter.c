@@ -355,10 +355,6 @@ bool8 StandardWildEncounter(u32 currMetatileAttrs, u16 previousMetatileBehavior)
     u16 headerId;
     struct Roamer * roamer;
 
-#ifdef DEBUG_NO_ENCOUNTERS
-    return FALSE;
-#endif
-
     if (sWildEncountersDisabled == TRUE)
         return FALSE;
 

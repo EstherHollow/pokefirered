@@ -61,11 +61,11 @@ ViridianCity_EventScript_CitySign::
 	end
 
 ViridianCity_EventScript_TrainerTips1::
-	msgbox ViridianCity_Text_CatchMonsForEasierBattles, MSGBOX_SIGN
+	msgbox ViridianCity_Text_TrainerTips1, MSGBOX_SIGN
 	end
 
 ViridianCity_EventScript_TrainerTips2::
-	msgbox ViridianCity_Text_MovesLimitedByPP, MSGBOX_SIGN
+	msgbox ViridianCity_Text_TrainerTips2, MSGBOX_SIGN
 	end
 
 ViridianCity_EventScript_GymSign::
