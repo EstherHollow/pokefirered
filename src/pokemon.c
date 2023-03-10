@@ -6483,6 +6483,52 @@ u8 GetWeightedResult(u32 random, u8 *values, u8 *weights) {
 #define SPRITE_COUNT   sMonSpriteCount[species]
 #define PALETTE_COUNT  sMonPaletteCount[species]
 #define WEIGHTED_VALUE(value, weight) values[index] = value; weights[index] = weight; index++;
+
+// So the weirdest bug I've ever seen in my life occurred here.
+// In the WEEDLE case, palettes[0] and [2] would be set correctly,
+// but as soon as it hit the nested switch block, control would
+// immediately jump to the DEFAULT case of the *outer* switch block.
+// There is no discernable reason why this would ever happen.
+// What's even stranger is that this behavior seems to depend on
+// the *number of case statements* in both the outer and nested
+// switch blocks. Removing enough of them, or adding enough of them,
+// makes the bug go away. I have to assume this is some compiler glitch.
+// I hope that this won't be a problem once I refactor _variant into
+// _personality and abstract a lot of this logic into the
+// variants.json data. For now, I'm adding external methods to set
+// METAPOD and KAKUNA's palettes. This somehow doesn't have the
+// same issues as a nested switch block.
+
+static u16 GetMetapodPalette(u16 butterfree) {
+    switch (butterfree) {
+    case PALETTE_BUTTERFREE_WHITE:
+    case PALETTE_BUTTERFREE_RED:
+        return PALETTE_METAPOD_YELLOW;
+    case PALETTE_BUTTERFREE_GREEN:
+    case PALETTE_BUTTERFREE_CYAN:
+        return PALETTE_METAPOD_GREEN;
+    case PALETTE_BUTTERFREE_BLUE:
+    case PALETTE_BUTTERFREE_PINK:
+        return PALETTE_METAPOD_BLUE;
+    }
+    return PALETTE_METAPOD_GREEN;
+}
+
+static u16 GetKakunaPalette(u16 beedrill) {
+    switch (beedrill) {
+    case PALETTE_BEEDRILL_PINK:
+    case PALETTE_BEEDRILL_RED:
+        return PALETTE_KAKUNA_RED;
+    case PALETTE_BEEDRILL_TANGELO:
+    case PALETTE_BEEDRILL_ORANGE:
+        return PALETTE_KAKUNA_ORANGE;
+    case PALETTE_BEEDRILL_GOLD:
+    case PALETTE_BEEDRILL_YELLOW:
+        return PALETTE_KAKUNA_YELLOW;
+    }
+    return PALETTE_KAKUNA_ORANGE;
+}
+
 u16 GenerateMonVariant(u16 species, u32 variantSeed) {
     u8 index = 0;
     u8 values[8] = {0, 0, 0, 0, 0, 0, 0, 0};
@@ -6509,17 +6555,7 @@ u16 GenerateMonVariant(u16 species, u32 variantSeed) {
     case SPECIES_BUTTERFREE:
         palettes[0] = PALETTE_CATERPIE_GREEN;
         palettes[2] = PALETTE_SEED_2 % NUM_PALETTES_BUTTERFREE;
-        switch (palettes[2]) {
-        case PALETTE_BUTTERFREE_WHITE:
-        case PALETTE_BUTTERFREE_RED:
-            palettes[1] = PALETTE_METAPOD_YELLOW;
-        case PALETTE_BUTTERFREE_GREEN:
-        case PALETTE_BUTTERFREE_CYAN:
-            palettes[1] = PALETTE_METAPOD_GREEN;
-        case PALETTE_BUTTERFREE_BLUE:
-        case PALETTE_BUTTERFREE_PINK:
-            palettes[1] = PALETTE_METAPOD_BLUE;
-        }
+        palettes[1] = GetMetapodPalette(palettes[2]);
         break;
 
     case SPECIES_WEEDLE:
@@ -6527,17 +6563,7 @@ u16 GenerateMonVariant(u16 species, u32 variantSeed) {
     case SPECIES_BEEDRILL:
         palettes[0] = PALETTE_WEEDLE_ORANGE;
         palettes[2] = PALETTE_SEED_2 % NUM_PALETTES_BEEDRILL;
-        switch (palettes[2]) {
-        case PALETTE_BEEDRILL_PINK:
-        case PALETTE_BEEDRILL_RED:
-            palettes[1] = PALETTE_KAKUNA_RED;
-        case PALETTE_BEEDRILL_TANGELO:
-        case PALETTE_BEEDRILL_ORANGE:
-            palettes[1] = PALETTE_KAKUNA_ORANGE;
-        case PALETTE_BEEDRILL_GOLD:
-        case PALETTE_BEEDRILL_YELLOW:
-            palettes[1] = PALETTE_KAKUNA_YELLOW;
-        }
+        palettes[1] = GetKakunaPalette(palettes[2]);
         break;
 
     case SPECIES_PIDGEY:
@@ -6646,6 +6672,7 @@ u16 GenerateMonVariant(u16 species, u32 variantSeed) {
 //    case SPECIES_ARON:
 
     default:
+        DebugPrintf("GenerateMonVariant DEFAULT case");
         if (SPRITE_COUNT > 1) {
             sprite = SPRITE_SEED % SPRITE_COUNT;
         }
