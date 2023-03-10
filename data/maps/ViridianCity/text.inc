@@ -103,14 +103,14 @@ ViridianCity_Text_CitySign::
     .string "VIRIDIAN CITY \n"
     .string "The Eternally Green Paradise$"
 
-ViridianCity_Text_CatchMonsForEasierBattles::
+ViridianCity_Text_TrainerTips1::
     .string "TRAINER TIPS\p"
-    .string "Catch POKéMON and keep them in\n"
-    .string "your party.\p"
-    .string "They gain experience just\n"
-    .string "by sticking with you.$"
+    .string "Experience is shared with\n"
+    .string "your entire party.\p"
+    .string "Keep weaker POKéMON in your\n"
+    .string "backline to train them.$"
 
-ViridianCity_Text_MovesLimitedByPP::
+ViridianCity_Text_TrainerTips2::
     .string "TRAINER TIPS\p"
     .string "If your POKéMON is too strong,\n"
     .string "they won't gain experience.\p"

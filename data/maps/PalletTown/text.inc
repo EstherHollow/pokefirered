@@ -16,7 +16,7 @@ PalletTown_Text_RaisingMonsToo::
     .string "protect me.$"
 
 PalletTown_Text_CanStoreItemsAndMonsInPC::
-    .string "Everything is moddable!\p"
+    .string "Everything is mutable!\p"
     .string "Even the words I'm speaking!$"
 
 PalletTown_Text_OakPokemonResearchLab::
