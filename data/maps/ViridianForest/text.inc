@@ -13,8 +13,8 @@ ViridianForest_Text_RickDefeat::
     .string "No!\nCATERPIE can't hack it!$"
 
 ViridianForest_Text_RickPostBattle::
-    .string "Hey, I think one of my CATERPIE\n"
-    .string "is different.$"
+    .string "Hey, did one of my CATERPIE\n"
+    .string "seem different to you?$"
 
 ViridianForest_Text_DougIntro::
     .string "Yo!\n"

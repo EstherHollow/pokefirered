@@ -205,12 +205,12 @@ static const struct TrainerMonNoItemDefaultMoves sParty_BugCatcherRick[] = {
                 .iv = 0,
                 .lvl = 5,
                 .species = SPECIES_CATERPIE,
-                .variant = VARIANT_ONE_TONE(PALETTE_CATERPIE_GREEN),
+                .variant = VARIANT_ONE_TONE(PALETTE_CATERPIE_BLACK),
         },{
                 .iv = 0,
                 .lvl = 5,
                 .species = SPECIES_CATERPIE,
-                .variant = VARIANT_ONE_TONE(PALETTE_CATERPIE_BLACK),
+                .variant = VARIANT_ONE_TONE(PALETTE_CATERPIE_GREEN),
         },
 };
 static const struct TrainerMonNoItemDefaultMoves sParty_BugCatcherDoug[] = {
