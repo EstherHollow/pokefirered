@@ -6451,10 +6451,11 @@ u16 GenerateMonVariant(u16 species, u32 variantSeed) {
 //     case SPECIES_GEODUDE:
 
     case SPECIES_ONIX:
-        WEIGHTED_VALUE(PALETTE_ONIX_BRONZE, 9);
-        WEIGHTED_VALUE(PALETTE_ONIX_SILVER, 6);
-        WEIGHTED_VALUE(PALETTE_ONIX_GOLD, 3);
-        WEIGHTED_VALUE(PALETTE_ONIX_CRYSTAL, 1);
+        WEIGHTED_VALUE(PALETTE_ONIX_STONE, 60);
+        WEIGHTED_VALUE(PALETTE_ONIX_BRONZE, 20);
+        WEIGHTED_VALUE(PALETTE_ONIX_SILVER, 12);
+        WEIGHTED_VALUE(PALETTE_ONIX_GOLD, 6);
+        WEIGHTED_VALUE(PALETTE_ONIX_CRYSTAL, 2);
         if (variantSeed % 10 == 0) {
             palettes[0] = GetWeightedResult(PALETTE_SEED_0, values, weights);
             palettes[1] = PALETTE_SEED_1 % PALETTE_COUNT;
