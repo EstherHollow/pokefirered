@@ -6303,7 +6303,7 @@ bool8 IsTrainerRival(u16 trainerId) {
     }
 }
 
-u8 GetWeightedResult(u32 random, u8 *values, u8 *weights) {
+u16 GetWeightedResult(u32 random, u16 *values, u16 *weights) {
     u16 weightedSum = 0;
     u16 weight;
     s32 i;
@@ -6358,7 +6358,7 @@ static u16 GetMetapodPalette(u16 butterfree) {
     case PALETTE_BUTTERFREE_PINK:
         return PALETTE_METAPOD_BLUE;
     }
-    return PALETTE_METAPOD_GREEN;
+    return VARIANT_DEFAULT;
 }
 
 static u16 GetKakunaPalette(u16 beedrill) {
@@ -6373,13 +6373,13 @@ static u16 GetKakunaPalette(u16 beedrill) {
     case PALETTE_BEEDRILL_YELLOW:
         return PALETTE_KAKUNA_YELLOW;
     }
-    return PALETTE_KAKUNA_ORANGE;
+    return VARIANT_DEFAULT;
 }
 
 u16 GenerateMonVariant(u16 species, u32 variantSeed) {
+    u16 values[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    u16 weights[8] = {0, 0, 0, 0, 0, 0, 0, 0};
     u8 index = 0;
-    u8 values[8] = {0, 0, 0, 0, 0, 0, 0, 0};
-    u8 weights[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 
     u16 sprite = 0;
     u16 palettes[4] = {0, 0, 0, 0};
@@ -6451,19 +6451,48 @@ u16 GenerateMonVariant(u16 species, u32 variantSeed) {
 //     case SPECIES_GEODUDE:
 
     case SPECIES_ONIX:
-        WEIGHTED_VALUE(PALETTE_ONIX_STONE, 60);
-        WEIGHTED_VALUE(PALETTE_ONIX_BRONZE, 20);
-        WEIGHTED_VALUE(PALETTE_ONIX_SILVER, 12);
-        WEIGHTED_VALUE(PALETTE_ONIX_GOLD, 6);
-        WEIGHTED_VALUE(PALETTE_ONIX_CRYSTAL, 2);
         if (variantSeed % 10 == 0) {
-            palettes[0] = GetWeightedResult(PALETTE_SEED_0, values, weights);
-            palettes[1] = PALETTE_SEED_1 % PALETTE_COUNT;
-            variant = VARIANT_TWO_TONE(palettes[0], palettes[1]);
+            if (PALETTE_SEED_2 % 2 == 0) {
+                WEIGHTED_VALUE(VARIANT_TWO_TONE(PALETTE_ONIX_STONE, PALETTE_ONIX_BRONZE), 10);
+                WEIGHTED_VALUE(VARIANT_TWO_TONE(PALETTE_ONIX_BRONZE, PALETTE_ONIX_SILVER), 5);
+                WEIGHTED_VALUE(VARIANT_TWO_TONE(PALETTE_ONIX_BRONZE, PALETTE_ONIX_GOLD), 5);
+                WEIGHTED_VALUE(VARIANT_TWO_TONE(PALETTE_ONIX_SILVER, PALETTE_ONIX_GOLD), 2);
+                WEIGHTED_VALUE(VARIANT_TWO_TONE(PALETTE_ONIX_SILVER, PALETTE_ONIX_CRYSTAL), 2);
+                WEIGHTED_VALUE(VARIANT_TWO_TONE(PALETTE_ONIX_GOLD, PALETTE_ONIX_CRYSTAL), 1);
+            }
+            else {
+                WEIGHTED_VALUE(VARIANT_TWO_TONE(PALETTE_ONIX_BRONZE, PALETTE_ONIX_STONE), 10);
+                WEIGHTED_VALUE(VARIANT_TWO_TONE(PALETTE_ONIX_SILVER, PALETTE_ONIX_BRONZE), 5);
+                WEIGHTED_VALUE(VARIANT_TWO_TONE(PALETTE_ONIX_GOLD, PALETTE_ONIX_BRONZE), 5);
+                WEIGHTED_VALUE(VARIANT_TWO_TONE(PALETTE_ONIX_GOLD, PALETTE_ONIX_SILVER), 2);
+                WEIGHTED_VALUE(VARIANT_TWO_TONE(PALETTE_ONIX_CRYSTAL, PALETTE_ONIX_SILVER), 2);
+                WEIGHTED_VALUE(VARIANT_TWO_TONE(PALETTE_ONIX_CRYSTAL, PALETTE_ONIX_GOLD), 1);
+            }
+            // stone   := 40%
+            // bronze  := 80%
+            // silver  := 36%
+            // gold    := 32%
+            // crystal := 12%
+            variant = GetWeightedResult(variantSeed, values, weights);
         }
         else {
+            WEIGHTED_VALUE(PALETTE_ONIX_STONE, 30);
+            WEIGHTED_VALUE(PALETTE_ONIX_BRONZE, 10);
+            WEIGHTED_VALUE(PALETTE_ONIX_SILVER, 6);
+            WEIGHTED_VALUE(PALETTE_ONIX_GOLD, 3);
+            WEIGHTED_VALUE(PALETTE_ONIX_CRYSTAL, 1);
+            // stone   := 60%
+            // bronze  := 20%
+            // silver  := 12%
+            // gold    :=  6%
+            // crystal :=  2%
             variant = VARIANT_ONE_TONE(GetWeightedResult(variantSeed, values, weights));
         }
+        // stone   := 58  %
+        // bronze  := 26  %
+        // silver  := 14.4%
+        // gold    :=  8.6%
+        // crystal :=  3  %
         break;
 
 //    case SPECIES_TANGELA:
