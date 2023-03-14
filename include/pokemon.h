@@ -440,7 +440,7 @@ void DestroyMonSpritesGfxManager(void);
 u8 *MonSpritesGfxManager_GetSpritePtr(u8 bufferId);
 
 bool8 IsTrainerRival(u16 trainerId);
-u8 GetWeightedResult(u32 random, u8 *values, u8 *weights);
+u16 GetWeightedResult(u32 random, u16 *values, u16 *weights);
 u16 GenerateMonVariant(u16 species, u32 variantSeed);
 
 const u32 *GetMonFrontPicFromVariant(u16 species, u16 variant);

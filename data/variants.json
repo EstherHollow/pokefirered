@@ -201,6 +201,7 @@
             "index": 95,
             "species": "onix",
             "palettes": [
+                "stone",
                 "bronze",
                 "silver",
                 "gold",
