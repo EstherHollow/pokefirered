@@ -186,19 +186,19 @@ string generate_map_connections_text(Json map_data) {
     return text.str();
 }
 
-string generate_map_transition_text(Json map_data) {
-    ostringstream text;
-    text << "@\n@ DO NOT MODIFY THIS FILE! It is auto-generated from data/maps/"
-         << map_data["name"].string_value()
-         << "/map.json\n@\n\n";
-
-    text << map_data["name"].string_value() << "_PaletteTransition::\n";
-    text << "\t.byte NO_TRANSITION\n";
-    text << "\tmap 0\n";
-    text << "\tmap 0\n\n";
-
-    return text.str();
-}
+//string generate_map_transition_text(Json map_data) {
+//    ostringstream text;
+//    text << "@\n@ DO NOT MODIFY THIS FILE! It is auto-generated from data/maps/"
+//         << map_data["name"].string_value()
+//         << "/map.json\n@\n\n";
+//
+//    text << map_data["name"].string_value() << "_PaletteTransition::\n";
+//    text << "\t.byte NO_TRANSITION\n";
+//    text << "\tmap 0\n";
+//    text << "\tmap 0\n\n";
+//
+//    return text.str();
+//}
 
 string generate_map_events_text(Json map_data) {
     if (map_data.object_items().find("shared_events_map") != map_data.object_items().end())
@@ -366,13 +366,13 @@ void process_map(string map_filepath, string layouts_filepath) {
     string header_text = generate_map_header_text(map_data, layouts_data);
     string events_text = generate_map_events_text(map_data);
     string connections_text = generate_map_connections_text(map_data);
-    string transition_text = generate_map_transition_text(map_data);
+//    string transition_text = generate_map_transition_text(map_data);
 
     string files_dir = get_directory_name(map_filepath);
     write_text_file(files_dir + "header.inc", header_text);
     write_text_file(files_dir + "events.inc", events_text);
     write_text_file(files_dir + "connections.inc", connections_text);
-    write_text_file(files_dir + "transition.inc", transition_text);
+//    write_text_file(files_dir + "transition.inc", transition_text);
 }
 
 string generate_groups_text(Json groups_data) {
