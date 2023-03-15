@@ -3,7 +3,7 @@
 @
 
 Route2_PaletteTransition::
-	.byte NO_TRANSITION
-	map 0
-	map 0
+	.byte AXIS_VERTICAL
+	map MAP_PEWTER_CITY
+	map MAP_VIRIDIAN_CITY
 
