@@ -5832,7 +5832,9 @@ static u8 GetPartyLayoutFromBattleType(void)
         return PARTY_LAYOUT_SINGLE;
     if (IsMultiBattle() == TRUE)
         return PARTY_LAYOUT_MULTI;
-    return PARTY_LAYOUT_DOUBLE;
+    if (PlayerHasTwoUsableMons() == TRUE)
+        return PARTY_LAYOUT_DOUBLE;
+    return PARTY_LAYOUT_SINGLE;
 }
 
 void OpenPartyMenuInTutorialBattle(u8 partyAction)
@@ -6077,13 +6079,14 @@ static void BufferBattlePartyOrderBySide(u8 *partyBattleOrder, u8 flankId, u8 ba
         }
         return;
     }
-    else if (IsDoubleBattle() == FALSE)
+    if (IsDoubleBattle() && PlayerHasTwoUsableMons())
     {
-        j = 1;
+        j = 2;
         partyIndexes[0] = gBattlerPartyIndexes[leftBattler];
+        partyIndexes[1] = gBattlerPartyIndexes[rightBattler];
         for (i = 0; i < PARTY_SIZE; ++i)
         {
-            if (i != partyIndexes[0])
+            if (i != partyIndexes[0] && i != partyIndexes[1])
             {
                 partyIndexes[j] = i;
                 ++j;
@@ -6092,12 +6095,11 @@ static void BufferBattlePartyOrderBySide(u8 *partyBattleOrder, u8 flankId, u8 ba
     }
     else
     {
-        j = 2;
+        j = 1;
         partyIndexes[0] = gBattlerPartyIndexes[leftBattler];
-        partyIndexes[1] = gBattlerPartyIndexes[rightBattler];
         for (i = 0; i < PARTY_SIZE; ++i)
         {
-            if (i != partyIndexes[0] && i != partyIndexes[1])
+            if (i != partyIndexes[0])
             {
                 partyIndexes[j] = i;
                 ++j;

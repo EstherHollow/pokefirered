@@ -862,6 +862,11 @@ bool8 IsDoubleBattle(void)
     return IS_DOUBLE_BATTLE();
 }
 
+bool8 PlayerHasTwoUsableMons(void)
+{
+    return GetMonsStateToDoubles() == PLAYER_HAS_TWO_USABLE_MONS;
+}
+
 #define BG_ANIM_PAL_1        8
 #define BG_ANIM_PAL_2        9
 
