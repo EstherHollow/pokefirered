@@ -3777,7 +3777,7 @@ u8 GetMonsStateToDoubles(void)
     CalculatePlayerPartyCount();
 
     if (gPlayerPartyCount == 1)
-        return gPlayerPartyCount; // PLAYER_HAS_ONE_MON
+        return PLAYER_HAS_ONE_MON;
 
     for (i = 0; i < gPlayerPartyCount; i++)
     {
