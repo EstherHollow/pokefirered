@@ -12,20 +12,6 @@
                 "red",
                 "green",
                 "blue"
-            ],
-            "subpalettes": [
-                {
-                    "name": "body",
-                    "indexes": [2, 3, 4, 5, 10]
-                },
-                {
-                    "name": "bulb",
-                    "indexes": [11, 12, 13, 14]
-                },
-                {
-                    "name": "mouth",
-                    "indexes": [1, 6, 7, 8, 9]
-                }
             ]
         },
         {
@@ -36,20 +22,6 @@
                 "red",
                 "green",
                 "blue"
-            ],
-            "subpalettes": [
-                {
-                    "name": "body",
-                    "indexes": [1, 2, 4, 5, 6, 9, 10, 11, 12]
-                },
-                {
-                    "name": "flame",
-                    "indexes": [7, 8]
-                },
-                {
-                    "name": "eyes",
-                    "indexes": [3, 13, 14, 15]
-                }
             ]
         },
         {
@@ -60,20 +32,6 @@
                 "red",
                 "green",
                 "blue"
-            ],
-            "subpalettes": [
-                {
-                    "name": "body",
-                    "indexes": [11, 12, 13, 14, 15]
-                },
-                {
-                    "name": "shell",
-                    "indexes": [1, 2, 3, 4, 5, 6, 7, 8, 9]
-                },
-                {
-                    "name": "mouth",
-                    "indexes": [10]
-                }
             ]
         },
         {
@@ -141,8 +99,6 @@
                 "black",
                 "brown",
                 "red",
-                "pink",
-                "orange",
                 "yellow",
                 "blue"
             ]
@@ -162,11 +118,17 @@
         {
             "index": 25,
             "species": "pikachu",
+            "sprites": [
+                "normal",
+                "redhat"
+            ],
             "palettes": [
                 "yellow",
                 "orange",
                 "red",
-                "blue"
+                "pink",
+                "blue",
+                "redhat"
             ]
         },
         {
@@ -206,29 +168,16 @@
                 "silver",
                 "gold",
                 "crystal"
-            ],
-            "subpalettes": [
-                {
-                    "name": "body_1",
-                    "indexes": [1, 10, 11, 12, 13, 14, 15]
-                },
-                {
-                    "name": "body_2",
-                    "indexes": [4, 5, 6, 7, 8, 9]
-                }
             ]
         },
         {
             "index": 114,
             "species": "tangela",
             "palettes": [
-                "red",
-                "orange",
-                "lime",
+                "blue",
                 "green",
                 "teal",
-                "blue",
-                "purple"
+                "yellow"
             ],
             "subpalettes": [
                 {
@@ -248,6 +197,10 @@
         {
             "index": 147,
             "species": "dratini",
+            "sprites": [
+                "normal",
+                "twintail"
+            ],
             "palettes": [
                 "blue",
                 "purple",
@@ -261,7 +214,7 @@
             "palettes": [
                 "brown",
                 "black",
-                "red",
+                "green",
                 "white"
             ]
         },
@@ -293,10 +246,10 @@
             "index": 183,
             "species": "marill",
             "palettes": [
-                "purple",
                 "blue",
-                "sky",
                 "green",
+                "purple",
+                "sky",
                 "yellow"
             ]
         },
@@ -322,16 +275,6 @@
                 "yellow",
                 "blue",
                 "purple"
-            ],
-            "subpalettes": [
-                {
-                    "name": "shell",
-                    "indexes": [1, 2, 8, 9, 11, 12, 13, 14, 15]
-                },
-                {
-                    "name": "flesh",
-                    "indexes": [3, 4, 5, 6]
-                }
             ]
         },
         {
@@ -363,9 +306,6 @@
                 "green",
                 "blue",
                 "bonfire",
-                "bronze",
-                "fullmoon",
-                "golden",
                 "pumpkin",
                 "sunset"
             ]
@@ -377,6 +317,7 @@
                 "white",
                 "black",
                 "blue",
+                "red",
                 "yellow"
             ]
         }

@@ -6416,9 +6416,7 @@ u16 GenerateMonVariant(u16 species, u32 variantSeed) {
     case SPECIES_PIDGEY:
         WEIGHTED_VALUE(PALETTE_PIDGEY_BLACK, 3);
         WEIGHTED_VALUE(PALETTE_PIDGEY_BROWN, 3);
-        WEIGHTED_VALUE(PALETTE_PIDGEY_PINK, 2);
         WEIGHTED_VALUE(PALETTE_PIDGEY_RED, 2);
-        WEIGHTED_VALUE(PALETTE_PIDGEY_ORANGE, 2);
         WEIGHTED_VALUE(PALETTE_PIDGEY_YELLOW, 2);
         WEIGHTED_VALUE(PALETTE_PIDGEY_BLUE, 1);
         variant = VARIANT_ONE_TONE(GetWeightedResult(variantSeed, values, weights));
@@ -6435,11 +6433,18 @@ u16 GenerateMonVariant(u16 species, u32 variantSeed) {
         break;
 
     case SPECIES_PIKACHU:
-        WEIGHTED_VALUE(PALETTE_PIKACHU_YELLOW, 5);
-        WEIGHTED_VALUE(PALETTE_PIKACHU_ORANGE, 3);
-        WEIGHTED_VALUE(PALETTE_PIKACHU_RED, 3);
-        WEIGHTED_VALUE(PALETTE_PIKACHU_BLUE, 1);
-        variant = VARIANT_ONE_TONE(GetWeightedResult(variantSeed, values, weights));
+        if (variantSeed % 100 == 0) {
+            sprite = SPRITE_PIKACHU_REDHAT;
+            palettes[0] = PALETTE_PIKACHU_REDHAT;
+        }
+        else {
+            WEIGHTED_VALUE(PALETTE_PIKACHU_YELLOW, 5);
+            WEIGHTED_VALUE(PALETTE_PIKACHU_ORANGE, 3);
+            WEIGHTED_VALUE(PALETTE_PIKACHU_RED, 3);
+            WEIGHTED_VALUE(PALETTE_PIKACHU_PINK, 2);
+            WEIGHTED_VALUE(PALETTE_PIKACHU_BLUE, 1);
+            variant = VARIANT_ONE_TONE(GetWeightedResult(variantSeed, values, weights));
+        }
         break;
 
     case SPECIES_MANKEY:
@@ -6535,21 +6540,17 @@ u16 GenerateMonVariant(u16 species, u32 variantSeed) {
         break;
 
     case SPECIES_RALTS:
-        WEIGHTED_VALUE(PALETTE_RALTS_GREEN, 9);
-        WEIGHTED_VALUE(PALETTE_RALTS_BLUE, 8);
-        WEIGHTED_VALUE(PALETTE_RALTS_BONFIRE, 5);
-        WEIGHTED_VALUE(PALETTE_RALTS_BRONZE, 4);
-        WEIGHTED_VALUE(PALETTE_RALTS_FULLMOON, 3);
-        WEIGHTED_VALUE(PALETTE_RALTS_GOLDEN, 2);
+        WEIGHTED_VALUE(PALETTE_RALTS_GREEN, 5);
+        WEIGHTED_VALUE(PALETTE_RALTS_BLUE, 4);
+        WEIGHTED_VALUE(PALETTE_RALTS_BONFIRE, 3);
         WEIGHTED_VALUE(PALETTE_RALTS_PUMPKIN, 3);
-        WEIGHTED_VALUE(PALETTE_RALTS_SUNSET, 3);
+        WEIGHTED_VALUE(PALETTE_RALTS_SUNSET, 1);
         variant = VARIANT_ONE_TONE(GetWeightedResult(variantSeed, values, weights));
         break;
 
 //    case SPECIES_ARON:
 
     default:
-        DebugPrintf("GenerateMonVariant DEFAULT case");
         if (SPRITE_COUNT > 1) {
             sprite = SPRITE_SEED % SPRITE_COUNT;
         }
