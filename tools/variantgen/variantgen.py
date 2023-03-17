@@ -170,11 +170,13 @@ def write_pokemon_graphics_header(file, json_data):
         try:
             sprites = species_data["sprites"]
             for i, sprite_name in enumerate(sprites):
-                write(f"const u32 gMonFrontPic_{species_variable}_{i}[] = INCBIN_U32(\"graphics/pokemon/{species_directory}/front_{sprite_name}.4bpp.lz\");")
+                sprite_file = get_sprite_file("front", sprite_name)
+                write(f"const u32 gMonFrontPic_{species_variable}_{i}[] = INCBIN_U32(\"graphics/pokemon/{species_directory}/{sprite_file}.4bpp.lz\");")
             for i in range(len(sprites), 4):
                 write(f"const u32 gMonFrontPic_{species_variable}_{i}[] = {{0}};")
             for i, sprite_name in enumerate(sprites):
-                write(f"const u32 gMonBackPic_{species_variable}_{i}[] = INCBIN_U32(\"graphics/pokemon/{species_directory}/back_{sprite_name}.4bpp.lz\");")
+                sprite_file = get_sprite_file("back", sprite_name)
+                write(f"const u32 gMonBackPic_{species_variable}_{i}[] = INCBIN_U32(\"graphics/pokemon/{species_directory}/{sprite_file}.4bpp.lz\");")
             for i in range(len(sprites), 4):
                 write(f"const u32 gMonBackPic_{species_variable}_{i}[] = {{0}};")
         except KeyError:
@@ -320,6 +322,11 @@ def to_directory(species_index, species_name):
     if species_name == "Unown": species_directory_part = "unown/a"
     if species_name == "Ho-Oh": species_directory_part = "ho_oh"
     return f"{str(species_index).zfill(3)}_{species_directory_part}"
+
+def get_sprite_file(sprite_label, sprite_name):
+    sprite_name = sprite_name.lower()
+    if sprite_name == "normal": return sprite_label
+    else: return f"{sprite_label}_{sprite_name}"
 
 if __name__ == "__main__":
     main()

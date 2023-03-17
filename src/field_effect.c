@@ -620,23 +620,24 @@ static u8 AddNewGameBirchObject(s16 x, s16 y, u8 subpriority)
 
 u8 CreateMonSprite_PicBox(u16 species, s16 x, s16 y, u8 subpriority)
 {
-//    u16 variant;
-//    u16 spriteId;
-//
-//    switch(species) {
-//    case SPECIES_BULBASAUR:
-//    case SPECIES_CHARMANDER:
-//    case SPECIES_SQUIRTLE:
-//        variant = VARIANT_FROM_GAME_VERSION;
-//        break;
-//    default:
-//        variant = VARIANT_DEFAULT;
-//        break;
-//    }
-//
-//    spriteId = CreateMonPicSprite_HandleDeoxys(species, variant, 0x8000, TRUE, x, y, 0, gMonPaletteTable[species][0].tag);
+    u16 variant;
+    u16 spriteId;
 
-    u16 spriteId = CreateMonPicSprite_HandleDeoxys(species, 0, 0x8000, TRUE, x, y, 0, gMonPaletteTable[species][0].tag);
+    // Hack to display the correct palette
+    // when checking the starter pokeballs.
+    // TODO Maybe implement a flags parameter?
+    switch(species) {
+    case SPECIES_BULBASAUR:
+    case SPECIES_CHARMANDER:
+    case SPECIES_SQUIRTLE:
+        variant = VARIANT_FROM_GAME_VERSION;
+        break;
+    default:
+        variant = VARIANT_DEFAULT;
+        break;
+    }
+
+    spriteId = CreateMonPicSprite_HandleDeoxys(species, variant, 0x8000, TRUE, x, y, 0, gMonPaletteTable[species][0].tag);
     PreservePaletteInWeather(IndexOfSpritePaletteTag(gMonPaletteTable[species][0].tag) + 0x10);
     if (spriteId == 0xFFFF)
         return MAX_SPRITES;
