@@ -96,8 +96,8 @@
             "index": 16,
             "species": "pidgey",
             "palettes": [
-                "black",
                 "brown",
+                "black",
                 "red",
                 "yellow",
                 "blue"
@@ -107,10 +107,10 @@
             "index": 19,
             "species": "rattata",
             "palettes": [
+                "purple",
                 "brown",
                 "orange",
                 "red",
-                "purple",
                 "blue",
                 "white"
             ]
@@ -152,8 +152,8 @@
             "index": 74,
             "species": "geodude",
             "palettes": [
-                "white",
                 "green",
+                "white",
                 "brown",
                 "gray",
                 "orange"
@@ -202,8 +202,8 @@
                 "twintail"
             ],
             "palettes": [
-                "blue",
                 "purple",
+                "blue",
                 "red",
                 "black"
             ]
@@ -261,8 +261,8 @@
                 "beta"
             ],
             "palettes": [
-                "violet",
                 "pink",
+                "violet",
                 "red",
                 "orange"
             ]
