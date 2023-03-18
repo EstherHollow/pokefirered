@@ -3,7 +3,7 @@
 #include "fieldmap.h"
 #include "field_player_avatar.h"
 #include "metatile_behavior.h"
-#include "wild_encounter.h"
+#include "constants/event_objects.h"
 
 void SetQuestLogObjectEventsData(struct QuestLog * questLog)
 {
@@ -13,7 +13,7 @@ void SetQuestLogObjectEventsData(struct QuestLog * questLog)
 
     for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
     {
-        if (!IsWanderingEncounterLocalId(gObjectEvents[i].localId)) {
+        if (!IS_WILD_ENCOUNTER_ID(gObjectEvents[i].localId)) {
             currentObject = &gObjectEvents[i];
         }
         else {
