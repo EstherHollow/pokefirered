@@ -2,7 +2,7 @@
 #define LEVEL_UP_END 0xFFFF
 
 static const u16 sBulbasaurLevelUpLearnset[] = {
-    LEVEL_UP_MOVE(1, MOVE_CUT),
+    LEVEL_UP_MOVE(1, MOVE_TACKLE),
     LEVEL_UP_MOVE(4, MOVE_GROWL),
     LEVEL_UP_MOVE(7, MOVE_LEECH_SEED),
     LEVEL_UP_MOVE(10, MOVE_VINE_WHIP),

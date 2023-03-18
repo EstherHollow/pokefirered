@@ -4898,7 +4898,7 @@ static bool8 IsMetatileDirectionallyImpassable(struct ObjectEvent *objectEvent, 
         gDirectionBlockedMetatileFuncs[direction - 1](MapGridGetMetatileBehaviorAt(x, y))) {
         return TRUE;
     }
-    else if (IsWanderingEncounterLocalId(objectEvent->localId)) {
+    else if (IS_WILD_ENCOUNTER_ID(objectEvent->localId)) {
         currentAttributes = MapGridGetMetatileAttributeAt(
                 objectEvent->currentCoords.x,
                 objectEvent->currentCoords.y,
@@ -4921,7 +4921,7 @@ static bool8 DoesObjectCollideWithObjectAt(struct ObjectEvent *objectEvent, s16 
             if ((curObject->currentCoords.x == x && curObject->currentCoords.y == y) ||
                 (curObject->previousCoords.x == x && curObject->previousCoords.y == y)) {
                 if (AreElevationsCompatible(objectEvent->currentElevation, curObject->currentElevation)) {
-                    if (!IsWanderingEncounterLocalId(curObject->localId) || objectEvent->localId != OBJ_EVENT_ID_PLAYER) {
+                    if (!IS_WILD_ENCOUNTER_ID(curObject->localId) || objectEvent->localId != OBJ_EVENT_ID_PLAYER) {
                         return TRUE;
                     }
                 }

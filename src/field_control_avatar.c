@@ -70,8 +70,8 @@ static s8 GetWarpEventAtMapPosition(struct MapHeader * mapHeader, struct MapPosi
 static bool8 TryDoorWarp(struct MapPosition * position, u16 metatileBehavior, u8 playerDirection);
 static s8 GetWarpEventAtPosition(struct MapHeader * mapHeader, u16 x, u16 y, u8 z);
 static const u8 *GetCoordEventScriptAtPosition(struct MapHeader * mapHeader, u16 x, u16 y, u8 z);
-static u8 GetWanderingEncounterAtPosition(struct MapPosition *position);
-static void RemoveWanderingEncounterByLocalId(u8 localId);
+static u8 GetWildEncounterAtPosition(struct MapPosition *position);
+static void RemoveWildEncounterByLocalId(u8 localId);
 
 struct FieldInput gInputToStoreInQuestLogMaybe;
 
@@ -244,12 +244,12 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
             metatileBehavior = MapGridGetMetatileBehaviorAt(position.x, position.y);
         }
 
-        localId = GetWanderingEncounterAtPosition(&position);
-        if (localId != OBJ_EVENT_ID_NULL_ENCOUNTER && CheckStandardWildEncounter(metatileAttributes) == TRUE)
+        localId = GetWildEncounterAtPosition(&position);
+        if (localId != OBJ_EVENT_ID_NULL && CheckStandardWildEncounter(metatileAttributes) == TRUE)
         {
             DebugPrintf("ProcessPlayerFieldInput encounter localId %d", localId);
             gInputToStoreInQuestLogMaybe.checkStandardWildEncounter = TRUE;
-            RemoveWanderingEncounterByLocalId(localId);
+            RemoveWildEncounterByLocalId(localId);
             return TRUE;
         }
     }
@@ -456,7 +456,7 @@ static const u8 *GetInteractedObjectEventScript(struct MapPosition *position, u8
     if (InUnionRoom() == TRUE && !ObjectEventCheckHeldMovementStatus(&gObjectEvents[objectEventId]))
         return NULL;
 
-    if (IsWanderingEncounterLocalId(gObjectEvents[objectEventId].localId)) {
+    if (IS_WILD_ENCOUNTER_ID(gObjectEvents[objectEventId].localId)) {
         return NULL;
     }
 
@@ -968,7 +968,7 @@ static bool8 IsArrowWarpMetatileBehavior(u16 metatileBehavior, u8 direction)
     return FALSE;
 }
 
-static u8 GetWanderingEncounterAtPosition(struct MapPosition *position) {
+static u8 GetWildEncounterAtPosition(struct MapPosition *position) {
     struct ObjectEvent *object;
     u8 i;
 
@@ -977,18 +977,18 @@ static u8 GetWanderingEncounterAtPosition(struct MapPosition *position) {
         if (object->active) {
             if ((object->currentCoords.x == position->x && object->currentCoords.y == position->y) ||
                 (object->previousCoords.x == position->x && object->previousCoords.y == position->y)) {
-                if (IsWanderingEncounterLocalId(object->localId)) {
+                if (IS_WILD_ENCOUNTER_ID(object->localId)) {
                     return object->localId;
                 }
             }
         }
     }
 
-    return OBJ_EVENT_ID_NULL_ENCOUNTER;
+    return OBJ_EVENT_ID_NULL;
 }
 
-static void RemoveWanderingEncounterByLocalId(u8 localId) {
-    DebugPrintf("RemoveWanderingEncounterByLocalId localId %d", localId);
+static void RemoveWildEncounterByLocalId(u8 localId) {
+    DebugPrintf("RemoveWildEncounterByLocalId localId %d", localId);
     RemoveObjectEventByLocalIdAndMap(localId, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
 }
 

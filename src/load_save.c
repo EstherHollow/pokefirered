@@ -9,7 +9,7 @@
 #include "berry_powder.h"
 #include "overworld.h"
 #include "quest_log.h"
-#include "wild_encounter.h"
+#include "constants/event_objects.h"
 
 #define SAVEBLOCK_MOVE_RANGE    128
 
@@ -179,7 +179,7 @@ void SaveObjectEvents(void)
     struct ObjectEvent emptyObject = {0};
 
     for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
-        if (!IsWanderingEncounterLocalId(gObjectEvents[i].localId))
+        if (!IS_WILD_ENCOUNTER_ID(gObjectEvents[i].localId))
             gSaveBlock1Ptr->objectEvents[i] = gObjectEvents[i];
         else
             gSaveBlock1Ptr->objectEvents[i] = emptyObject;

@@ -34,7 +34,7 @@ struct WildEncounterData
 static EWRAM_DATA struct WildEncounterData sWildEncounterData = {};
 static EWRAM_DATA bool8 sWildEncountersDisabled = FALSE;
 
-EWRAM_DATA u16 gWanderingEncounterState = 0;
+EWRAM_DATA u16 gWildEncounterUpdateState = 0;
 
 static bool8 UnlockedTanobyOrAreNotInTanoby(void);
 static u32 GenerateUnownPersonalityByLetter(u8 letter);
@@ -661,46 +661,32 @@ static void AddToWildEncounterRateBuff(u8 encounterRate)
 }
 
 void UpdateWildEncounters(void) {
-    struct ObjectEventTemplate template;
-    s16 cameraX, cameraY;
+    u8 count;
 
-    if (!QL_IS_PLAYBACK_STATE && gWanderingEncounterState >= WILD_ENCOUNTER_UPDATE_DELAY) {
-        gWanderingEncounterState = 0;
+    if (!QL_IS_PLAYBACK_STATE && gWildEncounterUpdateState >= WILD_ENCOUNTER_UPDATE_DELAY) {
+        gWildEncounterUpdateState = 0;
 
-        if (CountExistingWildEncounters() < MAX_WILD_ENCOUNTERS) {
-            FindAvailableSpawnPosition(&template.x, &template.y);
-            if (template.x != 0 && template.y != 0) {
-                template.localId = FindAvailableLocalId();
-                if (template.localId != OBJ_EVENT_ID_NULL_ENCOUNTER) {
-                    template.graphicsId = OBJ_EVENT_GFX_WILD_ENCOUNTER;
-                    template.kind = OBJ_KIND_NORMAL;
-                    template.objUnion.normal.elevation = 3;
-                    template.objUnion.normal.movementType = MOVEMENT_TYPE_WANDER_AROUND;
-                    template.objUnion.normal.movementRangeX = 4;
-                    template.objUnion.normal.movementRangeY = 4;
-                    template.objUnion.normal.trainerType = TRAINER_TYPE_NONE;
-                    template.objUnion.normal.trainerRange_berryTreeId = 0;
-                    template.script = 0;
-                    template.flagId = 0;
-
-                    GetObjectEventMovingCameraOffset(&cameraX, &cameraY);
-                    TrySpawnObjectEventTemplate(&template, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, cameraX, cameraY);
-                }
-            }
+        count = CountExistingWildEncounters();
+        if (count < WILD_ENCOUNTER_MIN ||
+           (count < WILD_ENCOUNTER_MAX && Random() % 100 < WILD_ENCOUNTER_SPAWN_CHANCE)) {
+            TrySpawnWildEncounter();
+        }
+        else if (Random() % 100 < WILD_ENCOUNTER_DESPAWN_CHANCE) {
+            TryDespawnWildEncounter();
         }
     }
     else {
-        gWanderingEncounterState++;
+        gWildEncounterUpdateState++;
     }
 }
 
 u8 CountExistingWildEncounters(void) {
     u8 count = 0;
-    s32 i;
+    u8 i;
 
     for (i = 0; i < OBJECT_EVENTS_COUNT; i++) {
-        struct ObjectEvent *objectEvent = &gObjectEvents[i];
-        if (objectEvent->active && IsWanderingEncounterLocalId(objectEvent->localId)) {
+        struct ObjectEvent *object = &gObjectEvents[i];
+        if (object->active && IS_WILD_ENCOUNTER_ID(object->localId)) {
             count++;
         }
     }
@@ -708,10 +694,64 @@ u8 CountExistingWildEncounters(void) {
     return count;
 }
 
-void FindAvailableSpawnPosition(s16 *x, s16 *y) {
-    u32 area = (WILD_ENCOUNTER_RANGE_X * 2 + 1) * (WILD_ENCOUNTER_RANGE_Y * 2 + 1);
-    u32 index = Random() % area;
+void TrySpawnWildEncounter(void) {
+    struct ObjectEventTemplate template;
+    s16 cameraX, cameraY;
 
+    FindAvailableSpawnPosition(&template.x, &template.y);
+    if (template.x != 0 && template.y != 0) {
+        template.localId = FindAvailableLocalId();
+        if (template.localId != OBJ_EVENT_ID_NULL) {
+            template.graphicsId = OBJ_EVENT_GFX_WILD_ENCOUNTER;
+            template.kind = OBJ_KIND_NORMAL;
+            template.objUnion.normal.elevation = 3;
+            template.objUnion.normal.movementType = MOVEMENT_TYPE_WANDER_AROUND;
+            template.objUnion.normal.movementRangeX = 4;
+            template.objUnion.normal.movementRangeY = 4;
+            template.objUnion.normal.trainerType = TRAINER_TYPE_NONE;
+            template.objUnion.normal.trainerRange_berryTreeId = 0;
+            template.script = 0;
+            template.flagId = 0;
+
+            GetObjectEventMovingCameraOffset(&cameraX, &cameraY);
+            TrySpawnObjectEventTemplate(
+                    &template,
+                    gSaveBlock1Ptr->location.mapNum,
+                    gSaveBlock1Ptr->location.mapGroup,
+                    cameraX, cameraY);
+        }
+    }
+}
+
+void TryDespawnWildEncounter(void) {
+    bool8 localIds[MAX_WILD_ENCOUNTER_IDS] = {FALSE};
+    u8 count = 0, index;
+    u8 i;
+
+    for (i = 0; i < OBJECT_EVENTS_COUNT; i++) {
+        struct ObjectEvent *object = &gObjectEvents[i];
+        if (object->active && IS_WILD_ENCOUNTER_ID(object->localId)) {
+            localIds[object->localId - OBJ_EVENT_ID_WILD_ENCOUNTER] = TRUE;
+            count++;
+        }
+    }
+
+    if (count > 0) {
+        index = Random() % count;
+        for (i = 0; i < MAX_WILD_ENCOUNTER_IDS; i++) {
+            if (localIds[i] && index-- == 0) {
+                RemoveObjectEventByLocalIdAndMap(
+                        OBJ_EVENT_ID_WILD_ENCOUNTER + i,
+                        gSaveBlock1Ptr->location.mapNum,
+                        gSaveBlock1Ptr->location.mapGroup);
+                return;
+            }
+        }
+    }
+}
+
+void FindAvailableSpawnPosition(s16 *x, s16 *y) {
+    u32 index = Random() % WILD_ENCOUNTER_SEARCH_AREA;
     u16 seed = 19;
 
     s16 playerX, playerY;
@@ -721,9 +761,10 @@ void FindAvailableSpawnPosition(s16 *x, s16 *y) {
 
     PlayerGetDestCoords(&playerX, &playerY);
 
-    for (i = 0; i < FIND_SPAWN_ATTEMPTS; i++) {
-        indexX = (index / (WILD_ENCOUNTER_RANGE_X * 2 + 1)) + playerX - WILD_ENCOUNTER_RANGE_X;
-        indexY = (index % (WILD_ENCOUNTER_RANGE_X * 2 + 1)) + playerY - WILD_ENCOUNTER_RANGE_Y;
+    for (i = 0; i < WILD_ENCOUNTER_SPAWN_ATTEMPTS; i++) {
+        indexX = (index / WILD_ENCOUNTER_SEARCH_WIDTH) + playerX - WILD_ENCOUNTER_SEARCH_X;
+        indexY = (index % WILD_ENCOUNTER_SEARCH_WIDTH) + playerY - WILD_ENCOUNTER_SEARCH_Y;
+
         attribute = MapGridGetMetatileAttributeAt(indexX, indexY, METATILE_ATTRIBUTE_ENCOUNTER_TYPE);
         if (attribute != TILE_ENCOUNTER_NONE) {
             if (MapGridGetCollisionAt(indexX, indexY) == COLLISION_NONE) {
@@ -734,7 +775,8 @@ void FindAvailableSpawnPosition(s16 *x, s16 *y) {
                 }
             }
         }
-        index = (index + seed) % area;
+
+        index = (index + seed) % WILD_ENCOUNTER_SEARCH_AREA;
     }
 
     *x = 0;
@@ -742,27 +784,22 @@ void FindAvailableSpawnPosition(s16 *x, s16 *y) {
 }
 
 u8 FindAvailableLocalId(void) {
-    bool8 localIds[MAX_WILD_ENCOUNTERS] = {0};
+    bool8 localIds[MAX_WILD_ENCOUNTER_IDS] = {FALSE};
     struct ObjectEvent *object;
     u8 i;
 
     for (i = 0; i < OBJECT_EVENTS_COUNT; i++) {
         object = &gObjectEvents[i];
-        if (object->active && IsWanderingEncounterLocalId(object->localId)) {
-            localIds[object->localId - OBJ_EVENT_ID_WILD_ENCOUNTER] = 1;
+        if (object->active && IS_WILD_ENCOUNTER_ID(object->localId)) {
+            localIds[object->localId - OBJ_EVENT_ID_WILD_ENCOUNTER] = TRUE;
         }
     }
 
-    for (i = 0; i < MAX_WILD_ENCOUNTERS; i++) {
-        if (localIds[i] == 0) {
+    for (i = 0; i < MAX_WILD_ENCOUNTER_IDS; i++) {
+        if (!localIds[i]) {
             return OBJ_EVENT_ID_WILD_ENCOUNTER + i;
         }
     }
 
-    return OBJ_EVENT_ID_NULL_ENCOUNTER;
-}
-
-bool8 IsWanderingEncounterLocalId(u8 localId) {
-    return (localId >= OBJ_EVENT_ID_WILD_ENCOUNTER) &&
-           (localId < (OBJ_EVENT_ID_WILD_ENCOUNTER + MAX_WILD_ENCOUNTERS));
+    return OBJ_EVENT_ID_NULL;
 }
