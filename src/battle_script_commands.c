@@ -1514,7 +1514,7 @@ u8 AI_TypeCalc(u16 move, u16 targetSpecies, u8 targetAbility)
 {
     s32 i = 0;
     u8 flags = 0;
-    u8 type1 = gBaseStats[targetSpecies].type1, type2 = gBaseStats[targetSpecies].type2;
+    u8 type1 = gSpeciesInfo[targetSpecies].types[0], type2 = gSpeciesInfo[targetSpecies].types[1];
     u8 moveType;
 
     if (move == MOVE_STRUGGLE)
@@ -3163,7 +3163,7 @@ static void Cmd_getexp(void)
                     holdEffect = ItemId_GetHoldEffect(item);
             }
 
-            calculatedExp = gBaseStats[gBattleMons[gBattlerFainted].species].expYield * gBattleMons[gBattlerFainted].level / EXP_MODIFIER;
+            calculatedExp = gSpeciesInfo[gBattleMons[gBattlerFainted].species].expYield * gBattleMons[gBattlerFainted].level / EXP_MODIFIER;
 
             *exp = SAFE_DIV(calculatedExp, viaSentIn + totalMons);
             if (*exp == 0)
@@ -5449,8 +5449,8 @@ static void Cmd_drawpartystatussummary(void)
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        if (GetMonData(&party[i], MON_DATA_SPECIES2) == SPECIES_NONE
-            || GetMonData(&party[i], MON_DATA_SPECIES2) == SPECIES_EGG)
+        if (GetMonData(&party[i], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
+            || GetMonData(&party[i], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
         {
             hpStatuses[i].hp = 0xFFFF;
             hpStatuses[i].status = 0;
@@ -6164,7 +6164,7 @@ static void Cmd_various(void)
         }
         for (i = 0; i < PARTY_SIZE; i++)
         {
-            species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES2);
+            species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG);
             abilityNum = GetMonData(&gPlayerParty[i], MON_DATA_ABILITY_NUM);
             status = GetMonData(&gPlayerParty[i], MON_DATA_STATUS);
             if (species != SPECIES_NONE
@@ -6184,7 +6184,7 @@ static void Cmd_various(void)
         monToCheck = 0;
         for (i = 0; i < PARTY_SIZE; i++)
         {
-            species = GetMonData(&gEnemyParty[i], MON_DATA_SPECIES2);
+            species = GetMonData(&gEnemyParty[i], MON_DATA_SPECIES_OR_EGG);
             abilityNum = GetMonData(&gEnemyParty[i], MON_DATA_ABILITY_NUM);
             status = GetMonData(&gEnemyParty[i], MON_DATA_STATUS);
 
@@ -8037,7 +8037,7 @@ static void Cmd_healpartystatus(void)
 
         for (i = 0; i < PARTY_SIZE; i++)
         {
-            u16 species = GetMonData(&party[i], MON_DATA_SPECIES2);
+            u16 species = GetMonData(&party[i], MON_DATA_SPECIES_OR_EGG);
             u8 abilityNum = GetMonData(&party[i], MON_DATA_ABILITY_NUM);
 
             if (species != SPECIES_NONE && species != SPECIES_EGG)
@@ -8583,8 +8583,8 @@ static void Cmd_trydobeatup(void)
         for (;gBattleCommunication[0] < PARTY_SIZE; gBattleCommunication[0]++)
         {
             if (GetMonData(&party[gBattleCommunication[0]], MON_DATA_HP)
-                && GetMonData(&party[gBattleCommunication[0]], MON_DATA_SPECIES2)
-                && GetMonData(&party[gBattleCommunication[0]], MON_DATA_SPECIES2) != SPECIES_EGG
+                && GetMonData(&party[gBattleCommunication[0]], MON_DATA_SPECIES_OR_EGG)
+                && GetMonData(&party[gBattleCommunication[0]], MON_DATA_SPECIES_OR_EGG) != SPECIES_EGG
                 && !GetMonData(&party[gBattleCommunication[0]], MON_DATA_STATUS))
                 break;
         }
@@ -8594,10 +8594,10 @@ static void Cmd_trydobeatup(void)
 
             gBattlescriptCurrInstr += 9;
 
-            gBattleMoveDamage = gBaseStats[GetMonData(&party[gBattleCommunication[0]], MON_DATA_SPECIES)].baseAttack;
+            gBattleMoveDamage = gSpeciesInfo[GetMonData(&party[gBattleCommunication[0]], MON_DATA_SPECIES)].baseAttack;
             gBattleMoveDamage *= gBattleMoves[gCurrentMove].power;
             gBattleMoveDamage *= (GetMonData(&party[gBattleCommunication[0]], MON_DATA_LEVEL) * 2 / 5 + 2);
-            gBattleMoveDamage /= gBaseStats[gBattleMons[gBattlerTarget].species].baseDefense;
+            gBattleMoveDamage /= gSpeciesInfo[gBattleMons[gBattlerTarget].species].baseDefense;
             gBattleMoveDamage = (gBattleMoveDamage / 50) + 2;
             if (gProtectStructs[gBattlerAttacker].helpingHand)
                 gBattleMoveDamage = gBattleMoveDamage * 15 / 10;
@@ -9100,9 +9100,9 @@ static void Cmd_assistattackselect(void)
     {
         if (monId == gBattlerPartyIndexes[gBattlerAttacker])
             continue;
-        if (GetMonData(&party[monId], MON_DATA_SPECIES2) == SPECIES_NONE)
+        if (GetMonData(&party[monId], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE)
             continue;
-        if (GetMonData(&party[monId], MON_DATA_SPECIES2) == SPECIES_EGG)
+        if (GetMonData(&party[monId], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
             continue;
 
         for (moveId = 0; moveId < MAX_MON_MOVES; moveId++)
@@ -9263,12 +9263,12 @@ static void Cmd_pickup(void)
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES2);
+        species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG);
         heldItem = GetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM);
         if (GetMonData(&gPlayerParty[i], MON_DATA_ABILITY_NUM) != ABILITY_NONE)
-            ability = gBaseStats[species].abilities[1];
+            ability = gSpeciesInfo[species].abilities[1];
         else
-            ability = gBaseStats[species].abilities[0];
+            ability = gSpeciesInfo[species].abilities[0];
         if (ability == ABILITY_PICKUP && species != SPECIES_NONE && species != SPECIES_EGG && heldItem == ITEM_NONE && !(Random() % 10))
         {
             s32 random = Random() % 100;
@@ -9492,7 +9492,7 @@ static void Cmd_handleballthrow(void)
         if (gLastUsedItem == ITEM_SAFARI_BALL)
             catchRate = gBattleStruct->safariCatchFactor * 1275 / 100;
         else
-            catchRate = gBaseStats[gBattleMons[gBattlerTarget].species].catchRate;
+            catchRate = gSpeciesInfo[gBattleMons[gBattlerTarget].species].catchRate;
 
         if (gLastUsedItem > ITEM_SAFARI_BALL)
         {

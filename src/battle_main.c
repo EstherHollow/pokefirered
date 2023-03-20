@@ -748,33 +748,33 @@ static void CB2_InitBattleInternal(void)
     gBattleCommunication[MULTIUSE_STATE] = 0;
 }
 
-#define BUFFER_PARTY_VS_SCREEN_STATUS(party, flags, i)              \
-    for ((i) = 0; (i) < PARTY_SIZE; (i)++)                          \
-    {                                                               \
-        u16 species = GetMonData(&(party)[(i)], MON_DATA_SPECIES2); \
-        u16 hp = GetMonData(&(party)[(i)], MON_DATA_HP);            \
-        u32 status = GetMonData(&(party)[(i)], MON_DATA_STATUS);    \
-                                                                    \
-        if (species == SPECIES_NONE)                                \
-            continue;                                               \
-                                                                    \
-        /* Is healthy mon? */                                       \
-        if (species != SPECIES_EGG && hp != 0 && status == 0)       \
-            (flags) |= 1 << (i) * 2;                                \
-                                                                    \
-        if (species == SPECIES_NONE) /* Redundant */                \
-            continue;                                               \
-                                                                    \
-        /* Is Egg or statused? */                                   \
-        if (hp != 0 && (species == SPECIES_EGG || status != 0))     \
-            (flags) |= 2 << (i) * 2;                                \
-                                                                    \
-        if (species == SPECIES_NONE) /* Redundant */                \
-            continue;                                               \
-                                                                    \
-        /* Is fainted? */                                           \
-        if (species != SPECIES_EGG && hp == 0)                      \
-            (flags) |= 3 << (i) * 2;                                \
+#define BUFFER_PARTY_VS_SCREEN_STATUS(party, flags, i)                    \
+    for ((i) = 0; (i) < PARTY_SIZE; (i)++)                                \
+    {                                                                     \
+        u16 species = GetMonData(&(party)[(i)], MON_DATA_SPECIES_OR_EGG); \
+        u16 hp = GetMonData(&(party)[(i)], MON_DATA_HP);                  \
+        u32 status = GetMonData(&(party)[(i)], MON_DATA_STATUS);          \
+                                                                          \
+        if (species == SPECIES_NONE)                                      \
+            continue;                                                     \
+                                                                          \
+        /* Is healthy mon? */                                             \
+        if (species != SPECIES_EGG && hp != 0 && status == 0)             \
+            (flags) |= 1 << (i) * 2;                                      \
+                                                                          \
+        if (species == SPECIES_NONE) /* Redundant */                      \
+            continue;                                                     \
+                                                                          \
+        /* Is Egg or statused? */                                         \
+        if (hp != 0 && (species == SPECIES_EGG || status != 0))           \
+            (flags) |= 2 << (i) * 2;                                      \
+                                                                          \
+        if (species == SPECIES_NONE) /* Redundant */                      \
+            continue;                                                     \
+                                                                          \
+        /* Is fainted? */                                                 \
+        if (species != SPECIES_EGG && hp == 0)                            \
+            (flags) |= 3 << (i) * 2;                                      \
     }
 
 // For Vs Screen at link battle start
@@ -2308,8 +2308,8 @@ static void BattleStartClearSetData(void)
     gBattleStruct->runTries = 0;
     gBattleStruct->safariRockThrowCounter = 0;
     gBattleStruct->safariBaitThrowCounter = 0;
-    *(&gBattleStruct->safariCatchFactor) = gBaseStats[GetMonData(&gEnemyParty[0], MON_DATA_SPECIES)].catchRate * 100 / 1275;
-    *(&gBattleStruct->safariEscapeFactor) = gBaseStats[GetMonData(&gEnemyParty[0], MON_DATA_SPECIES)].safariZoneFleeRate * 100 / 1275;
+    *(&gBattleStruct->safariCatchFactor) = gSpeciesInfo[GetMonData(&gEnemyParty[0], MON_DATA_SPECIES)].catchRate * 100 / 1275;
+    *(&gBattleStruct->safariEscapeFactor) = gSpeciesInfo[GetMonData(&gEnemyParty[0], MON_DATA_SPECIES)].safariZoneFleeRate * 100 / 1275;
     if (gBattleStruct->safariEscapeFactor <= 1)
         gBattleStruct->safariEscapeFactor = 2;
     gBattleStruct->wildVictorySong = 0;
@@ -2682,8 +2682,8 @@ static void BattleIntroDrawPartySummaryScreens(void)
     {
         for (i = 0; i < PARTY_SIZE; i++)
         {
-            if (GetMonData(&gEnemyParty[i], MON_DATA_SPECIES2) == SPECIES_NONE
-             || GetMonData(&gEnemyParty[i], MON_DATA_SPECIES2) == SPECIES_EGG)
+            if (GetMonData(&gEnemyParty[i], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
+             || GetMonData(&gEnemyParty[i], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
             {
                 hpStatus[i].hp = HP_EMPTY_SLOT;
                 hpStatus[i].status = 0;
@@ -2700,8 +2700,8 @@ static void BattleIntroDrawPartySummaryScreens(void)
 
         for (i = 0; i < PARTY_SIZE; i++)
         {
-            if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES2) == SPECIES_NONE
-             || GetMonData(&gPlayerParty[i], MON_DATA_SPECIES2) == SPECIES_EGG)
+            if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
+             || GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
             {
                 hpStatus[i].hp = HP_EMPTY_SLOT;
                 hpStatus[i].status = 0;
@@ -2726,8 +2726,8 @@ static void BattleIntroDrawPartySummaryScreens(void)
 
         for (i = 0; i < PARTY_SIZE; i++)
         {
-            if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES2) == SPECIES_NONE
-             || GetMonData(&gPlayerParty[i], MON_DATA_SPECIES2) == SPECIES_EGG)
+            if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
+             || GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
             {
                 hpStatus[i].hp = HP_EMPTY_SLOT;
                 hpStatus[i].status = 0;
@@ -4368,7 +4368,7 @@ static void HandleAction_WatchesCarefully(void)
         --gBattleStruct->safariRockThrowCounter;
         if (gBattleStruct->safariRockThrowCounter == 0)
         {
-            *(&gBattleStruct->safariCatchFactor) = gBaseStats[GetMonData(gEnemyParty, MON_DATA_SPECIES)].catchRate * 100 / 1275;
+            *(&gBattleStruct->safariCatchFactor) = gSpeciesInfo[GetMonData(gEnemyParty, MON_DATA_SPECIES)].catchRate * 100 / 1275;
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_MON_WATCHING;
         }
         else
