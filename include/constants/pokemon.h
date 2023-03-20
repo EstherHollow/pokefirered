@@ -186,11 +186,8 @@
 // Shiny odds
 #define SHINY_ODDS 8 // Actual probability is SHINY_ODDS/65536
 
-#define MAX_LEVEL 100
-
-#define OT_ID_PLAYER_ID       0
-#define OT_ID_PRESET          1
-#define OT_ID_RANDOM_NO_SHINY 2
+#define MAX_LEVEL_UP_MOVES  20
+#define MAX_LEVEL          100
 
 #define MON_GIVEN_TO_PARTY 0
 #define MON_GIVEN_TO_PC    1
@@ -207,13 +204,6 @@
 #define LEVEL_UP_MOVE_ID   0x01FF
 #define LEVEL_UP_MOVE_LV   0xFE00
 #define LEVEL_UP_END       0xFFFF
-
-#define MAX_LEVEL_UP_MOVES  20
-#define MAX_LEVEL          100
-
-#define MON_GIVEN_TO_PARTY      0x0
-#define MON_GIVEN_TO_PC         0x1
-#define MON_CANT_GIVE           0x2
 
 #define MON_MALE       0x00
 #define MON_FEMALE     0xFE
@@ -236,10 +226,10 @@
 #define MAX_SHEEN       255
 #define MAX_CONDITION   255
 
-#define MIN_IVS 0
+#define MIN_IVS      0
 #define DEFAULT_IVS 23
-#define MAX_IVS 31
-#define MAX_IV_MASK 31
+#define MAX_IVS     31
+#define IV_MASK     0x1F
 
 #define MAX_PER_STAT_EVS 255
 #define MAX_TOTAL_EVS 510

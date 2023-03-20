@@ -519,8 +519,8 @@ u8 GetMostSuitableMonToSwitchInto(void) {
             if (skippingMons & gBitTable[i]) continue;
 
             species = GetMonData(&gEnemyParty[i], MON_DATA_SPECIES);
-            type1 = gBaseStats[species].type1;
-            type2 = gBaseStats[species].type2;
+            type1 = gSpeciesInfo[species].types[0];
+            type2 = gSpeciesInfo[species].types[1];
             damage = 10;
             ModulateByTypeEffectiveness(gBattleMons[opposingBattler].type1, type1, type2, &damage);
             ModulateByTypeEffectiveness(gBattleMons[opposingBattler].type2, type1, type2, &damage);

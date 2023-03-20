@@ -21,27 +21,27 @@ const u8 GetPrimaryPalette(u16 species, u16 variant) {
 }
 
 const u8 GetBaseHP(u16 species) {
-    return gBaseStats[species].baseHP;
+    return gSpeciesInfo[species].baseHP;
 }
 
 const u8 GetBaseAttack(u16 species) {
-    return gBaseStats[species].baseAttack;
+    return gSpeciesInfo[species].baseAttack;
 }
 
 const u8 GetBaseDefense(u16 species) {
-    return gBaseStats[species].baseDefense;
+    return gSpeciesInfo[species].baseDefense;
 }
 
 const u8 GetBaseSpeed(u16 species) {
-    return gBaseStats[species].baseSpeed;
+    return gSpeciesInfo[species].baseSpeed;
 }
 
 const u8 GetBaseSpAttack(u16 species) {
-    return gBaseStats[species].baseSpAttack;
+    return gSpeciesInfo[species].baseSpAttack;
 }
 
 const u8 GetBaseSpDefense(u16 species) {
-    return gBaseStats[species].baseSpDefense;
+    return gSpeciesInfo[species].baseSpDefense;
 }
 
 
@@ -375,7 +375,7 @@ const u8 GetVariantType1(u16 species, u16 variant) {
         return gVariantStats[species][palette].type1;
     }
     else {
-        return gBaseStats[species].type1;
+        return gSpeciesInfo[species].types[0];
     }
 }
 
@@ -385,7 +385,7 @@ const u8 GetVariantType2(u16 species, u16 variant) {
         return gVariantStats[species][palette].type2;
     }
     else {
-        return gBaseStats[species].type2;
+        return gSpeciesInfo[species].types[1];
     }
 }
 

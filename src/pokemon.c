@@ -1829,7 +1829,7 @@ void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, 
     SetBoxMonData(boxMon, MON_DATA_POKEBALL, &value);
     SetBoxMonData(boxMon, MON_DATA_OT_GENDER, &gSaveBlock2Ptr->playerGender);
 
-    if (fixedIV < USE_RANDOM_IVS)
+    if (fixedIV <= MAX_IVS)
     {
         SetBoxMonData(boxMon, MON_DATA_HP_IV, &fixedIV);
         SetBoxMonData(boxMon, MON_DATA_ATK_IV, &fixedIV);
@@ -1923,7 +1923,7 @@ void CreateMaleMon(struct Pokemon *mon, u16 species, u8 level)
         personality = Random32();
     }
     while (GetGenderFromSpeciesAndPersonality(species, personality) != MON_MALE);
-    CreateMon(mon, species, level, USE_RANDOM_IVS, TRUE, personality, otId, VARIANT_DEFAULT, 0);
+    CreateMon(mon, species, level, DEFAULT_IVS, TRUE, personality, otId, VARIANT_DEFAULT, 0);
 }
 
 void CreateMonWithIVsPersonality(struct Pokemon *mon, u16 species, u8 level, u32 ivs, u32 personality)
@@ -3658,17 +3658,13 @@ void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
         break;
     case MON_DATA_IVS:
     {
-#ifdef BUGFIX
         u32 ivs = data[0] | (data[1] << 8) | (data[2] << 16) | (data[3] << 24);
-#else
-        u32 ivs = *data; // Bug: Only the HP IV and the lower 3 bits of the Attack IV are read. The rest become 0.
-#endif
-        substruct3->hpIV = ivs & MAX_IV_MASK;
-        substruct3->attackIV = (ivs >> 5) & MAX_IV_MASK;
-        substruct3->defenseIV = (ivs >> 10) & MAX_IV_MASK;
-        substruct3->speedIV = (ivs >> 15) & MAX_IV_MASK;
-        substruct3->spAttackIV = (ivs >> 20) & MAX_IV_MASK;
-        substruct3->spDefenseIV = (ivs >> 25) & MAX_IV_MASK;
+        substruct3->hpIV = ivs & IV_MASK;
+        substruct3->attackIV = (ivs >> 5) & IV_MASK;
+        substruct3->defenseIV = (ivs >> 10) & IV_MASK;
+        substruct3->speedIV = (ivs >> 15) & IV_MASK;
+        substruct3->spAttackIV = (ivs >> 20) & IV_MASK;
+        substruct3->spDefenseIV = (ivs >> 25) & IV_MASK;
         break;
     }
     default:
@@ -6188,7 +6184,7 @@ void CreateEnemyEventMon(void)
     s32 itemId = gSpecialVar_0x8006;
 
     ZeroEnemyPartyMons();
-    CreateEventMon(&gEnemyParty[0], species, level, USE_RANDOM_IVS, FALSE, 0);
+    CreateEventMon(&gEnemyParty[0], species, level, DEFAULT_IVS, FALSE, 0);
     if (itemId)
     {
         u8 heldItem[2];
@@ -6767,7 +6763,7 @@ const u16 *GetMonPaletteFromVariant(u16 species, u16 variant) {
 EWRAM_DATA struct SpritePalette dynamicPalette = {0};
 
 const struct SpritePalette *GetMonPaletteStruct(struct Pokemon *mon) {
-    u16 species = GetMonData(mon, MON_DATA_SPECIES2, NULL);
+    u16 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG, NULL);
     u16 variant = GetMonData(mon, MON_DATA_VARIANT, NULL);
 
     const struct SpritePalette *palette1;

@@ -768,8 +768,8 @@ static void LoadTradeMonPic(u8 whichParty, u8 state)
             HandleLoadSpecialPokePic_DontHandleDeoxys(GetMonFrontPicStructFromVariant(species, variant), gMonSpritesGfxPtr->sprites[whichParty * 2 + 1], species, variant, personality);
 
         LoadSpritePalette(GetMonPaletteStruct(mon));
-        sTradeData->monSpecies[whichParty] = species;
-        sTradeData->monPersonalities[whichParty] = personality;
+        sTradeAnim->monSpecies[whichParty] = species;
+        sTradeAnim->monPersonalities[whichParty] = personality;
         break;
     case 1:
         // Create sprite
