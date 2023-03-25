@@ -1,3 +1,9 @@
+PalletTown_Text_WoahItsDangerous::
+    .string "Woah!\n"
+    .string "I shouldn't go into tall grass\l"
+    .string "without a POKéMON!\p"
+    .string "Let's find PROF. OAK first.$"
+
 PalletTown_Text_OakDontGoOut::
     .string "OAK: Hey! Wait!\n"
     .string "Don't go out!$"

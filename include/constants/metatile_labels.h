@@ -17,134 +17,7 @@
 #define METATILE_CeladonCity_DeptStoreDoor      0x294
 
 // gTileset_CeruleanCity
-#define METATILE_CeruleanCity_Door 0x298
-
-// gTileset_SeaCottage
-#define METATILE_SeaCottage_Teleporter_Light_Green      0x28A
-#define METATILE_SeaCottage_Teleporter_Light_Yellow     0x2B5
-#define METATILE_SeaCottage_Teleporter_Light_Red        0x2B6
-#define METATILE_SeaCottage_Teleporter_Cable_Top        0x285
-#define METATILE_SeaCottage_Teleporter_Cable_Bottom     0x2B4
-#define METATILE_SeaCottage_Teleporter_CableBall_Top    0x2B9
-#define METATILE_SeaCottage_Teleporter_CableBall_Bottom 0x2BA
-#define METATILE_SeaCottage_Teleporter_Door             0x296
-#define METATILE_SeaCottage_Teleporter_Door_HalfGlowing 0x2B7
-#define METATILE_SeaCottage_Teleporter_Door_FullGlowing 0x2B8
-
-// gTileset_VermilionCity
-#define METATILE_VermilionCity_Door               0x29E
-#define METATILE_VermilionCity_SSAnneWarp         0x2E1
-
-// gTileset_VermilionGym
-#define METATILE_VermilionGym_Floor                             0x281
-#define METATILE_VermilionGym_Beam_MidTop                       0x285
-#define METATILE_VermilionGym_Beam_MidBottom                    0x28D
-#define METATILE_VermilionGym_Beam_Node_TopLeft_Off             0x293
-#define METATILE_VermilionGym_Beam_Node_TopLeft_Edge_Off        0x294
-#define METATILE_VermilionGym_Beam_Node_TopRight_Edge_Off       0x295
-#define METATILE_VermilionGym_Beam_Node_TopRight_Off            0x296
-#define METATILE_VermilionGym_Beam_Node_BottomLeft_Off          0x29B
-#define METATILE_VermilionGym_Beam_Node_BottomLeft_Edge_Off     0x29C
-#define METATILE_VermilionGym_Beam_Node_BottomRight_Edge_Off    0x29D
-#define METATILE_VermilionGym_Beam_Node_BottomRight_Off         0x29E
-#define METATILE_VermilionGym_Beam_Node_TopLeft_On              0x2A9
-#define METATILE_VermilionGym_Beam_Node_TopLeft_Edge_On         0x2AA
-#define METATILE_VermilionGym_Beam_Node_TopRight_Edge_On        0x2AB
-#define METATILE_VermilionGym_Beam_Node_TopRight_On             0x2AC
-#define METATILE_VermilionGym_Beam_Node_BottomLeft_On           0x2B1
-#define METATILE_VermilionGym_Beam_Node_BottomLeft_Edge_On      0x2B2
-#define METATILE_VermilionGym_Beam_Node_BottomRight_Edge_On     0x2B3
-#define METATILE_VermilionGym_Beam_Node_BottomRight_On          0x2B4
-#define METATILE_VermilionGym_Beam_Node_TopLeft_HalfOn          0x2BB
-#define METATILE_VermilionGym_Beam_Node_TopLeft_Edge_HalfOn     0x2BC
-#define METATILE_VermilionGym_Beam_MidTop_HalfOn                0x2BD
-#define METATILE_VermilionGym_Beam_Node_TopRight_Edge_HalfOn    0x2BE
-#define METATILE_VermilionGym_Beam_Node_TopRight_HalfOn         0x2BF
-#define METATILE_VermilionGym_Beam_Node_BottomLeft_HalfOn       0x2C3
-#define METATILE_VermilionGym_Beam_Node_BottomLeft_Edge_HalfOn  0x2C4
-#define METATILE_VermilionGym_Beam_MidBottom_HalfOn             0x2C5
-#define METATILE_VermilionGym_Beam_Node_BottomRight_Edge_HalfOn 0x2C6
-#define METATILE_VermilionGym_Beam_Node_BottomRight_HalfOn      0x2C7
-
-// gTileset_SSAnne
-#define METATILE_SSAnne_Door 0x281
-
-// gTileset_LavenderTown
-#define METATILE_LavenderTown_Door 0x2A2
-
-// gTilset_CeladonCity
-#define METATILE_CeladonCity_DeptStoreDoor     0x294
-#define METATILE_CeladonCity_CyclingRoad_Grass 0x352
-#define METATILE_CeladonCity_CyclingRoad_Mowed 0x33E
-
-// gTileset_DepartmentStore
-#define METATILE_DepartmentStore_ElevatorDoor 0x28D
-
-// gTileset_GameCorner
-#define METATILE_GameCorner_Floor_ShadeFull          0x292
-#define METATILE_GameCorner_Floor_StairsTop          0x29D
-#define METATILE_GameCorner_StairsTop                0x29E
-#define METATILE_GameCorner_StairsBottom             0x29F
-#define METATILE_GameCorner_PurpleWall_Floor         0x2CF
-#define METATILE_GameCorner_PurpleWall_StairsTop     0x2A6
-#define METATILE_GameCorner_PurpleWall_stairsBottom  0x2A7
-#define METATILE_GameCorner_CheckeredFloor_ShadeLeft 0x2E1
-#define METATILE_GameCorner_CounterBarrier           0x2F7
-
-// gTileset_SaffronCity
-#define METATILE_SaffronCity_Door        0x284
-#define METATILE_SaffronCity_SilphCoDoor 0x2BC
-
-// gTileset_SilphCo  Includes Silph Co, Rocket Hideout/Warehouse, and all Elevators
-#define METATILE_SilphCo_HideoutFloor                   0x281
-#define METATILE_SilphCo_HideoutFloor_ShadeFull         0x282
-#define METATILE_SilphCo_Arrow_Up                       0x2A0
-#define METATILE_SilphCo_Arrow_Left                     0x2A1
-#define METATILE_SilphCo_Arrow_Down                     0x2A8
-#define METATILE_SilphCo_Arrow_Right                    0x2A9 
-#define METATILE_SilphCo_HideoutBarrier_TopLeft_Wall    0x2C6
-#define METATILE_SilphCo_HideoutBarrier_TopRight_Wall   0x2C7
-#define METATILE_SilphCo_HideoutBarrier_TopLeft_Floor   0x2CE
-#define METATILE_SilphCo_HideoutBarrier_TopRight_Floor  0x2CF
-#define METATILE_SilphCo_HideoutBarrier_BottomLeft      0x2D6
-#define METATILE_SilphCo_HideoutBarrier_BottomRight     0x2D7
-#define METATILE_SilphCo_HideoutElevatorDoor            0x2AB 
-#define METATILE_SilphCo_ElevatorDoor                   0x2E2
-#define METATILE_SilphCo_ElevatorWindow_Top0            0x2E8
-#define METATILE_SilphCo_ElevatorWindow_Top1            0x2E9
-#define METATILE_SilphCo_ElevatorWindow_Top2            0x2EA
-#define METATILE_SilphCo_ElevatorWindow_Mid0            0x2F0
-#define METATILE_SilphCo_ElevatorWindow_Mid1            0x2F1
-#define METATILE_SilphCo_ElevatorWindow_Mid2            0x2F2
-#define METATILE_SilphCo_ElevatorWindow_Bottom0         0x2F8
-#define METATILE_SilphCo_ElevatorWindow_Bottom1         0x2F9
-#define METATILE_SilphCo_ElevatorWindow_Bottom2         0x2FA
-#define METATILE_SilphCo_Floor                          0x334
-#define METATILE_SilphCo_Floor_ShadeFull                0x335
-#define METATILE_SilphCo_Floor_WallLeftCorner           0x339
-#define METATILE_SilphCo_Floor_WallRightCorner          0x33A
-#define METATILE_SilphCo_Wall_RightEdge                 0x346
-#define METATILE_SilphCo_Wall_LeftEdge                  0x347
-#define METATILE_SilphCo_HorizontalBarrier_TopLeft      0x3B0
-#define METATILE_SilphCo_HorizontalBarrier_TopRight     0x3B1
-#define METATILE_SilphCo_HorizontalBarrier_BottomLeft   0x3B8
-#define METATILE_SilphCo_HorizontalBarrier_BottomRight  0x3B9
-#define METATILE_SilphCo_VerticalBarrier_TopLeft        0x3C0
-#define METATILE_SilphCo_VerticalBarrier_TopRight       0x3C1
-#define METATILE_SilphCo_VerticalBarrier_MidLeft        0x3C2
-#define METATILE_SilphCo_VerticalBarrier_MidRight       0x3C3
-#define METATILE_SilphCo_VerticalBarrier_BottomLeft     0x3C4
-#define METATILE_SilphCo_VerticalBarrier_BottomRight    0x3C5
-
-// gTileset_FuchsiaCity
-#define METATILE_FuchsiaCity_Door                          0x2BF
-#define METATILE_FuchsiaCity_SafariZoneDoor                0x2D2
-#define METATILE_FuchsiaCity_SafariZoneTreeTopLeft_Grass   0x300
-#define METATILE_FuchsiaCity_SafariZoneTreeTopMiddle_Grass 0x301
-#define METATILE_FuchsiaCity_SafariZoneTreeTopRight_Grass  0x302
-#define METATILE_FuchsiaCity_SafariZoneTreeTopLeft_Mowed   0x310
-#define METATILE_FuchsiaCity_SafariZoneTreeTopMiddle_Mowed 0x311
-#define METATILE_FuchsiaCity_SafariZoneTreeTopRight_Mowed  0x312
+#define METATILE_CeruleanCity_Door  0x298
 
 // gTileset_CinnabarGym
 #define METATILE_CinnabarGym_Floor                  0x281
@@ -161,6 +34,16 @@
 
 // gTileset_DepartmentStore
 #define METATILE_DepartmentStore_ElevatorDoor  0x28D
+
+// gTileset_FuchsiaCity
+#define METATILE_FuchsiaCity_Door                           0x2BF
+#define METATILE_FuchsiaCity_SafariZoneDoor                 0x2D2
+#define METATILE_FuchsiaCity_SafariZoneTreeTopLeft_Grass    0x300
+#define METATILE_FuchsiaCity_SafariZoneTreeTopLeft_Mowed    0x310
+#define METATILE_FuchsiaCity_SafariZoneTreeTopMiddle_Grass  0x301
+#define METATILE_FuchsiaCity_SafariZoneTreeTopMiddle_Mowed  0x311
+#define METATILE_FuchsiaCity_SafariZoneTreeTopRight_Grass   0x302
+#define METATILE_FuchsiaCity_SafariZoneTreeTopRight_Mowed   0x312
 
 // gTileset_GameCorner
 #define METATILE_GameCorner_CheckeredFloor_ShadeLeft  0x2E1
@@ -373,6 +256,7 @@
 // gTileset_VermilionCity
 #define METATILE_VermilionCity_Door                0x29E
 #define METATILE_VermilionCity_PokemonFanClubDoor  0x2E1
+#define METATILE_VermilionCity_SSAnneWarp          0x2E1
 
 // gTileset_VermilionGym
 #define METATILE_VermilionGym_Beam_MidBottom                     0x28D
