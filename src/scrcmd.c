@@ -1766,6 +1766,7 @@ bool8 ScrCmd_checkpartymove(struct ScriptContext * ctx)
 {
     u8 i;
     u16 moveId = ScriptReadHalfword(ctx);
+    u16 itemId;
 
     gSpecialVar_Result = PARTY_SIZE;
     for (i = 0; i < PARTY_SIZE; i++)
@@ -1773,7 +1774,8 @@ bool8 ScrCmd_checkpartymove(struct ScriptContext * ctx)
         u16 species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES, NULL);
         if (!species)
             break;
-        if (!GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG) && MonKnowsMove(&gPlayerParty[i], moveId) == TRUE)
+        itemId = BattleMoveIdToItemId(moveId); // This script is only used for HM field moves.
+        if (!GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG) && CanMonLearnTMHM(&gPlayerParty[i], itemId - ITEM_TM01))
         {
             gSpecialVar_Result = i;
             gSpecialVar_0x8004 = species;

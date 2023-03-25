@@ -2962,20 +2962,18 @@ static void SetPartyMonSelectionActions(struct Pokemon *mons, u8 slotId, u8 acti
 
 static void SetPartyMonFieldSelectionActions(struct Pokemon *mons, u8 slotId)
 {
-    u8 i, j;
+    u8 i;
+    u16 item;
 
     sPartyMenuInternal->numActions = 0;
     AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, CURSOR_OPTION_SUMMARY);
     // Add field moves to action list
-    for (i = 0; i < MAX_MON_MOVES; ++i)
+    for (i = 0; sFieldMoves[i] != FIELD_MOVE_END; ++i)
     {
-        for (j = 0; sFieldMoves[j] != FIELD_MOVE_END; ++j)
+        item = BattleMoveIdToItemId(sFieldMoves[i]);
+        if (CanMonLearnTMHM(&mons[slotId], item - ITEM_TM01))
         {
-            if (GetMonData(&mons[slotId], i + MON_DATA_MOVE1) == sFieldMoves[j])
-            {
-                AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, j + CURSOR_OPTION_FIELD_MOVES);
-                break;
-            }
+            AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, i + CURSOR_OPTION_FIELD_MOVES);
         }
     }
     if (GetMonData(&mons[1], MON_DATA_SPECIES) != SPECIES_NONE)
@@ -4725,6 +4723,18 @@ u16 ItemIdToBattleMoveId(u16 item)
     u16 tmNumber = item - ITEM_TM01_FOCUS_PUNCH;
 
     return sTMHMMoves[tmNumber];
+}
+
+u16 BattleMoveIdToItemId(u16 move)
+{
+    u16 i;
+    for (i = ITEM_TM01; i <= ITEM_HM08; i++) {
+        if (ItemIdToBattleMoveId(i) == move) {
+            return i;
+        }
+    }
+
+    return 0xFFFF;
 }
 
 bool8 IsMoveHm(u16 move)

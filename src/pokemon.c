@@ -6868,7 +6868,7 @@ const struct SpritePalette *GetMonPaletteStructStandard(u16 species, u16 variant
             .tag = species,
     };
 
-//    DebugPrintf("GetMonPaletteStructFromVariant variant: 0x%x", variant);
+//    DebugPrintf("GetMonPaletteStructFromVariant species %d variant: 0x%x", species, variant);
 
     dynamicPalette = dynamicPaletteBuffer;
     return &dynamicPalette;

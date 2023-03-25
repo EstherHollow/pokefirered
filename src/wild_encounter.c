@@ -663,7 +663,7 @@ static void AddToWildEncounterRateBuff(u8 encounterRate)
 void UpdateWildEncounters(void) {
     u8 count;
 
-    if (!QL_IS_PLAYBACK_STATE && gWildEncounterUpdateState >= WILD_ENCOUNTER_UPDATE_DELAY) {
+    if (!QL_IS_PLAYBACK_STATE && !IsObjectsFrozen() && gWildEncounterUpdateState >= WILD_ENCOUNTER_UPDATE_DELAY) {
         gWildEncounterUpdateState = 0;
 
         count = CountExistingWildEncounters();

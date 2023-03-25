@@ -8794,6 +8794,13 @@ static void DoGroundEffects_OnFinishStep(struct ObjectEvent *objEvent, struct Sp
     }
 }
 
+EWRAM_DATA bool8 sObjectsFrozen = FALSE;
+
+bool8 IsObjectsFrozen(void)
+{
+    return sObjectsFrozen;
+}
+
 bool8 FreezeObjectEvent(struct ObjectEvent *objectEvent)
 {
     if (objectEvent->heldMovementActive || objectEvent->frozen)
@@ -8809,6 +8816,7 @@ bool8 FreezeObjectEvent(struct ObjectEvent *objectEvent)
 void FreezeObjectEvents(void)
 {
     u8 i;
+    sObjectsFrozen = TRUE;
     for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
     {
         if (gObjectEvents[i].active && i != gPlayerAvatar.objectEventId)
@@ -8844,6 +8852,7 @@ void UnfreezeObjectEvents(void)
         if (gObjectEvents[i].active)
             UnfreezeObjectEvent(&gObjectEvents[i]);
     }
+    sObjectsFrozen = FALSE;
 }
 
 #define tDirection data[3]
