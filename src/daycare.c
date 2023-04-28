@@ -1911,12 +1911,13 @@ static void CB2_EggHatch_1(void)
     case 3:
         if (gSprites[sEggHatchData->eggSpriteID].callback == SpriteCallbackDummy)
         {
-            PlayCry_Normal(sEggHatchData->species, 0);
+            species = GetMonData(&gPlayerParty[sEggHatchData->eggPartyID], MON_DATA_SPECIES);
+            DoMonFrontSpriteAnimation(&gSprites[sEggHatchData->eggSpriteID], species, FALSE, 1);
             sEggHatchData->CB2_state++;
         }
         break;
     case 4:
-        if (IsCryFinished())
+        if (gSprites[sEggHatchData->eggSpriteID].callback == SpriteCallbackDummy)
         {
             sEggHatchData->CB2_state++;
         }

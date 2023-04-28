@@ -96,6 +96,7 @@ static u16 GetMonMoveBySlotId(struct Pokemon * mon, u8 moveSlot);
 static u16 GetMonPpByMoveSlot(struct Pokemon * mon, u8 moveSlot);
 static void CreateShinyStarObj(u16, u16);
 static void CreatePokerusIconObj(u16, u16);
+static void StopPokemonAnimations(void);
 static void PokeSum_CreateMonMarkingsSprite(void);
 static void CreateMoveSelectionCursorObjs(u16, u16);
 static void CreateMonStatusIconObj(u16, u16);
@@ -326,6 +327,7 @@ static EWRAM_DATA u8 sLastViewedMonIndex = 0;
 static EWRAM_DATA u8 sMoveSelectionCursorPos = 0;
 static EWRAM_DATA u8 sMoveSwapCursorPos = 0;
 static EWRAM_DATA struct MonPicBounceState * sMonPicBounceState = NULL;
+static EWRAM_DATA u8 sAnimDelayTaskId = 0;
 
 extern const u32 gSummaryScreen_PageSkills_Tilemap[];
 extern const u32 gSummaryScreen_PageMoves_Tilemap[];
@@ -1179,6 +1181,7 @@ static void Task_InputHandler_Info(u8 taskId)
             {
                 if (sMonSummaryScreen->curPageIndex == PSS_PAGE_INFO)
                 {
+                    StopPokemonAnimations();
                     PlaySE(SE_SELECT);
                     sMonSummaryScreen->state3270 = PSS_STATE3270_ATEXIT_FADEOUT;
                 }
@@ -1194,6 +1197,7 @@ static void Task_InputHandler_Info(u8 taskId)
             }
             else if (JOY_NEW(B_BUTTON))
             {
+                StopPokemonAnimations();
                 sMonSummaryScreen->state3270 = PSS_STATE3270_ATEXIT_FADEOUT;
             }
         }
@@ -3856,6 +3860,7 @@ static void Task_InputHandler_SelectOrForgetMove(u8 taskId)
         {
             if (PokeSum_CanForgetSelectedMove() == TRUE || sMoveSelectionCursorPos == 4)
             {
+                StopPokemonAnimations();
                 PlaySE(SE_SELECT);
                 sMoveSwapCursorPos = sMoveSelectionCursorPos;
                 gSpecialVar_0x8005 = sMoveSwapCursorPos;
@@ -3869,6 +3874,7 @@ static void Task_InputHandler_SelectOrForgetMove(u8 taskId)
         }
         else if (JOY_NEW(B_BUTTON))
         {
+            StopPokemonAnimations();
             sMoveSwapCursorPos = 4;
             gSpecialVar_0x8005 = (u16)sMoveSwapCursorPos;
             sMonSummaryScreen->selectMoveInputHandlerState = 6;
@@ -3917,41 +3923,11 @@ static void Task_InputHandler_SelectOrForgetMove(u8 taskId)
 
 static void SpriteCB_PokeSum_MonPicSprite(struct Sprite *sprite)
 {
-    if (sMonSummaryScreen->numMonPicBounces >= 2)
-        return;
-
-    if (sMonPicBounceState->initDelay++ >= 2)
+    if (!gPaletteFade.active && sprite->data[2] != 1)
     {
-        u8 arrayLen;
-
-        switch (sMonPicBounceState->vigor)
-        {
-        case 0:
-            sprite->y += sMonPicBounceYDelta_Under60[sMonPicBounceState->animFrame++];
-            arrayLen = NELEMS(sMonPicBounceYDelta_Under60);
-            break;
-        case 1:
-            sprite->y += sMonPicBounceYDelta_60to80[sMonPicBounceState->animFrame++];
-            arrayLen = NELEMS(sMonPicBounceYDelta_60to80);
-            break;
-        case 2:
-            sprite->y += sMonPicBounceYDelta_80to99[sMonPicBounceState->animFrame++];
-            arrayLen = NELEMS(sMonPicBounceYDelta_80to99);
-            break;
-        case 3:
-        default:
-            sprite->y += sMonPicBounceYDelta_Full[sMonPicBounceState->animFrame++];
-            arrayLen = NELEMS(sMonPicBounceYDelta_Full);
-            break;
-        }
-
-        if (sMonPicBounceState->animFrame >= arrayLen)
-        {
-            sMonPicBounceState->animFrame = 0;
-            sMonSummaryScreen->numMonPicBounces++;
-        }
-
-        sMonPicBounceState->initDelay = 0;
+        sprite->data[1] = IsMonSpriteNotFlipped(sprite->data[0]);
+        PokeSum_TryPlayMonCry();
+        PokemonSummaryDoMonAnimation(sprite, sprite->data[0], sMonSummaryScreen->isEgg);
     }
 }
 
@@ -4105,6 +4081,49 @@ static void PokeSum_DestroyMonPicSprite(void)
 {
     FreeAndDestroyMonPicSprite(sMonSummaryScreen->monPicSpriteId);
     FREE_AND_SET_NULL(sMonPicBounceState);
+}
+
+// Track and then destroy Task_PokemonSummaryAnimateAfterDelay
+// Normally destroys itself but it can be interrupted before the animation starts
+void SummaryScreen_SetAnimDelayTaskId(u8 taskId)
+{
+    sAnimDelayTaskId = taskId;
+}
+
+static void SummaryScreen_DestroyAnimDelayTask(void)
+{
+    if (sAnimDelayTaskId != TASK_NONE)
+    {
+        DestroyTask(sAnimDelayTaskId);
+        sAnimDelayTaskId = TASK_NONE;
+    }
+}
+
+// unused
+static bool32 IsMonAnimationFinished(void)
+{
+    if (gSprites[sMonSummaryScreen->monPicSpriteId].callback == SpriteCallbackDummy)
+        return FALSE;
+    else
+        return TRUE;
+}
+
+static void StopPokemonAnimations(void)  // A subtle effect, this function stops pokemon animations when leaving the PSS
+{
+    u16 i;
+    u16 paletteIndex;
+
+    gSprites[sMonSummaryScreen->monPicSpriteId].animPaused = TRUE;
+    gSprites[sMonSummaryScreen->monPicSpriteId].callback = SpriteCallbackDummy;
+    StopPokemonAnimationDelayTask();
+
+    paletteIndex = OBJ_PLTT_ID(gSprites[sMonSummaryScreen->monPicSpriteId].oam.paletteNum);
+
+    for (i = 0; i < 16; i++)
+    {
+        u16 id = i + paletteIndex;
+        gPlttBufferUnfaded[id] = gPlttBufferFaded[id];
+    }
 }
 
 static void CreateBallIconObj(void)
@@ -5152,7 +5171,6 @@ static void Task_PokeSum_SwitchDisplayedPokemon(u8 taskId)
         if (!Overworld_LinkRecvQueueLengthMoreThan2() && !IsLinkRecvQueueAtOverworldMax())
         {
             PokeSum_CreateSprites();
-            PokeSum_TryPlayMonCry();
             sMonSummaryScreen->switchMonTaskState++;
         }
         break;

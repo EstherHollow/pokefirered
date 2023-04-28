@@ -1241,8 +1241,12 @@ static void SpriteCB_GetOnScreen(struct Sprite *sprite)
     }
     else
     {
-        sprite->data[0] = 1;
-        sprite->callback = SpriteCB_EndGetOnScreen;
+        s16 species = sprite->data[7];
+
+        if (species == SPECIES_EGG)
+            DoMonFrontSpriteAnimation(sprite, species, TRUE, 3);
+        else
+            DoMonFrontSpriteAnimation(sprite, species, FALSE, 3);
     }
 }
 
