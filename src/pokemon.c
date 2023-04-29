@@ -7172,18 +7172,18 @@ u16 GenerateMonVariant(u16 species, u32 variantSeed) {
         break;
 
     case SPECIES_PIKACHU:
-        if (variantSeed % 100 == 0) {
-            sprite = SPRITE_PIKACHU_REDHAT;
-            palettes[0] = PALETTE_PIKACHU_REDHAT;
-        }
-        else {
+//        if (variantSeed % 100 == 0) {
+//            sprite = SPRITE_PIKACHU_REDHAT;
+//            palettes[0] = PALETTE_PIKACHU_REDHAT;
+//        }
+//        else {
             WEIGHTED_VALUE(PALETTE_PIKACHU_YELLOW, 5);
             WEIGHTED_VALUE(PALETTE_PIKACHU_ORANGE, 3);
             WEIGHTED_VALUE(PALETTE_PIKACHU_RED, 3);
             WEIGHTED_VALUE(PALETTE_PIKACHU_PINK, 2);
             WEIGHTED_VALUE(PALETTE_PIKACHU_BLUE, 1);
             variant = VARIANT_ONE_TONE(GetWeightedResult(variantSeed, values, weights));
-        }
+//        }
         break;
 
     case SPECIES_MANKEY:

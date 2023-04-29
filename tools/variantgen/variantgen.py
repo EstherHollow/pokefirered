@@ -170,7 +170,7 @@ def write_pokemon_graphics_header(file, json_data):
         try:
             sprites = species_data["sprites"]
             for i, sprite_name in enumerate(sprites):
-                sprite_file = get_sprite_file("front", sprite_name)
+                sprite_file = get_sprite_file("anim_front", sprite_name)
                 write(f"const u32 gMonFrontPic_{species_variable}_{i}[] = INCBIN_U32(\"graphics/pokemon/{species_directory}/{sprite_file}.4bpp.lz\");")
             for i in range(len(sprites), 4):
                 write(f"const u32 gMonFrontPic_{species_variable}_{i}[] = {{0}};")
@@ -180,7 +180,7 @@ def write_pokemon_graphics_header(file, json_data):
             for i in range(len(sprites), 4):
                 write(f"const u32 gMonBackPic_{species_variable}_{i}[] = {{0}};")
         except KeyError:
-            write(f"const u32 gMonFrontPic_{species_variable}_0[] = INCBIN_U32(\"graphics/pokemon/{species_directory}/front.4bpp.lz\");")
+            write(f"const u32 gMonFrontPic_{species_variable}_0[] = INCBIN_U32(\"graphics/pokemon/{species_directory}/anim_front.4bpp.lz\");")
             write(f"const u32 gMonFrontPic_{species_variable}_1[] = {{0}};")
             write(f"const u32 gMonFrontPic_{species_variable}_2[] = {{0}};")
             write(f"const u32 gMonFrontPic_{species_variable}_3[] = {{0}};")
@@ -235,15 +235,15 @@ def write_pokemon_graphics_header(file, json_data):
     write("};")
     write("#endif")
     write("")
-    write("const u32 gMonFrontPic_Egg[] = INCBIN_U32(\"graphics/pokemon/egg/front.4bpp.lz\");")
+    write("const u32 gMonFrontPic_Egg[] = INCBIN_U32(\"graphics/pokemon/egg/anim_front.4bpp.lz\");")
     write("const u32 gMonPalette_Egg[] = INCBIN_U16(\"graphics/pokemon/egg/normal.gbapal\");")
     write("")
-    write("const u32 gMonFrontPic_CircledQuestionMark[] = INCBIN_U32(\"graphics/pokemon/question_mark/circled/front.4bpp.lz\");")
+    write("const u32 gMonFrontPic_CircledQuestionMark[] = INCBIN_U32(\"graphics/pokemon/question_mark/circled/anim_front.4bpp.lz\");")
     write("const u32 gMonBackPic_CircledQuestionMark[] = INCBIN_U32(\"graphics/pokemon/question_mark/circled/back.4bpp.lz\");")
     write("const u32 gMonPalette_CircledQuestionMark[] = INCBIN_U32(\"graphics/pokemon/question_mark/circled/normal.gbapal.lz\");")
     write("const u32 gMonShinyPalette_CircledQuestionMark[] = INCBIN_U32(\"graphics/pokemon/question_mark/circled/shiny.gbapal.lz\");")
     write("")
-    write("const u32 gMonFrontPic_DoubleQuestionMark[] = INCBIN_U32(\"graphics/pokemon/question_mark/double/front.4bpp.lz\");")
+    write("const u32 gMonFrontPic_DoubleQuestionMark[] = INCBIN_U32(\"graphics/pokemon/question_mark/double/anim_front.4bpp.lz\");")
     write("const u32 gMonPalette_DoubleQuestionMark[] = INCBIN_U16(\"graphics/pokemon/question_mark/double/normal.gbapal\");")
     write("const u32 gMonBackPic_DoubleQuestionMark[] = INCBIN_U32(\"graphics/pokemon/question_mark/double/back.4bpp.lz\");")
     write("const u32 gMonShinyPalette_DoubleQuestionMark[] = INCBIN_U16(\"graphics/pokemon/question_mark/double/shiny.gbapal\");")
@@ -252,7 +252,7 @@ def write_pokemon_graphics_header(file, json_data):
     for lower in ascii_lowercase:
         if lower != 'a':
             upper = str(lower).upper()
-            write(f"const u32 gMonFrontPic_Unown{upper}_0[] = INCBIN_U32(\"graphics/pokemon/201_unown/{lower}/front.4bpp.lz\");")
+            write(f"const u32 gMonFrontPic_Unown{upper}_0[] = INCBIN_U32(\"graphics/pokemon/201_unown/{lower}/anim_front.4bpp.lz\");")
             write(f"const u32 gMonFrontPic_Unown{upper}_1[] = {{0}};")
             write(f"const u32 gMonFrontPic_Unown{upper}_2[] = {{0}};")
             write(f"const u32 gMonFrontPic_Unown{upper}_3[] = {{0}};")
@@ -263,7 +263,7 @@ def write_pokemon_graphics_header(file, json_data):
             write(f"const u8 gMonIcon_Unown{upper}[] = INCBIN_U8(\"graphics/pokemon/201_unown/{lower}/icon.4bpp\");")
             write("")
     
-    write("const u32 gMonFrontPic_UnownExclamationMark_0[] = INCBIN_U32(\"graphics/pokemon/201_unown/exclamation_mark/front.4bpp.lz\");")
+    write("const u32 gMonFrontPic_UnownExclamationMark_0[] = INCBIN_U32(\"graphics/pokemon/201_unown/exclamation_mark/anim_front.4bpp.lz\");")
     write("const u32 gMonFrontPic_UnownExclamationMark_1[] = {0};")
     write("const u32 gMonFrontPic_UnownExclamationMark_2[] = {0};")
     write("const u32 gMonFrontPic_UnownExclamationMark_3[] = {0};")
@@ -273,7 +273,7 @@ def write_pokemon_graphics_header(file, json_data):
     write("const u32 gMonBackPic_UnownExclamationMark_3[] = {0};")
     write("const u8 gMonIcon_UnownExclamationMark[] = INCBIN_U8(\"graphics/pokemon/201_unown/exclamation_mark/icon.4bpp\");")
     write("")
-    write("const u32 gMonFrontPic_UnownQuestionMark_0[] = INCBIN_U32(\"graphics/pokemon/201_unown/question_mark/front.4bpp.lz\");")
+    write("const u32 gMonFrontPic_UnownQuestionMark_0[] = INCBIN_U32(\"graphics/pokemon/201_unown/question_mark/anim_front.4bpp.lz\");")
     write("const u32 gMonFrontPic_UnownQuestionMark_1[] = {0};")
     write("const u32 gMonFrontPic_UnownQuestionMark_2[] = {0};")
     write("const u32 gMonFrontPic_UnownQuestionMark_3[] = {0};")

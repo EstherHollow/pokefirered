@@ -393,7 +393,6 @@ static void Task_DoPokeballSendOutAnim(u8 taskId)
         }
         else
         {
-            gender = !!gender; // something unknown got optimized out
             x = 48;
             y = 70;
         }

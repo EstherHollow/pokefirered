@@ -118,10 +118,6 @@
         {
             "index": 25,
             "species": "pikachu",
-            "sprites": [
-                "normal",
-                "redhat"
-            ],
             "palettes": [
                 "yellow",
                 "orange",
@@ -197,10 +193,6 @@
         {
             "index": 147,
             "species": "dratini",
-            "sprites": [
-                "normal",
-                "twintail"
-            ],
             "palettes": [
                 "purple",
                 "blue",
@@ -256,10 +248,6 @@
         {
             "index": 187,
             "species": "hoppip",
-            "sprites": [
-                "normal",
-                "beta"
-            ],
             "palettes": [
                 "pink",
                 "violet",
