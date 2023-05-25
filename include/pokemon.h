@@ -460,6 +460,7 @@ const u16 *GetMonPaletteFromVariant(u16 species, u16 variant);
 const struct SpritePalette *GetMonPaletteStruct(struct Pokemon *mon);
 const struct SpritePalette *GetMonPaletteStructFromVariant(u16 species, u16 variant);
 const struct SpritePalette *GetMonPaletteStructStandard(u16 species, u16 variant);
+const struct SpritePalette *ShiftPaletteHue(const struct SpritePalette *palette, u8 hueShift);
 const struct SpritePalette *MixPalettes(const struct SpritePalette *palette1, const struct SpritePalette *palette2, u16 weight);
 u16 MixColors(u16 color1, u16 color2, u16 weight);
 

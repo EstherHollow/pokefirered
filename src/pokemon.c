@@ -10,6 +10,7 @@
 #include "item.h"
 #include "event_data.h"
 #include "util.h"
+#include "color.h"
 #include "pokemon_animation.h"
 #include "pokemon_storage_system.h"
 #include "pokemon_summary_screen.h"
@@ -7459,6 +7460,37 @@ const struct SpritePalette *GetMonPaletteStructStandard(u16 species, u16 variant
     };
 
 //    DebugPrintf("GetMonPaletteStructFromVariant species %d variant: 0x%x", species, variant);
+
+    dynamicPalette = dynamicPaletteBuffer;
+    return &dynamicPalette;
+}
+
+const struct SpritePalette *ShiftPaletteHue(const struct SpritePalette *palette, u8 hueShift) {
+    const u16 data[16] = {
+            ModifyHsv(palette->data[0], hueShift, 0, 0),
+            ModifyHsv(palette->data[1], hueShift, 0, 0),
+            ModifyHsv(palette->data[2], hueShift, 0, 0),
+            ModifyHsv(palette->data[3], hueShift, 0, 0),
+            ModifyHsv(palette->data[4], hueShift, 0, 0),
+            ModifyHsv(palette->data[5], hueShift, 0, 0),
+            ModifyHsv(palette->data[6], hueShift, 0, 0),
+            ModifyHsv(palette->data[7], hueShift, 0, 0),
+            ModifyHsv(palette->data[8], hueShift, 0, 0),
+            ModifyHsv(palette->data[9], hueShift, 0, 0),
+            ModifyHsv(palette->data[10], hueShift, 0, 0),
+            ModifyHsv(palette->data[11], hueShift, 0, 0),
+            ModifyHsv(palette->data[12], hueShift, 0, 0),
+            ModifyHsv(palette->data[13], hueShift, 0, 0),
+            ModifyHsv(palette->data[14], hueShift, 0, 0),
+            ModifyHsv(palette->data[15], hueShift, 0, 0),
+    };
+
+    struct SpritePalette dynamicPaletteBuffer = {
+            .data = data,
+            .tag = palette->tag,
+    };
+
+    DebugPrintf("ShiftPaletteHue hueShift %d", hueShift);
 
     dynamicPalette = dynamicPaletteBuffer;
     return &dynamicPalette;
