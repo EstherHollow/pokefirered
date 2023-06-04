@@ -292,8 +292,8 @@
 #define EVO_MODE_ITEM_USE   2
 #define EVO_MODE_ITEM_CHECK 3 // If an Everstone is being held, still want to show that the stone *could* be used on that Pokémon to evolve
 
-#define MON_PIC_WIDTH 64
-#define MON_PIC_HEIGHT 64
+#define MON_PIC_WIDTH 80
+#define MON_PIC_HEIGHT 80
 #define MON_PIC_SIZE (MON_PIC_WIDTH * MON_PIC_HEIGHT / 2)
 
 // Most pokemon have 2 frames (a default and an alternate for their animation).
@@ -302,7 +302,8 @@
 // - Deoxys has 2 frames, 1 for each form
 // - Spinda has 1 frame, presumably to avoid the work of animating its spots
 // - Unown has 1 frame, presumably to avoid the work of animating all 28 of its forms
-#define MAX_MON_PIC_FRAMES 4
+#define MAX_MON_PIC_FRAMES 2
+// [EH] Changing from 4 to 2, Castform will be fixed later.
 
 // used by ShouldIgnoreDeoxysForm
 #define DEOXYS_CHECK_BATTLE_SPRITE      1

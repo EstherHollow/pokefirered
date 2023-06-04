@@ -6729,8 +6729,9 @@ struct MonSpritesGfxManager *CreateMonSpritesGfxManager(u8 managerId, u8 mode)
     }
 
     // Set up sprite / sprite pointer buffers
+    DebugPrintf("CreateMonSpritesGfxManager MON_PIC_SIZE=%d");
     gfx->spriteBuffer = AllocZeroed(gfx->dataSize * MON_PIC_SIZE * MAX_MON_PIC_FRAMES * gfx->numSprites);
-    gfx->spritePointers = AllocZeroed(gfx->numSprites * 32); // ? Only * 4 is necessary, perhaps they were thinking bits.
+    gfx->spritePointers = AllocZeroed(gfx->numSprites * 4);
     if (gfx->spriteBuffer == NULL || gfx->spritePointers == NULL)
     {
         failureFlags |= ALLOC_FAIL_BUFFER;
@@ -7319,73 +7320,75 @@ const struct SpritePalette *GetMonPaletteStruct(struct Pokemon *mon) {
     u16 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG, NULL);
     u16 variant = GetMonData(mon, MON_DATA_VARIANT, NULL);
 
-    const struct SpritePalette *palette1;
-    const struct SpritePalette *palette2;
-    u16 weight;
-
-    switch (species) {
-    case SPECIES_MANKEY:
-        weight = GetMonData(mon, MON_DATA_ATK, NULL);
-        if (weight > 100) weight = 100;
-        palette1 = &gMonPaletteTable[SPECIES_MANKEY][PALETTE_MANKEY_YELLOW];
-        palette2 = &gMonPaletteTable[SPECIES_MANKEY][(variant & 0x0007)];
-        return MixPalettes(palette1, palette2, weight);
-    }
+//    const struct SpritePalette *palette1;
+//    const struct SpritePalette *palette2;
+//    u16 weight;
+//
+//    switch (species) {
+//    case SPECIES_MANKEY:
+//        weight = GetMonData(mon, MON_DATA_ATK, NULL);
+//        if (weight > 100) weight = 100;
+//        palette1 = &gMonPaletteTable[SPECIES_MANKEY][PALETTE_MANKEY_YELLOW];
+//        palette2 = &gMonPaletteTable[SPECIES_MANKEY][(variant & 0x0007)];
+//        return MixPalettes(palette1, palette2, weight);
+//    }
 
     return GetMonPaletteStructFromVariant(species, variant);
 }
 
 const struct SpritePalette *GetMonPaletteStructFromVariant(u16 species, u16 variant) {
-    u8 palettes[4] = {
-            (variant & 0x0007),
-            (variant & 0x0038) >> 3,
-            (variant & 0x01C0) >> 6,
-            (variant & 0x0E00) >> 9,
-    };
+    return &gMonPaletteTable[species][0];
 
-    switch (species) {
-//    case SPECIES_BULBASAUR:
-//    case SPECIES_CHARMANDER:
-//    case SPECIES_SQUIRTLE:
-
-    case SPECIES_CATERPIE:
-        return &gMonPaletteTable[SPECIES_CATERPIE][palettes[0]];
-    case SPECIES_METAPOD:
-        return &gMonPaletteTable[SPECIES_METAPOD][palettes[1]];
-    case SPECIES_BUTTERFREE:
-        return &gMonPaletteTable[SPECIES_BUTTERFREE][palettes[2]];
-
-    case SPECIES_WEEDLE:
-        return &gMonPaletteTable[SPECIES_WEEDLE][palettes[0]];
-    case SPECIES_KAKUNA:
-        return &gMonPaletteTable[SPECIES_KAKUNA][palettes[1]];
-    case SPECIES_BEEDRILL:
-        return &gMonPaletteTable[SPECIES_BEEDRILL][palettes[2]];
-
-//    case SPECIES_PIDGEY:
-//    case SPECIES_RATTATA:
-//    case SPECIES_PIKACHU:
-//    case SPECIES_NIDORAN_F:
-
-    case SPECIES_MANKEY:
-        return &gMonPaletteTable[SPECIES_MANKEY][PALETTE_MANKEY_YELLOW];
-
-//    case SPECIES_GEODUDE:
-//    case SPECIES_ONIX:
-//    case SPECIES_TANGELA:
-//    case SPECIES_DRATINI:
-//    case SPECIES_HOOTHOOT:
-//    case SPECIES_SPINARAK:
-//    case SPECIES_MARILL:
-//    case SPECIES_HOPPIP:
-//    case SPECIES_SHUCKLE:
-//    case SPECIES_HOUNDOUR:
-//    case SPECIES_ZIGZAGOON:
-//    case SPECIES_RALTS:
-//    case SPECIES_ARON:
-    }
-
-    return GetMonPaletteStructStandard(species, variant);
+//    u8 palettes[4] = {
+//            (variant & 0x0007),
+//            (variant & 0x0038) >> 3,
+//            (variant & 0x01C0) >> 6,
+//            (variant & 0x0E00) >> 9,
+//    };
+//
+//    switch (species) {
+////    case SPECIES_BULBASAUR:
+////    case SPECIES_CHARMANDER:
+////    case SPECIES_SQUIRTLE:
+//
+//    case SPECIES_CATERPIE:
+//        return &gMonPaletteTable[SPECIES_CATERPIE][palettes[0]];
+//    case SPECIES_METAPOD:
+//        return &gMonPaletteTable[SPECIES_METAPOD][palettes[1]];
+//    case SPECIES_BUTTERFREE:
+//        return &gMonPaletteTable[SPECIES_BUTTERFREE][palettes[2]];
+//
+//    case SPECIES_WEEDLE:
+//        return &gMonPaletteTable[SPECIES_WEEDLE][palettes[0]];
+//    case SPECIES_KAKUNA:
+//        return &gMonPaletteTable[SPECIES_KAKUNA][palettes[1]];
+//    case SPECIES_BEEDRILL:
+//        return &gMonPaletteTable[SPECIES_BEEDRILL][palettes[2]];
+//
+////    case SPECIES_PIDGEY:
+////    case SPECIES_RATTATA:
+////    case SPECIES_PIKACHU:
+////    case SPECIES_NIDORAN_F:
+//
+//    case SPECIES_MANKEY:
+//        return &gMonPaletteTable[SPECIES_MANKEY][PALETTE_MANKEY_YELLOW];
+//
+////    case SPECIES_GEODUDE:
+////    case SPECIES_ONIX:
+////    case SPECIES_TANGELA:
+////    case SPECIES_DRATINI:
+////    case SPECIES_HOOTHOOT:
+////    case SPECIES_SPINARAK:
+////    case SPECIES_MARILL:
+////    case SPECIES_HOPPIP:
+////    case SPECIES_SHUCKLE:
+////    case SPECIES_HOUNDOUR:
+////    case SPECIES_ZIGZAGOON:
+////    case SPECIES_RALTS:
+////    case SPECIES_ARON:
+//    }
+//
+//    return GetMonPaletteStructStandard(species, variant);
 }
 
 #define REF_SUBPALETTE_MAP(index) gMonPaletteTable[species][palettes[sMonSubpaletteMap[species][index]]].data[index]

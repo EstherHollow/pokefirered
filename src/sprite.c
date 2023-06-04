@@ -556,6 +556,10 @@ u8 CreateSpriteAt(u8 index, const struct SpriteTemplate *template, s16 x, s16 y,
         s16 tileNum;
         sprite->images = template->images;
         tileNum = AllocSpriteTiles((u8)(sprite->images->size / TILE_SIZE_4BPP));
+        DebugPrintf("CreateSpriteAt tileTag=0xFFFF sprite->images->size=%d tileCount=%d, tileNum=%d",
+                sprite->images->size,
+                sprite->images->size / TILE_SIZE_4BPP,
+                tileNum);
         if (tileNum == -1)
         {
             ResetSprite(sprite);
