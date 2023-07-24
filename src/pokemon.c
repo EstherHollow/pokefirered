@@ -7079,8 +7079,8 @@ static u16 GetKakunaPalette(u16 beedrill) {
 }
 
 u16 GenerateMonVariant(u16 species, u32 variantSeed) {
-    u16 values[8] = {0, 0, 0, 0, 0, 0, 0, 0};
-    u16 weights[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    u16 values[8] = {0};
+    u16 weights[8] = {0};
     u8 index = 0;
 
     u16 sprite = 0;
