@@ -15,7 +15,6 @@
 #include "overworld.h"
 #include "random.h"
 #include "data.h"
-#include "battle.h"
 #include "constants/songs.h"
 
 enum
@@ -1768,7 +1767,7 @@ static void Task_OakSpeech_WaitForFade(u8 taskId)
 static void Task_OakSpeech_FreeResources(u8 taskId)
 {
     FreeAllWindowBuffers();
-    DestroyMonSpritesGfxManager(MON_SPR_GFX_MANAGER_A);
+    DestroyMonSpritesGfxManager();
     Free(sOakSpeechResources);
     sOakSpeechResources = NULL;
     gTextFlags.canABSpeedUpPrint = FALSE;
@@ -1869,8 +1868,8 @@ static void CreateNidoranFSprite(u8 taskId)
 {
     u8 spriteId;
 
-    DecompressPicFromTable(GetMonFrontPicStructFromVariant(SPECIES_NIDORAN_F, VARIANT_DEFAULT), MonSpritesGfxManager_GetSpritePtr(MON_SPR_GFX_MANAGER_A, B_POSITION_OPPONENT_LEFT), SPECIES_NIDORAN_F);
-    LoadSpritePalette(GetMonPaletteStructFromVariant(SPECIES_NIDORAN_F, VARIANT_DEFAULT));
+    DecompressPicFromTable(GetMonFrontPicStructFromVariant(SPECIES_NIDORAN_F, VARIANT_DEFAULT), MonSpritesGfxManager_GetSpritePtr(0), SPECIES_NIDORAN_F);
+    LoadSpritePalette(GetMonPaletteStructFromVariant(SPECIES_NIDORAN_F, VARIANT_ONE_TONE(PALETTE_NIDORAN_F_BLACK)));
     SetMultiuseSpriteTemplateToPokemon(SPECIES_NIDORAN_F, 0);
     spriteId = CreateSprite(&gMultiuseSpriteTemplate, 96, 96, 1);
     gSprites[spriteId].callback = SpriteCallbackDummy;

@@ -627,11 +627,11 @@ u8 CreateMonSprite_PicBox(u16 species, s16 x, s16 y, u8 subpriority)
     // when checking the starter pokeballs.
     // TODO Maybe implement a flags parameter?
     switch(species) {
-    case SPECIES_BULBASAUR:
-    case SPECIES_CHARMANDER:
-    case SPECIES_SQUIRTLE:
-        variant = VARIANT_FROM_GAME_VERSION;
-        break;
+//    case SPECIES_BULBASAUR:
+//    case SPECIES_CHARMANDER:
+//    case SPECIES_SQUIRTLE:
+//        variant = VARIANT_FROM_GAME_VERSION;
+//        break;
     default:
         variant = VARIANT_DEFAULT;
         break;

@@ -150,32 +150,6 @@ struct Pokemon
     u16 spDefense;
 };
 
-struct MonSpritesGfxManager
-{
-    u32 numSprites:4;
-    u32 numSprites2:4; // Never read
-    u32 numFrames:8;
-    u32 active:8;
-    u32 dataSize:4;
-    u32 mode:4; // MON_SPR_GFX_MODE_*
-    void *spriteBuffer;
-    u8 **spritePointers;
-    struct SpriteTemplate *templates;
-    struct SpriteFrameImage *frameImages;
-};
-
-enum {
-    MON_SPR_GFX_MODE_NORMAL,
-    MON_SPR_GFX_MODE_BATTLE,
-    MON_SPR_GFX_MODE_FULL_PARTY,
-};
-
-enum {
-    MON_SPR_GFX_MANAGER_A,
-    MON_SPR_GFX_MANAGER_B, // Nothing ever sets up this manager.
-    MON_SPR_GFX_MANAGERS_COUNT
-};
-
 struct BattleTowerPokemon
 {
     /*0x00*/ u16 species;
@@ -333,7 +307,7 @@ extern const u32 gExperienceTables[][MAX_LEVEL + 1];
 extern const u16 *const gLevelUpLearnsets[];
 extern const u8 gFacilityClassToPicIndex[];
 extern const u8 gFacilityClassToTrainerClass[];
-extern const struct SpriteTemplate gBattlerSpriteTemplates[];
+extern const struct SpriteTemplate gSpriteTemplates_Battlers[];
 extern const u8 gPPUpGetMask[];
 
 void ZeroBoxMonData(struct BoxPokemon *boxMon);
@@ -460,9 +434,9 @@ u16 GetUnionRoomTrainerClass(void);
 void CreateEnemyEventMon(void);
 void HandleSetPokedexFlag(u16 nationalNum, u8 caseId, u32 personality);
 bool8 CheckBattleTypeGhost(struct Pokemon *mon, u8 bank);
-struct MonSpritesGfxManager *CreateMonSpritesGfxManager(u8 managerId, u8 mode);
-void DestroyMonSpritesGfxManager(u8 managerId);
-u8 *MonSpritesGfxManager_GetSpritePtr(u8 managerId, u8 spriteNum);
+struct MonSpritesGfxManager *CreateMonSpritesGfxManager(u8 battlePosition, u8 mode);
+void DestroyMonSpritesGfxManager(void);
+u8 *MonSpritesGfxManager_GetSpritePtr(u8 bufferId);
 void BattleAnimateFrontSprite(struct Sprite *sprite, u16 species, bool8 noCry, u8 panMode);
 void DoMonFrontSpriteAnimation(struct Sprite *sprite, u16 species, bool8 noCry, u8 panModeAnimFlag);
 void PokemonSummaryDoMonAnimation(struct Sprite *sprite, u16 species, bool8 oneFrame);

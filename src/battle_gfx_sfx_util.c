@@ -731,7 +731,6 @@ void HandleSpeciesGfxDataChange(u8 battlerAtk, u8 battlerDef, u8 transformType)
         LoadPalette(lzPaletteData, paletteOffset, 32);
         if (targetSpecies == SPECIES_CASTFORM)
         {
-            gSprites[gBattlerSpriteIds[battlerAtk]].anims = gMonFrontAnimsPtrTable[targetSpecies];
             CpuCopy16(lzPaletteData, gBattleStruct->castformPalette[0], 0x20);
             LoadPalette(gBattleStruct->castformPalette[0] + gBattleMonForms[battlerDef] * 16, paletteOffset, 32);
         }
@@ -1003,7 +1002,7 @@ void AllocateMonSpritesGfx(void)
     for (i = 0; i < MAX_BATTLERS_COUNT; ++i)
     {
         gMonSpritesGfxPtr->sprites[i] = gMonSpritesGfxPtr->firstDecompressed + (i * 0x2000);
-        *(gMonSpritesGfxPtr->templates + i) = gBattlerSpriteTemplates[i];
+        *(gMonSpritesGfxPtr->templates + i) = gSpriteTemplates_Battlers[i];
 
         for (j = 0; j < 4; ++j)
         {

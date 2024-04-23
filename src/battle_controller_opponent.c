@@ -1075,7 +1075,6 @@ static void StartSendOutAnim(u8 battlerId, bool8 dontClearSubstituteBit)
     gSprites[gBattlerSpriteIds[battlerId]].data[0] = battlerId;
     gSprites[gBattlerSpriteIds[battlerId]].data[2] = species;
     gSprites[gBattleControllerData[battlerId]].data[1] = gBattlerSpriteIds[battlerId];
-    gSprites[gBattleControllerData[battlerId]].data[2] = battlerId;
     gSprites[gBattlerSpriteIds[battlerId]].oam.paletteNum = battlerId;
     StartSpriteAnim(&gSprites[gBattlerSpriteIds[battlerId]], gBattleMonForms[battlerId]);
     gSprites[gBattlerSpriteIds[battlerId]].invisible = TRUE;
