@@ -2300,12 +2300,12 @@ void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, 
 
 void CreateMonWithFlags(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u32 flags)
 {
-    if (flags & MON_FLAG_IS_STARTER) {
-        CreateMon(mon, species, level, fixedIV, 0, 0, GetPlayerId(), VARIANT_FROM_GAME_VERSION, 0);
-    }
-    else {
+//    if (flags & MON_FLAG_IS_STARTER) {
+//        CreateMon(mon, species, level, fixedIV, 0, 0, GetPlayerId(), VARIANT_FROM_GAME_VERSION, 0);
+//    }
+//    else {
         CreatePlayerMon(mon, species, level, fixedIV, 0, 0);
-    }
+//    }
 }
 
 void CreateMonWithNature(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 nature)
@@ -7005,286 +7005,8 @@ bool8 IsTrainerRival(u16 trainerId) {
     }
 }
 
-u16 GetWeightedResult(u32 random, u16 *values, u16 *weights) {
-    u16 weightedSum = 0;
-    u16 weight;
-    s32 i;
-
-    for (i = 0; i < 8; i++) {
-        weightedSum += weights[i];
-    }
-    weight = random % weightedSum;
-    weightedSum = 0;
-    for (i = 0; i < 8; i++) {
-        weightedSum += weights[i];
-        if (weight < weightedSum) {
-            return values[i];
-        }
-    }
-    return values[0];
-}
-
-#define PALETTE_SEED_0 (variantSeed & 0x0000007F)
-#define PALETTE_SEED_1 ((variantSeed & 0x00003F80) >> 7)
-#define PALETTE_SEED_2 ((variantSeed & 0x001FC000) >> 14)
-#define PALETTE_SEED_3 ((variantSeed & 0x0FE00000) >> 21)
-#define SPRITE_SEED    ((variantSeed & 0xF0000000) >> 28)
-#define SPRITE_COUNT   sMonSpriteCount[species]
-#define PALETTE_COUNT  sMonPaletteCount[species]
-#define WEIGHTED_VALUE(value, weight) values[index] = value; weights[index] = weight; index++;
-
-// So the weirdest bug I've ever seen in my life occurred here.
-// In the WEEDLE case, palettes[0] and [2] would be set correctly,
-// but as soon as it hit the nested switch block, control would
-// immediately jump to the DEFAULT case of the *outer* switch block.
-// There is no discernable reason why this would ever happen.
-// What's even stranger is that this behavior seems to depend on
-// the *number of case statements* in both the outer and nested
-// switch blocks. Removing enough of them, or adding enough of them,
-// makes the bug go away. I have to assume this is some compiler glitch.
-// I hope that this won't be a problem once I refactor _variant into
-// _personality and abstract a lot of this logic into the
-// variants.json data. For now, I'm adding external methods to set
-// METAPOD and KAKUNA's palettes. This somehow doesn't have the
-// same issues as a nested switch block.
-
-static u16 GetMetapodPalette(u16 butterfree) {
-    switch (butterfree) {
-    case PALETTE_BUTTERFREE_WHITE:
-    case PALETTE_BUTTERFREE_RED:
-        return PALETTE_METAPOD_YELLOW;
-    case PALETTE_BUTTERFREE_GREEN:
-    case PALETTE_BUTTERFREE_CYAN:
-        return PALETTE_METAPOD_GREEN;
-    case PALETTE_BUTTERFREE_BLUE:
-    case PALETTE_BUTTERFREE_PINK:
-        return PALETTE_METAPOD_BLUE;
-    }
-    return VARIANT_DEFAULT;
-}
-
-static u16 GetKakunaPalette(u16 beedrill) {
-    switch (beedrill) {
-    case PALETTE_BEEDRILL_PINK:
-    case PALETTE_BEEDRILL_RED:
-        return PALETTE_KAKUNA_RED;
-    case PALETTE_BEEDRILL_TANGELO:
-    case PALETTE_BEEDRILL_ORANGE:
-        return PALETTE_KAKUNA_ORANGE;
-    case PALETTE_BEEDRILL_GOLD:
-    case PALETTE_BEEDRILL_YELLOW:
-        return PALETTE_KAKUNA_YELLOW;
-    }
-    return VARIANT_DEFAULT;
-}
-
 u16 GenerateMonVariant(u16 species, u32 variantSeed) {
-    u16 values[8] = {0};
-    u16 weights[8] = {0};
-    u8 index = 0;
-
-    u16 sprite = 0;
-    u16 palettes[4] = {0, 0, 0, 0};
-    u16 variant = 0xFFFF;
-
-    switch (species) {
-    case SPECIES_BULBASAUR:
-    case SPECIES_CHARMANDER:
-    case SPECIES_SQUIRTLE:
-        variant = VARIANT_FROM_GAME_VERSION;
-        break;
-
-    case SPECIES_CATERPIE:
-        if (PALETTE_SEED_0 % 10 == 0) {
-            variant = VARIANT_ONE_TONE(PALETTE_CATERPIE_BLACK);
-            break;
-        }
-        // fall-through
-    case SPECIES_METAPOD:
-    case SPECIES_BUTTERFREE:
-        palettes[0] = PALETTE_CATERPIE_GREEN;
-        palettes[2] = PALETTE_SEED_2 % NUM_PALETTES_BUTTERFREE;
-        palettes[1] = GetMetapodPalette(palettes[2]);
-        break;
-
-    case SPECIES_WEEDLE:
-    case SPECIES_KAKUNA:
-    case SPECIES_BEEDRILL:
-        palettes[0] = PALETTE_WEEDLE_ORANGE;
-        palettes[2] = PALETTE_SEED_2 % NUM_PALETTES_BEEDRILL;
-        palettes[1] = GetKakunaPalette(palettes[2]);
-        break;
-
-    case SPECIES_PIDGEY:
-        WEIGHTED_VALUE(PALETTE_PIDGEY_BLACK, 3);
-        WEIGHTED_VALUE(PALETTE_PIDGEY_BROWN, 3);
-        WEIGHTED_VALUE(PALETTE_PIDGEY_RED, 2);
-        WEIGHTED_VALUE(PALETTE_PIDGEY_YELLOW, 2);
-        WEIGHTED_VALUE(PALETTE_PIDGEY_BLUE, 1);
-        variant = VARIANT_ONE_TONE(GetWeightedResult(variantSeed, values, weights));
-        break;
-
-    case SPECIES_RATTATA:
-        WEIGHTED_VALUE(PALETTE_RATTATA_BROWN, 3);
-        WEIGHTED_VALUE(PALETTE_RATTATA_PURPLE, 3);
-        WEIGHTED_VALUE(PALETTE_RATTATA_ORANGE, 2);
-        WEIGHTED_VALUE(PALETTE_RATTATA_RED, 2);
-        WEIGHTED_VALUE(PALETTE_RATTATA_BLUE, 2);
-        WEIGHTED_VALUE(PALETTE_RATTATA_WHITE, 1);
-        variant = VARIANT_ONE_TONE(GetWeightedResult(variantSeed, values, weights));
-        break;
-
-    case SPECIES_PIKACHU:
-//        if (variantSeed % 100 == 0) {
-//            sprite = SPRITE_PIKACHU_REDHAT;
-//            palettes[0] = PALETTE_PIKACHU_REDHAT;
-//        }
-//        else {
-            WEIGHTED_VALUE(PALETTE_PIKACHU_YELLOW, 5);
-            WEIGHTED_VALUE(PALETTE_PIKACHU_ORANGE, 3);
-            WEIGHTED_VALUE(PALETTE_PIKACHU_RED, 3);
-            WEIGHTED_VALUE(PALETTE_PIKACHU_PINK, 2);
-            WEIGHTED_VALUE(PALETTE_PIKACHU_BLUE, 1);
-            variant = VARIANT_ONE_TONE(GetWeightedResult(variantSeed, values, weights));
-//        }
-        break;
-
-    case SPECIES_MANKEY:
-        WEIGHTED_VALUE(PALETTE_MANKEY_RED, 1);
-        WEIGHTED_VALUE(PALETTE_MANKEY_WHITE, 1);
-        variant = VARIANT_ONE_TONE(GetWeightedResult(variantSeed, values, weights));
-        break;
-
-//     case SPECIES_GEODUDE:
-
-    case SPECIES_ONIX:
-        if (variantSeed % 10 == 0) {
-            if (PALETTE_SEED_2 % 2 == 0) {
-                WEIGHTED_VALUE(VARIANT_TWO_TONE(PALETTE_ONIX_STONE, PALETTE_ONIX_BRONZE), 10);
-                WEIGHTED_VALUE(VARIANT_TWO_TONE(PALETTE_ONIX_BRONZE, PALETTE_ONIX_SILVER), 5);
-                WEIGHTED_VALUE(VARIANT_TWO_TONE(PALETTE_ONIX_BRONZE, PALETTE_ONIX_GOLD), 5);
-                WEIGHTED_VALUE(VARIANT_TWO_TONE(PALETTE_ONIX_SILVER, PALETTE_ONIX_GOLD), 2);
-                WEIGHTED_VALUE(VARIANT_TWO_TONE(PALETTE_ONIX_SILVER, PALETTE_ONIX_CRYSTAL), 2);
-                WEIGHTED_VALUE(VARIANT_TWO_TONE(PALETTE_ONIX_GOLD, PALETTE_ONIX_CRYSTAL), 1);
-            }
-            else {
-                WEIGHTED_VALUE(VARIANT_TWO_TONE(PALETTE_ONIX_BRONZE, PALETTE_ONIX_STONE), 10);
-                WEIGHTED_VALUE(VARIANT_TWO_TONE(PALETTE_ONIX_SILVER, PALETTE_ONIX_BRONZE), 5);
-                WEIGHTED_VALUE(VARIANT_TWO_TONE(PALETTE_ONIX_GOLD, PALETTE_ONIX_BRONZE), 5);
-                WEIGHTED_VALUE(VARIANT_TWO_TONE(PALETTE_ONIX_GOLD, PALETTE_ONIX_SILVER), 2);
-                WEIGHTED_VALUE(VARIANT_TWO_TONE(PALETTE_ONIX_CRYSTAL, PALETTE_ONIX_SILVER), 2);
-                WEIGHTED_VALUE(VARIANT_TWO_TONE(PALETTE_ONIX_CRYSTAL, PALETTE_ONIX_GOLD), 1);
-            }
-            // stone   := 40%
-            // bronze  := 80%
-            // silver  := 36%
-            // gold    := 32%
-            // crystal := 12%
-            variant = GetWeightedResult(variantSeed, values, weights);
-        }
-        else {
-            WEIGHTED_VALUE(PALETTE_ONIX_STONE, 30);
-            WEIGHTED_VALUE(PALETTE_ONIX_BRONZE, 10);
-            WEIGHTED_VALUE(PALETTE_ONIX_SILVER, 6);
-            WEIGHTED_VALUE(PALETTE_ONIX_GOLD, 3);
-            WEIGHTED_VALUE(PALETTE_ONIX_CRYSTAL, 1);
-            // stone   := 60%
-            // bronze  := 20%
-            // silver  := 12%
-            // gold    :=  6%
-            // crystal :=  2%
-            variant = VARIANT_ONE_TONE(GetWeightedResult(variantSeed, values, weights));
-        }
-        // stone   := 58  %
-        // bronze  := 26  %
-        // silver  := 14.4%
-        // gold    :=  8.6%
-        // crystal :=  3  %
-        break;
-
-//    case SPECIES_TANGELA:
-
-//    case SPECIES_DRATINI:
-
-//    case SPECIES_HOOTHOOT:
-
-//    case SPECIES_SPINARAK:
-
-    case SPECIES_MARILL:
-        WEIGHTED_VALUE(PALETTE_MARILL_BLUE, 5);
-        WEIGHTED_VALUE(PALETTE_MARILL_SKY, 5);
-        WEIGHTED_VALUE(PALETTE_MARILL_PURPLE, 4);
-        WEIGHTED_VALUE(PALETTE_MARILL_GREEN, 4);
-        WEIGHTED_VALUE(PALETTE_MARILL_YELLOW, 1);
-        variant = VARIANT_ONE_TONE(GetWeightedResult(variantSeed, values, weights));
-        break;
-
-//    case SPECIES_HOPPIP:
-
-//    case SPECIES_SHUCKLE:
-
-    case SPECIES_HOUNDOUR:
-        WEIGHTED_VALUE(PALETTE_HOUNDOUR_BLACK, 3);
-        WEIGHTED_VALUE(PALETTE_HOUNDOUR_RED, 3);
-        WEIGHTED_VALUE(PALETTE_HOUNDOUR_BLUE, 3);
-        WEIGHTED_VALUE(PALETTE_HOUNDOUR_YELLOW, 1);
-        variant = VARIANT_ONE_TONE(GetWeightedResult(variantSeed, values, weights));
-        break;
-
-    case SPECIES_ZIGZAGOON:
-        WEIGHTED_VALUE(PALETTE_ZIGZAGOON_CHOCOLATE, 4);
-        WEIGHTED_VALUE(PALETTE_ZIGZAGOON_CARAMEL, 4);
-        WEIGHTED_VALUE(PALETTE_ZIGZAGOON_VANILLA, 4);
-        WEIGHTED_VALUE(PALETTE_ZIGZAGOON_STRAWBERRY, 1);
-        WEIGHTED_VALUE(PALETTE_ZIGZAGOON_MINT, 1);
-        WEIGHTED_VALUE(PALETTE_ZIGZAGOON_LEMON, 1);
-        variant = VARIANT_ONE_TONE(GetWeightedResult(variantSeed, values, weights));
-        break;
-
-    case SPECIES_RALTS:
-        WEIGHTED_VALUE(PALETTE_RALTS_GREEN, 5);
-        WEIGHTED_VALUE(PALETTE_RALTS_BLUE, 4);
-        WEIGHTED_VALUE(PALETTE_RALTS_BONFIRE, 3);
-        WEIGHTED_VALUE(PALETTE_RALTS_PUMPKIN, 3);
-        WEIGHTED_VALUE(PALETTE_RALTS_SUNSET, 1);
-        variant = VARIANT_ONE_TONE(GetWeightedResult(variantSeed, values, weights));
-        break;
-
-//    case SPECIES_ARON:
-
-    default:
-        if (SPRITE_COUNT > 1) {
-            sprite = SPRITE_SEED % SPRITE_COUNT;
-        }
-        if (PALETTE_COUNT > 1) {
-            palettes[0] = PALETTE_SEED_0 % PALETTE_COUNT;
-            palettes[1] = PALETTE_SEED_1 % PALETTE_COUNT;
-            palettes[2] = PALETTE_SEED_2 % PALETTE_COUNT;
-            palettes[3] = PALETTE_SEED_3 % PALETTE_COUNT;
-        }
-        break;
-    }
-
-    if (variant == 0xFFFF) { // Hasn't been set yet
-        variant = (palettes[0]) | (palettes[1] << 3) | (palettes[2] << 6) | (palettes[3] << 9) | (sprite << 12);
-    }
-
-//    DebugPrintf("GenerateMonVariant speciesName: %S", gSpeciesNames[species]);
-//    DebugPrintf("GenerateMonVariant variantSeed: 0x%x", variantSeed);
-//    DebugPrintf("GenerateMonVariant paletteSeeds: [0x%x, 0x%x, 0x%x, 0x%x] spriteSeed: 0x%x",
-//            paletteSeed0,
-//            paletteSeed1,
-//            paletteSeed2,
-//            paletteSeed3,
-//            spriteSeed);
-//    DebugPrintf("GenerateMonVariant palettes: [%d, %d, %d, %d] sprite: %d",
-//            (variant & 0x0007),
-//            (variant & 0x0038) >> 3,
-//            (variant & 0x01C0) >> 6,
-//            (variant & 0x0E00) >> 9,
-//            (variant & 0x3000) >> 12);
-//    DebugPrintf("GenerateMonVariant variant: 0x%x", variant);
-    return variant;
+    return Random();
 }
 
 const u32 *GetMonFrontPicFromVariant(u16 species, u16 variant) {
@@ -7296,13 +7018,11 @@ const u32 *GetMonBackPicFromVariant(u16 species, u16 variant) {
 }
 
 const struct CompressedSpriteSheet *GetMonFrontPicStructFromVariant(u16 species, u16 variant) {
-    u8 sprite = (variant & 0x3000) >> 12;
-    return &gMonFrontPicTable[species][sprite];
+    return &gMonFrontPicTable[species][0];
 }
 
 const struct CompressedSpriteSheet *GetMonBackPicStructFromVariant(u16 species, u16 variant) {
-    u8 sprite = (variant & 0x3000) >> 12;
-    return &gMonBackPicTable[species][sprite];
+    return &gMonBackPicTable[species][0];
 }
 
 const u16 *GetMonPalette(struct Pokemon *mon) {
@@ -7319,140 +7039,36 @@ const struct SpritePalette *GetMonPaletteStruct(struct Pokemon *mon) {
     u16 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG, NULL);
     u16 variant = GetMonData(mon, MON_DATA_VARIANT, NULL);
 
-    const struct SpritePalette *palette1;
-    const struct SpritePalette *palette2;
-    u16 weight;
-
-    switch (species) {
-    case SPECIES_MANKEY:
-        weight = GetMonData(mon, MON_DATA_ATK, NULL);
-        if (weight > 100) weight = 100;
-        palette1 = &gMonPaletteTable[SPECIES_MANKEY][PALETTE_MANKEY_YELLOW];
-        palette2 = &gMonPaletteTable[SPECIES_MANKEY][(variant & 0x0007)];
-        return MixPalettes(palette1, palette2, weight);
-    }
-
     return GetMonPaletteStructFromVariant(species, variant);
 }
 
+#define REF_ROTATE_COLOR(index) RotateColor(gMonPaletteTable[species][0].data[index], rotation)
 const struct SpritePalette *GetMonPaletteStructFromVariant(u16 species, u16 variant) {
-    u8 palettes[4] = {
-            (variant & 0x0007),
-            (variant & 0x0038) >> 3,
-            (variant & 0x01C0) >> 6,
-            (variant & 0x0E00) >> 9,
-    };
-
-    switch (species) {
-//    case SPECIES_BULBASAUR:
-//    case SPECIES_CHARMANDER:
-//    case SPECIES_SQUIRTLE:
-
-    case SPECIES_CATERPIE:
-        return &gMonPaletteTable[SPECIES_CATERPIE][palettes[0]];
-    case SPECIES_METAPOD:
-        return &gMonPaletteTable[SPECIES_METAPOD][palettes[1]];
-    case SPECIES_BUTTERFREE:
-        return &gMonPaletteTable[SPECIES_BUTTERFREE][palettes[2]];
-
-    case SPECIES_WEEDLE:
-        return &gMonPaletteTable[SPECIES_WEEDLE][palettes[0]];
-    case SPECIES_KAKUNA:
-        return &gMonPaletteTable[SPECIES_KAKUNA][palettes[1]];
-    case SPECIES_BEEDRILL:
-        return &gMonPaletteTable[SPECIES_BEEDRILL][palettes[2]];
-
-//    case SPECIES_PIDGEY:
-//    case SPECIES_RATTATA:
-//    case SPECIES_PIKACHU:
-//    case SPECIES_NIDORAN_F:
-
-    case SPECIES_MANKEY:
-        return &gMonPaletteTable[SPECIES_MANKEY][PALETTE_MANKEY_YELLOW];
-
-//    case SPECIES_GEODUDE:
-//    case SPECIES_ONIX:
-//    case SPECIES_TANGELA:
-//    case SPECIES_DRATINI:
-//    case SPECIES_HOOTHOOT:
-//    case SPECIES_SPINARAK:
-//    case SPECIES_MARILL:
-//    case SPECIES_HOPPIP:
-//    case SPECIES_SHUCKLE:
-//    case SPECIES_HOUNDOUR:
-//    case SPECIES_ZIGZAGOON:
-//    case SPECIES_RALTS:
-//    case SPECIES_ARON:
-    }
-
-    return GetMonPaletteStructStandard(species, variant);
-}
-
-#define REF_SUBPALETTE_MAP(index) gMonPaletteTable[species][palettes[sMonSubpaletteMap[species][index]]].data[index]
-const struct SpritePalette *GetMonPaletteStructStandard(u16 species, u16 variant) {
-    u8 palettes[4] = {
-            (variant & 0x0007),
-            (variant & 0x0038) >> 3,
-            (variant & 0x01C0) >> 6,
-            (variant & 0x0E00) >> 9,
-    };
+    u16 rotation = variant % FULL_ROTATION;
 
     const u16 data[16] = {
-            REF_SUBPALETTE_MAP(0),
-            REF_SUBPALETTE_MAP(1),
-            REF_SUBPALETTE_MAP(2),
-            REF_SUBPALETTE_MAP(3),
-            REF_SUBPALETTE_MAP(4),
-            REF_SUBPALETTE_MAP(5),
-            REF_SUBPALETTE_MAP(6),
-            REF_SUBPALETTE_MAP(7),
-            REF_SUBPALETTE_MAP(8),
-            REF_SUBPALETTE_MAP(9),
-            REF_SUBPALETTE_MAP(10),
-            REF_SUBPALETTE_MAP(11),
-            REF_SUBPALETTE_MAP(12),
-            REF_SUBPALETTE_MAP(13),
-            REF_SUBPALETTE_MAP(14),
-            REF_SUBPALETTE_MAP(15),
+            REF_ROTATE_COLOR(0),
+            REF_ROTATE_COLOR(1),
+            REF_ROTATE_COLOR(2),
+            REF_ROTATE_COLOR(3),
+            REF_ROTATE_COLOR(4),
+            REF_ROTATE_COLOR(5),
+            REF_ROTATE_COLOR(6),
+            REF_ROTATE_COLOR(7),
+            REF_ROTATE_COLOR(8),
+            REF_ROTATE_COLOR(9),
+            REF_ROTATE_COLOR(10),
+            REF_ROTATE_COLOR(11),
+            REF_ROTATE_COLOR(12),
+            REF_ROTATE_COLOR(13),
+            REF_ROTATE_COLOR(14),
+            REF_ROTATE_COLOR(15),
     };
 
     struct SpritePalette dynamicPaletteBuffer = {
             .data = data,
             .tag = species,
     };
-
-//    DebugPrintf("GetMonPaletteStructFromVariant species %d variant: 0x%x", species, variant);
-
-    dynamicPalette = dynamicPaletteBuffer;
-    return &dynamicPalette;
-}
-
-const struct SpritePalette *ShiftPaletteHue(const struct SpritePalette *palette, u8 hueShift) {
-    const u16 data[16] = {
-            ModifyHsv(palette->data[0], hueShift, 0, 0),
-            ModifyHsv(palette->data[1], hueShift, 0, 0),
-            ModifyHsv(palette->data[2], hueShift, 0, 0),
-            ModifyHsv(palette->data[3], hueShift, 0, 0),
-            ModifyHsv(palette->data[4], hueShift, 0, 0),
-            ModifyHsv(palette->data[5], hueShift, 0, 0),
-            ModifyHsv(palette->data[6], hueShift, 0, 0),
-            ModifyHsv(palette->data[7], hueShift, 0, 0),
-            ModifyHsv(palette->data[8], hueShift, 0, 0),
-            ModifyHsv(palette->data[9], hueShift, 0, 0),
-            ModifyHsv(palette->data[10], hueShift, 0, 0),
-            ModifyHsv(palette->data[11], hueShift, 0, 0),
-            ModifyHsv(palette->data[12], hueShift, 0, 0),
-            ModifyHsv(palette->data[13], hueShift, 0, 0),
-            ModifyHsv(palette->data[14], hueShift, 0, 0),
-            ModifyHsv(palette->data[15], hueShift, 0, 0),
-    };
-
-    struct SpritePalette dynamicPaletteBuffer = {
-            .data = data,
-            .tag = palette->tag,
-    };
-
-    DebugPrintf("ShiftPaletteHue hueShift %d", hueShift);
 
     dynamicPalette = dynamicPaletteBuffer;
     return &dynamicPalette;

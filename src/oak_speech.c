@@ -1870,7 +1870,7 @@ static void CreateNidoranFSprite(u8 taskId)
     u8 spriteId;
 
     DecompressPicFromTable(GetMonFrontPicStructFromVariant(SPECIES_NIDORAN_F, VARIANT_DEFAULT), MonSpritesGfxManager_GetSpritePtr(MON_SPR_GFX_MANAGER_A, B_POSITION_OPPONENT_LEFT), SPECIES_NIDORAN_F);
-    LoadSpritePalette(GetMonPaletteStructFromVariant(SPECIES_NIDORAN_F, VARIANT_ONE_TONE(PALETTE_NIDORAN_F_BLACK)));
+    LoadSpritePalette(GetMonPaletteStructFromVariant(SPECIES_NIDORAN_F, VARIANT_DEFAULT));
     SetMultiuseSpriteTemplateToPokemon(SPECIES_NIDORAN_F, 0);
     spriteId = CreateSprite(&gMultiuseSpriteTemplate, 96, 96, 1);
     gSprites[spriteId].callback = SpriteCallbackDummy;

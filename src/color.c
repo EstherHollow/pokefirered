@@ -1,141 +1,196 @@
 #include "global.h"
 #include "color.h"
+#include "data/graphics/color.h"
 
-// https://www.rapidtables.com/convert/color/rgb-to-hsv.html
-void RgbToHsv(u8 red, u8 green, u8 blue, u8 *hue, u8 *sat, u8 *val) {
-    if (red > green) {
-        if (red > blue) {
-            if (green > blue) { // Red > Green > Blue
-                *hue = (green - blue) * HUE_SLICE / (red - blue);
-                *sat = (red - blue) * RGB_MAX / red;
-            }
-            else { // Red > Blue > Green
-                *hue = (HUE_MAX - 1) - ((blue - green) * HUE_SLICE / (red - green));
-                *sat = (red - green) * RGB_MAX / red;
-            }
-            *val = red; // Red is highest
+#define CLAMP(num, min, max) (num < min ? min : num > max ? max : num)
+
+const void RGBToOklab(u16 color, s16* lightness, s16* a, s16* b) {
+    s16 red, green, blue, l, m, s;
+
+//    DebugPrintf("RGBToOklab Color: [%d, %d, %d]", GET_RED(color), GET_GREEN(color), GET_BLUE(color));
+
+    red   = GET_RED(color)   * OKLAB_MAX / RGB_MAX;
+    green = GET_GREEN(color) * OKLAB_MAX / RGB_MAX;
+    blue  = GET_BLUE(color)  * OKLAB_MAX / RGB_MAX;
+
+//    DebugPrintf("RGBToOklab RGB: [%d, %d, %d]", red, green, blue);
+
+    red   = gLinearLookup[red];
+    green = gLinearLookup[green];
+    blue  = gLinearLookup[blue];
+
+//    DebugPrintf("RGBToOklab RGBLinear: [%d, %d, %d]", red, green, blue);
+
+    l = ((red * gRGBToLMS[0]) + (green * gRGBToLMS[1]) + (blue * gRGBToLMS[2])) / 1000;
+    m = ((red * gRGBToLMS[3]) + (green * gRGBToLMS[4]) + (blue * gRGBToLMS[5])) / 1000;
+    s = ((red * gRGBToLMS[6]) + (green * gRGBToLMS[7]) + (blue * gRGBToLMS[8])) / 1000;
+
+    l = CLAMP(l, 0, OKLAB_MAX);
+    m = CLAMP(m, 0, OKLAB_MAX);
+    s = CLAMP(s, 0, OKLAB_MAX);
+
+//    DebugPrintf("RGBToOklab LMS: [%d, %d, %d]", l, m, s);
+
+    l = gCbrtLookup[l];
+    m = gCbrtLookup[m];
+    s = gCbrtLookup[s];
+
+//    DebugPrintf("RGBToOklab LMSCbrt: [%d, %d, %d]", l, m, s);
+
+    *lightness = ((l * gLMSToOklab[0]) + (m * gLMSToOklab[1]) + (s * gLMSToOklab[2])) / 1000;
+    *a         = ((l * gLMSToOklab[3]) + (m * gLMSToOklab[4]) + (s * gLMSToOklab[5])) / 1000;
+    *b         = ((l * gLMSToOklab[6]) + (m * gLMSToOklab[7]) + (s * gLMSToOklab[8])) / 1000;
+
+    *lightness = CLAMP(*lightness,          0, OKLAB_MAX);
+    *a         = CLAMP(*a        , -OKLAB_MAX, OKLAB_MAX);
+    *b         = CLAMP(*b        , -OKLAB_MAX, OKLAB_MAX);
+
+//    DebugPrintf("RGBToOklab Oklab: [%d, %d, %d]", *lightness, *a, *b);
+//    DebugPrintf("");
+}
+
+const u16 OklabToRGB(s16 lightness, s16 a, s16 b) {
+    s16 l, m, s, red, green, blue;
+
+    l = ((lightness * gOklabToLMS[0]) + (a * gOklabToLMS[1]) + (b * gOklabToLMS[2])) / 1000;
+    m = ((lightness * gOklabToLMS[3]) + (a * gOklabToLMS[4]) + (b * gOklabToLMS[5])) / 1000;
+    s = ((lightness * gOklabToLMS[6]) + (a * gOklabToLMS[7]) + (b * gOklabToLMS[8])) / 1000;
+
+    l = CLAMP(l, 0, OKLAB_MAX);
+    m = CLAMP(m, 0, OKLAB_MAX);
+    s = CLAMP(s, 0, OKLAB_MAX);
+
+//    DebugPrintf("OklabToRGB LMS: [%d, %d, %d]", l, m, s);
+
+    l = gCubeLookup[l];
+    m = gCubeLookup[m];
+    s = gCubeLookup[s];
+
+//    DebugPrintf("OklabToRGB LMSCube: [%d, %d, %d]", l, m, s);
+
+    red   = ((l * gLMSToRGB[0]) + (m * gLMSToRGB[1]) + (s * gLMSToRGB[2])) / 1000;
+    green = ((l * gLMSToRGB[3]) + (m * gLMSToRGB[4]) + (s * gLMSToRGB[5])) / 1000;
+    blue  = ((l * gLMSToRGB[6]) + (m * gLMSToRGB[7]) + (s * gLMSToRGB[8])) / 1000;
+
+    red   = CLAMP(red  , 0, OKLAB_MAX);
+    green = CLAMP(green, 0, OKLAB_MAX);
+    blue  = CLAMP(blue , 0, OKLAB_MAX);
+
+//    DebugPrintf("OklabToRGB RGBLinear: [%d, %d, %d]", red, green, blue);
+
+    red   = gLinearInverseLookup[red]   * RGB_MAX / OKLAB_MAX;
+    green = gLinearInverseLookup[green] * RGB_MAX / OKLAB_MAX;
+    blue  = gLinearInverseLookup[blue]  * RGB_MAX / OKLAB_MAX;
+
+//    DebugPrintf("OklabToRGB RGB: [%d, %d, %d]", red, green, blue);
+//    DebugPrintf("");
+
+    return TO_COLOR(red, green, blue);
+}
+
+#define ATAN2_LOOKUP(x, y) (x <= y ? gAtanLookup[x * OKLAB_MAX / y] : QUARTER_ROTATION - gAtanLookup[y * OKLAB_MAX / x])
+
+const void CartesianToPolar(s16 x, s16 y, u16* radius, u16* theta) {
+    u16 temp;
+
+    *radius = gSqrtLookup[gSquareLookup[x >= 0 ? x : -x] + gSquareLookup[y >= 0 ? y : -y]];
+
+    if (x > 0) {
+        if (y > 0) {
+            *theta = ATAN2_LOOKUP(x, y);
         }
-        else { // Blue > Red > Green
-            *hue = (red - green) * HUE_SLICE / (blue - green) + (HUE_SLICE * 4);
-            *sat = (blue - green) * RGB_MAX / blue;
-            *val = blue;
+        else if (y < 0) {
+            temp = x;
+            x = -y;
+            y = temp;
+            *theta = ATAN2_LOOKUP(x, y) + QUARTER_ROTATION;
+        }
+        else /* y == 0 */ {
+            *theta = QUARTER_ROTATION;
         }
     }
-    else {
-        if (green > blue) {
-            if (red > blue) { // Green > Red > Blue
-                *hue = (HUE_SLICE * 2) - ((red - blue) * HUE_SLICE / (green - blue));
-                *sat = (green - blue) * RGB_MAX / green;
-            }
-            else { // Blue > Green > Red
-                *hue = (blue - red) * HUE_SLICE / (green - red) + (HUE_SLICE * 2);
-                *sat = (green - red) * RGB_MAX / green;
-            }
-            *val = green; // Green is highest
+    else if (x < 0) {
+        if (y > 0) {
+            temp = x;
+            x = y;
+            y = -temp;
+            *theta = ATAN2_LOOKUP(x, y) + (QUARTER_ROTATION * 3);
         }
-        else { // Blue > Green > Red
-            *hue = (HUE_SLICE * 4) - ((green - red) * HUE_SLICE / (blue - red));
-            *sat = (blue - red) * RGB_MAX / blue;
-            *val = blue;
+        else if (y < 0) {
+            x = -x;
+            y = -y;
+            *theta = ATAN2_LOOKUP(x, y) + HALF_ROTATION;
+        }
+        else /* y == 0 */ {
+            *theta = QUARTER_ROTATION * 3;
+        }
+    }
+    else /* x == 0 */ {
+        if (y > 0) {
+            *theta = 0;
+        }
+        else if (y < 0) {
+            *theta = HALF_ROTATION;
+        }
+        else /* y == 0 */ {
+            *theta = 0;
         }
     }
 }
 
-void HsvToRgb(u8 hue, u8 sat, u8 val, u8 *red, u8 *green, u8 *blue) {
-    u8 c = (sat * val) / RGB_MAX;
-    u8 x = ((hue / HUE_SLICE) % 2 == 0) ? 0 : c;
-    u8 m;
-
-    switch (hue / HUE_SLICE) {
-    case 0:
-        *red = c;
-        *green = x;
-        *blue = 0;
-        break;
-    case 1:
-        *red = x;
-        *green = c;
-        *blue = 0;
-        break;
-    case 2:
-        *red = 0;
-        *green = c;
-        *blue = x;
-        break;
-    case 3:
-        *red = 0;
-        *green = x;
-        *blue = c;
-        break;
-    case 4:
-        *red = x;
-        *green = 0;
-        *blue = c;
-        break;
-    case 5:
-        *red = c;
-        *green = 0;
-        *blue = x;
-        break;
+const void PolarToCartesian(u16 radius, u16 theta, s16* x, s16* y) {
+    if (theta <= QUARTER_ROTATION) {
+        *x = gSinLookup[theta] * radius / OKLAB_MAX;
+        *y = gCosLookup[theta] * radius / OKLAB_MAX;
     }
-
-    if (val > sat) {
-        m = val - sat;
-
-        if (*red + m < RGB_MAX) *red += m;
-        else *red = RGB_MAX;
-
-        if (*green + m < RGB_MAX) *green += m;
-        else *green = RGB_MAX;
-
-        if (*blue + m < RGB_MAX) *blue += m;
-        else *blue = RGB_MAX;
+    else if (theta <= HALF_ROTATION) {
+        theta -= QUARTER_ROTATION;
+        *x =  gCosLookup[theta] * radius / OKLAB_MAX;
+        *y = -gSinLookup[theta] * radius / OKLAB_MAX;
+    }
+    else if (theta <= QUARTER_ROTATION * 3) {
+        theta -= HALF_ROTATION;
+        *x = -gSinLookup[theta] * radius / OKLAB_MAX;
+        *y = -gCosLookup[theta] * radius / OKLAB_MAX;
     }
     else {
-        m = sat - val;
-
-        if (*red > m) *red -= m;
-        else *red = 0;
-
-        if (*green > m) *green -= m;
-        else *green = 0;
-
-        if (*blue > m) *blue -= m;
-        else *blue = 0;
+        theta -= QUARTER_ROTATION * 3;
+        *x = -gCosLookup[theta] * radius / OKLAB_MAX;
+        *y =  gSinLookup[theta] * radius / OKLAB_MAX;
     }
 }
 
-const u16 ModifyHsv(const u16 color, u8 hueShift, u8 satShift, u8 valShift) {
-    u8 red = (color & 0x001F);
-    u8 green = (color & 0x03E0) >> 5;
-    u8 blue = (color & 0x7C00) >> 10;
+const u16 RotateColor(u16 color, u16 rotation) {
+    s16 lightness, a, b;
+    u16 radius, theta;
+    u16 color2;
 
-    u8 hue, sat, val;
-    RgbToHsv(red, green, blue, &hue, &sat, &val);
+    RGBToOklab(color, &lightness, &a, &b);
 
-    hue = (hue + hueShift) % HUE_MAX;
+    CartesianToPolar(a, b, &radius, &theta);
 
-    if ((satShift & SIGN_MASK) > 0) {
-        satShift = satShift & MAGNITUDE_MASK;
-        if (sat > satShift) sat -= satShift;
-        else sat = 0;
-    }
-    else {
-        if (sat + satShift < RGB_MAX) sat += satShift;
-        else sat = RGB_MAX;
-    }
+//    DebugPrintf("RotateColor Polar: [%d, %d]", radius, theta);
 
-    if ((valShift & SIGN_MASK) > 0) {
-        valShift = valShift & MAGNITUDE_MASK;
-        if (val > valShift) val -= valShift;
-        else val = 0;
-    }
-    else {
-        if (val + valShift < RGB_MAX) val += valShift;
-        else val = RGB_MAX;
-    }
+    theta = (theta + rotation) % FULL_ROTATION;
 
-    HsvToRgb(hue, sat, val, &red, &green, &blue);
+    PolarToCartesian(radius, theta, &a, &b);
 
-    return red | (green << 5) | (blue << 10);
+//    DebugPrintf("RotateColor Cartesian: [%d, %d]", a, b);
+//    DebugPrintf("");
+
+    color2 = OklabToRGB(lightness, a, b);
+
+    DebugPrintf("RotateColor(color: [%d, %d, %d], rotation: %d) -> [%d, %d, %d] -> [%d, %d, %d]",
+            GET_RED(color),
+            GET_GREEN(color),
+            GET_BLUE(color),
+            rotation,
+            lightness,
+            a,
+            b,
+            GET_RED(color2),
+            GET_GREEN(color2),
+            GET_BLUE(color2));
+
+    return color2;
 }

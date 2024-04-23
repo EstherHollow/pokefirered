@@ -12,6 +12,20 @@
                 "red",
                 "green",
                 "blue"
+            ],
+            "subpalettes": [
+                {
+                    "name": "body",
+                    "indexes": [2,3,4,5]
+                },
+                {
+                    "name": "bulb",
+                    "indexes": [11,12,13,14]
+                },
+                {
+                    "name": "mouth",
+                    "indexes": [6,7,8]
+                }
             ]
         },
         {
@@ -22,6 +36,20 @@
                 "red",
                 "green",
                 "blue"
+            ],
+            "subpalettes": [
+                {
+                    "name": "body",
+                    "indexes": [4,5,6,9,10,11]
+                },
+                {
+                    "name": "flame",
+                    "indexes": [7,8]
+                },
+                {
+                    "name": "eyes",
+                    "indexes": [13,14,15]
+                }
             ]
         },
         {
@@ -32,6 +60,16 @@
                 "red",
                 "green",
                 "blue"
+            ],
+            "subpalettes": [
+                {
+                    "name": "body",
+                    "indexes": [11,12,13,14]
+                },
+                {
+                    "name": "shell",
+                    "indexes": [2,3,4,6,7,8,9,10]
+                }
             ]
         },
         {
