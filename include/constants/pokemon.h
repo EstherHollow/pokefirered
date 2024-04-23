@@ -296,19 +296,14 @@
 #define MON_PIC_HEIGHT 64
 #define MON_PIC_SIZE (MON_PIC_WIDTH * MON_PIC_HEIGHT / 2)
 
-// Most pokemon have 2 frames (a default and an alternate for their animation).
-// There are 4 exceptions:
+// Most pokemon have 1 frame. There are 2 exceptions:
 // - Castform has 4 frames, 1 for each form
 // - Deoxys has 2 frames, 1 for each form
-// - Spinda has 1 frame, presumably to avoid the work of animating its spots
-// - Unown has 1 frame, presumably to avoid the work of animating all 28 of its forms
 #define MAX_MON_PIC_FRAMES 4
 
 // used by ShouldIgnoreDeoxysForm
 #define DEOXYS_CHECK_BATTLE_SPRITE      1
 #define DEOXYS_CHECK_TRADE_MAIN         3
 #define DEOXYS_CHECK_BATTLE_ANIM        5
-
-#define SKIP_FRONT_ANIM (1 << 7)
 
 #endif // GUARD_CONSTANTS_POKEMON_H

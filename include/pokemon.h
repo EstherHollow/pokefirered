@@ -437,12 +437,6 @@ bool8 CheckBattleTypeGhost(struct Pokemon *mon, u8 bank);
 struct MonSpritesGfxManager *CreateMonSpritesGfxManager(u8 battlePosition, u8 mode);
 void DestroyMonSpritesGfxManager(void);
 u8 *MonSpritesGfxManager_GetSpritePtr(u8 bufferId);
-void BattleAnimateFrontSprite(struct Sprite *sprite, u16 species, bool8 noCry, u8 panMode);
-void DoMonFrontSpriteAnimation(struct Sprite *sprite, u16 species, bool8 noCry, u8 panModeAnimFlag);
-void PokemonSummaryDoMonAnimation(struct Sprite *sprite, u16 species, bool8 oneFrame);
-void StopPokemonAnimationDelayTask(void);
-bool8 HasTwoFramesAnimation(u16 species);
-void BattleAnimateBackSprite(struct Sprite *sprite, u16 species);
 
 bool8 IsTrainerRival(u16 trainerId);
 u16 GetWeightedResult(u32 random, u16 *values, u16 *weights);

@@ -822,12 +822,6 @@ static void SpriteCB_ReleaseMonFromBall(struct Sprite *sprite)
     }
 
     StartSpriteAffineAnim(&gSprites[gBattlerSpriteIds[sprite->sBattler]], BATTLER_AFFINE_EMERGE);
-
-    if (GetBattlerSide(sprite->sBattler) == B_SIDE_OPPONENT)
-        gSprites[gBattlerSpriteIds[sprite->sBattler]].callback = SpriteCB_OpponentMonFromBall;
-    else
-        gSprites[gBattlerSpriteIds[sprite->sBattler]].callback = SpriteCB_PlayerMonFromBall;
-
     AnimateSprite(&gSprites[gBattlerSpriteIds[sprite->sBattler]]);
     gSprites[gBattlerSpriteIds[sprite->sBattler]].data[1] = 0x1000;
 }
@@ -1019,9 +1013,6 @@ static u8 LaunchBallFadeMonTaskForPokeball(bool8 unFadeLater, u8 spritePalNum, u
     return LaunchBallFadeMonTask(unFadeLater, spritePalNum, selectedPalettes, BALL_POKE);
 }
 
-// Sprite data for the pokemon
-#define sSpecies data[7]
-
 // Sprite data for the pokeball
 #define sMonSpriteId data[0]
 #define sDelay       data[1]
@@ -1033,7 +1024,7 @@ static u8 LaunchBallFadeMonTaskForPokeball(bool8 unFadeLater, u8 spritePalNum, u
 #define sTrigIdx     data[7]
 
 // Pokeball in Oak intro, and when receiving via trade
-void CreatePokeballSpriteToReleaseMon(u8 monSpriteId, u8 monPalNum, u8 x, u8 y, u8 oamPriority, u8 subpriortiy, u8 delay, u32 fadePalettes, u16 species)
+void CreatePokeballSpriteToReleaseMon(u8 monSpriteId, u8 monPalNum, u8 x, u8 y, u8 oamPriority, u8 subpriortiy, u8 delay, u32 fadePalettes)
 {
     u8 spriteId;
 
@@ -1047,7 +1038,6 @@ void CreatePokeballSpriteToReleaseMon(u8 monSpriteId, u8 monPalNum, u8 x, u8 y, 
 
     gSprites[monSpriteId].x = x;
     gSprites[monSpriteId].y = y;
-    gSprites[monSpriteId].sSpecies = species;
 
     gSprites[spriteId].sDelay = delay;
     gSprites[spriteId].sMonPalNum = monPalNum;
@@ -1129,11 +1119,6 @@ static void SpriteCB_ReleasedMonFlyOut(struct Sprite *sprite)
     }
     if (sprite->animEnded && emergeAnimFinished && atFinalPosition)
     {
-        if (gSprites[monSpriteId].sSpecies == SPECIES_EGG)
-            DoMonFrontSpriteAnimation(&gSprites[monSpriteId], gSprites[monSpriteId].sSpecies, TRUE, 0);
-        else
-            DoMonFrontSpriteAnimation(&gSprites[monSpriteId], gSprites[monSpriteId].sSpecies, FALSE, 0);
-
         DestroySpriteAndFreeResources(sprite);
     }
 }

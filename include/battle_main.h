@@ -80,8 +80,6 @@ void SetIdleSpriteCallback(struct Sprite *sprite);
 void SpriteCB_FaintSlideAnim(struct Sprite *sprite);
 void DoBounceEffect(u8 battler, u8 which, s8 delta, s8 amplitude);
 void EndBounceEffect(u8 battler, u8 which);
-void SpriteCB_OpponentMonFromBall(struct Sprite *sprite);
-void SpriteCB_PlayerMonFromBall(struct Sprite *sprite);
 void SpriteCB_PlayerThrowInit(struct Sprite *sprite);
 void UpdatePlayerPosInThrowAnim(struct Sprite *sprite);
 void BeginBattleIntroDummy(void);

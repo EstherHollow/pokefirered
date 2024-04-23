@@ -76,7 +76,6 @@ static void CB2_EndLinkBattle(void);
 static void EndLinkBattleInSteps(void);
 static void SpriteCB_MoveWildMonToRight(struct Sprite *sprite);
 static void SpriteCB_WildMonShowHealthbox(struct Sprite *sprite);
-static void SpriteCB_WildMonAnimate(struct Sprite *sprite);
 static void SpriteCB_Flicker(struct Sprite *sprite);
 static void SpriteCB_AnimFaintOpponent(struct Sprite *sprite);
 static void SpriteCB_BlinkVisible(struct Sprite *sprite);
@@ -1934,17 +1933,9 @@ static void SpriteCB_WildMonShowHealthbox(struct Sprite *sprite)
     {
         StartHealthboxSlideIn(sprite->sBattler);
         SetHealthboxSpriteVisible(gHealthboxSpriteIds[sprite->sBattler]);
-        sprite->callback = SpriteCB_WildMonAnimate;
+        sprite->callback = SpriteCallbackDummy_2;
         StartSpriteAnimIfDifferent(sprite, 0);
         BeginNormalPaletteFade(0x20000, 0, 10, 0, RGB(8, 8, 8));
-    }
-}
-
-static void SpriteCB_WildMonAnimate(struct Sprite *sprite)
-{
-    if (!gPaletteFade.active)
-    {
-        BattleAnimateFrontSprite(sprite, sprite->sSpeciesId, FALSE, 1);
     }
 }
 
@@ -2221,25 +2212,6 @@ static void SpriteCB_PlayerThrowUpdate(struct Sprite *sprite)
     UpdatePlayerPosInThrowAnim(sprite);
     if (sprite->animEnded)
         sprite->callback = SpriteCB_Idle;
-}
-
-void SpriteCB_OpponentMonFromBall(struct Sprite *sprite)
-{
-    if (sprite->affineAnimEnded)
-    {
-        if (!(gHitMarker & HITMARKER_NO_ANIMATIONS) || gBattleTypeFlags & BATTLE_TYPE_LINK)
-        {
-            if (HasTwoFramesAnimation(sprite->sSpeciesId))
-                StartSpriteAnim(sprite, 1);
-        }
-        BattleAnimateFrontSprite(sprite, sprite->sSpeciesId, TRUE, 1);
-    }
-}
-
-void SpriteCB_PlayerMonFromBall(struct Sprite *sprite)
-{
-    if (sprite->affineAnimEnded)
-        BattleAnimateBackSprite(sprite, sprite->sSpeciesId);
 }
 
 void BeginBattleIntroDummy(void)
