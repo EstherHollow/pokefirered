@@ -37,12 +37,6 @@ types := normal fight flying poison ground rock bug ghost steel mystery fire wat
 contest_types := cool beauty cute smart tough
 
 CASTFORMGFXDIR := graphics/pokemon/351_castform
-$(CASTFORMGFXDIR)/anim_front.4bpp: $(CASTFORMGFXDIR)/normal/anim_front.4bpp \
-											$(CASTFORMGFXDIR)/sunny/anim_front.4bpp \
-											$(CASTFORMGFXDIR)/rainy/anim_front.4bpp \
-											$(CASTFORMGFXDIR)/snowy/anim_front.4bpp
-	@cat $^ >$@
-
 $(CASTFORMGFXDIR)/front.4bpp: $(CASTFORMGFXDIR)/normal/front.4bpp \
 											$(CASTFORMGFXDIR)/sunny/front.4bpp \
 											$(CASTFORMGFXDIR)/rainy/front.4bpp \
