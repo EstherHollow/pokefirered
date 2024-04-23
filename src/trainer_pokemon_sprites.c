@@ -157,6 +157,7 @@ u16 CreatePicSprite(u16 species, u16 variant, u32 personality, bool8 isFrontPic,
         images[j].size = 0x800;
     }
     sCreatingSpriteTemplate.tileTag = TAG_NONE;
+    sCreatingSpriteTemplate.anims = gMonFrontAnimsPtrTable[species];
     sCreatingSpriteTemplate.oam = &sOamData_Normal;
     AssignSpriteAnimsTable(isTrainer);
     sCreatingSpriteTemplate.images = images;

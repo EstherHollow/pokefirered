@@ -129,7 +129,7 @@ static void PokeSum_FlipPages_HandleBgHofs(void);
 static void SwapMonMoveSlots(void);
 static void SwapBoxMonMoveSlots(void);
 static void UpdateCurrentMonBufferFromPartyOrBox(struct Pokemon * mon);
-static void PokeSum_SetMonPicSpriteCallback(u16 spriteId, u16 species);
+static void PokeSum_SetMonPicSpriteCallback(u16 spriteId);
 static void SpriteCB_MoveSelectionCursor(struct Sprite *sprite);
 static void UpdateMonStatusIconObj(void);
 static void UpdateHpBarObjs(void);
@@ -4020,10 +4020,10 @@ static void PokeSum_CreateMonPicSprite(void)
     sMonSummaryScreen->monPicSpriteId = spriteId;
 
     PokeSum_ShowOrHideMonPicSprite(TRUE);
-    PokeSum_SetMonPicSpriteCallback(spriteId, species);
+    PokeSum_SetMonPicSpriteCallback(spriteId);
 }
 
-static void PokeSum_SetMonPicSpriteCallback(u16 spriteId, u16 species)
+static void PokeSum_SetMonPicSpriteCallback(u16 spriteId)
 {
     u16 curHp;
     u16 maxHp;
@@ -4057,11 +4057,19 @@ static void PokeSum_SetMonPicSpriteCallback(u16 spriteId, u16 species)
         return;
     }
 
-    gSprites[spriteId].data[0] = species;
-    gSprites[spriteId].data[2] = 0;
-    gSprites[spriteId].anims = gMonFrontAnimsPtrTable[species];
+    curHp = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_HP);
+    maxHp = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_MAX_HP);
+
+    if (curHp == maxHp)
+        sMonPicBounceState->vigor = 3;
+    else if (maxHp * 0.8 <= curHp)
+        sMonPicBounceState->vigor = 2;
+    else if (maxHp * 0.6 <= curHp)
+        sMonPicBounceState->vigor = 1;
+    else
+        sMonPicBounceState->vigor = 0;
+
     gSprites[spriteId].callback = SpriteCB_PokeSum_MonPicSprite;
-    gSprites[spriteId].oam.priority = 0;
 }
 
 static void PokeSum_ShowOrHideMonPicSprite(u8 invisible)
