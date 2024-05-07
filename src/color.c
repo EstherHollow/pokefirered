@@ -7,19 +7,13 @@
 const void RGBToOklab(u16 color, s16* lightness, s16* a, s16* b) {
     s16 red, green, blue, l, m, s;
 
-//    DebugPrintf("RGBToOklab Color: [%d, %d, %d]", GET_RED(color), GET_GREEN(color), GET_BLUE(color));
-
     red   = GET_RED(color)   * OKLAB_MAX / RGB_MAX;
     green = GET_GREEN(color) * OKLAB_MAX / RGB_MAX;
     blue  = GET_BLUE(color)  * OKLAB_MAX / RGB_MAX;
 
-//    DebugPrintf("RGBToOklab RGB: [%d, %d, %d]", red, green, blue);
-
     red   = gLinearLookup[red];
     green = gLinearLookup[green];
     blue  = gLinearLookup[blue];
-
-//    DebugPrintf("RGBToOklab RGBLinear: [%d, %d, %d]", red, green, blue);
 
     l = ((red * gRGBToLMS[0]) + (green * gRGBToLMS[1]) + (blue * gRGBToLMS[2])) / 1000;
     m = ((red * gRGBToLMS[3]) + (green * gRGBToLMS[4]) + (blue * gRGBToLMS[5])) / 1000;
@@ -29,13 +23,9 @@ const void RGBToOklab(u16 color, s16* lightness, s16* a, s16* b) {
     m = CLAMP(m, 0, OKLAB_MAX);
     s = CLAMP(s, 0, OKLAB_MAX);
 
-//    DebugPrintf("RGBToOklab LMS: [%d, %d, %d]", l, m, s);
-
     l = gCbrtLookup[l];
     m = gCbrtLookup[m];
     s = gCbrtLookup[s];
-
-//    DebugPrintf("RGBToOklab LMSCbrt: [%d, %d, %d]", l, m, s);
 
     *lightness = ((l * gLMSToOklab[0]) + (m * gLMSToOklab[1]) + (s * gLMSToOklab[2])) / 1000;
     *a         = ((l * gLMSToOklab[3]) + (m * gLMSToOklab[4]) + (s * gLMSToOklab[5])) / 1000;
@@ -44,9 +34,6 @@ const void RGBToOklab(u16 color, s16* lightness, s16* a, s16* b) {
     *lightness = CLAMP(*lightness,          0, OKLAB_MAX);
     *a         = CLAMP(*a        , -OKLAB_MAX, OKLAB_MAX);
     *b         = CLAMP(*b        , -OKLAB_MAX, OKLAB_MAX);
-
-//    DebugPrintf("RGBToOklab Oklab: [%d, %d, %d]", *lightness, *a, *b);
-//    DebugPrintf("");
 }
 
 const u16 OklabToRGB(s16 lightness, s16 a, s16 b) {
@@ -60,13 +47,9 @@ const u16 OklabToRGB(s16 lightness, s16 a, s16 b) {
     m = CLAMP(m, 0, OKLAB_MAX);
     s = CLAMP(s, 0, OKLAB_MAX);
 
-//    DebugPrintf("OklabToRGB LMS: [%d, %d, %d]", l, m, s);
-
     l = gCubeLookup[l];
     m = gCubeLookup[m];
     s = gCubeLookup[s];
-
-//    DebugPrintf("OklabToRGB LMSCube: [%d, %d, %d]", l, m, s);
 
     red   = ((l * gLMSToRGB[0]) + (m * gLMSToRGB[1]) + (s * gLMSToRGB[2])) / 1000;
     green = ((l * gLMSToRGB[3]) + (m * gLMSToRGB[4]) + (s * gLMSToRGB[5])) / 1000;
@@ -76,14 +59,9 @@ const u16 OklabToRGB(s16 lightness, s16 a, s16 b) {
     green = CLAMP(green, 0, OKLAB_MAX);
     blue  = CLAMP(blue , 0, OKLAB_MAX);
 
-//    DebugPrintf("OklabToRGB RGBLinear: [%d, %d, %d]", red, green, blue);
-
     red   = gLinearInverseLookup[red]   * RGB_MAX / OKLAB_MAX;
     green = gLinearInverseLookup[green] * RGB_MAX / OKLAB_MAX;
     blue  = gLinearInverseLookup[blue]  * RGB_MAX / OKLAB_MAX;
-
-//    DebugPrintf("OklabToRGB RGB: [%d, %d, %d]", red, green, blue);
-//    DebugPrintf("");
 
     return TO_COLOR(red, green, blue);
 }
@@ -163,34 +141,14 @@ const void PolarToCartesian(u16 radius, u16 theta, s16* x, s16* y) {
 const u16 RotateColor(u16 color, u16 rotation) {
     s16 lightness, a, b;
     u16 radius, theta;
-    u16 color2;
 
     RGBToOklab(color, &lightness, &a, &b);
 
     CartesianToPolar(a, b, &radius, &theta);
 
-//    DebugPrintf("RotateColor Polar: [%d, %d]", radius, theta);
-
     theta = (theta + rotation) % FULL_ROTATION;
 
     PolarToCartesian(radius, theta, &a, &b);
 
-//    DebugPrintf("RotateColor Cartesian: [%d, %d]", a, b);
-//    DebugPrintf("");
-
-    color2 = OklabToRGB(lightness, a, b);
-
-    DebugPrintf("RotateColor(color: [%d, %d, %d], rotation: %d) -> [%d, %d, %d] -> [%d, %d, %d]",
-            GET_RED(color),
-            GET_GREEN(color),
-            GET_BLUE(color),
-            rotation,
-            lightness,
-            a,
-            b,
-            GET_RED(color2),
-            GET_GREEN(color2),
-            GET_BLUE(color2));
-
-    return color2;
+    return OklabToRGB(lightness, a, b);
 }
