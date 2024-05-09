@@ -31,7 +31,8 @@ bool8 MetatileBehavior_IsATile(u8 metatileBehavior)
 
 bool8 MetatileBehavior_IsJumpEast(u8 metatileBehavior)
 {
-    if (metatileBehavior == MB_JUMP_EAST)
+    if (metatileBehavior == MB_JUMP_EAST ||
+        metatileBehavior == MB_JUMP_SOUTH_OR_EAST)
         return TRUE;
     else
         return FALSE;
@@ -39,10 +40,11 @@ bool8 MetatileBehavior_IsJumpEast(u8 metatileBehavior)
 
 bool8 MetatileBehavior_IsJumpWest(u8 metatileBehavior)
 {
-    if (metatileBehavior == MB_JUMP_WEST)
-            return TRUE;
-        else
-            return FALSE;
+    if (metatileBehavior == MB_JUMP_WEST ||
+        metatileBehavior == MB_JUMP_SOUTH_OR_WEST)
+        return TRUE;
+    else
+        return FALSE;
 }
 
 bool8 MetatileBehavior_IsJumpNorth(u8 metatileBehavior)
@@ -55,7 +57,9 @@ bool8 MetatileBehavior_IsJumpNorth(u8 metatileBehavior)
 
 bool8 MetatileBehavior_IsJumpSouth(u8 metatileBehavior)
 {
-    if (metatileBehavior == MB_JUMP_SOUTH)
+    if (metatileBehavior == MB_JUMP_SOUTH ||
+        metatileBehavior == MB_JUMP_SOUTH_OR_EAST ||
+        metatileBehavior == MB_JUMP_SOUTH_OR_WEST)
         return TRUE;
     else
         return FALSE;

@@ -48,6 +48,8 @@
 #define MB_JUMP_WEST 0x39
 #define MB_JUMP_NORTH 0x3A
 #define MB_JUMP_SOUTH 0x3B
+#define MB_JUMP_SOUTH_OR_EAST 0x3C
+#define MB_JUMP_SOUTH_OR_WEST 0x3D
 //
 #define MB_WALK_EAST 0x40
 #define MB_WALK_WEST 0x41
