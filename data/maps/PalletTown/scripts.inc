@@ -13,8 +13,6 @@ PalletTown_OnTransition::
 	call_if_set FLAG_PALLET_LADY_NOT_BLOCKING_SIGN, PalletTown_EventScript_TryReadySignLady
 	call_if_eq VAR_MAP_SCENE_PALLET_TOWN_SIGN_LADY, 0, PalletTown_EventScript_SetSignLadyPos
 	call_if_eq VAR_MAP_SCENE_PALLET_TOWN_SIGN_LADY, 1, PalletTown_EventScript_SetSignLadyDone
-    clearflag FLAG_HIDE_OAK_IN_HIS_LAB
-    setflag FLAG_HIDE_OAK_IN_PALLET_TOWN
 	end
 
 PalletTown_EventScript_TryReadySignLady::
@@ -29,12 +27,12 @@ PalletTown_EventScript_SetSignLadyDone::
 
 PalletTown_EventScript_SetSignLadyPos::
 	goto_if_set FLAG_PALLET_LADY_NOT_BLOCKING_SIGN, PalletTown_EventScript_MoveSignLadyToRouteEntrance
-	setobjectxyperm LOCALID_SIGN_LADY, 14, 16
+	setobjectxyperm LOCALID_SIGN_LADY, 5, 15
 	setobjectmovementtype LOCALID_SIGN_LADY, MOVEMENT_TYPE_FACE_UP
 	return
 
 PalletTown_EventScript_MoveSignLadyToRouteEntrance::
-	setobjectxyperm LOCALID_SIGN_LADY, 20, 1
+	setobjectxyperm LOCALID_SIGN_LADY, 12, 2
 	setobjectmovementtype LOCALID_SIGN_LADY, MOVEMENT_TYPE_FACE_DOWN
 	setvar SIGN_LADY_READY, TRUE
 	return
@@ -184,17 +182,45 @@ PalletTown_EventScript_OakTriggerRight::
 	end
 
 PalletTown_EventScript_OakTrigger::
-    lockall
-    msgbox PalletTown_Text_WoahItsDangerous
-    closemessage
-    applymovement OBJ_EVENT_ID_PLAYER, PalletTown_Movement_PlayerWalkDown
-    waitmovement 0
-    releaseall
-    end
-
-PalletTown_Movement_PlayerWalkDown::
-    walk_down
-    step_end
+	famechecker FAMECHECKER_OAK, FCPICKSTATE_COLORED, UpdatePickStateFromSpecialVar8005
+	textcolor NPC_TEXT_COLOR_MALE
+	delay 30
+	playbgm MUS_OAK, 0
+	message PalletTown_Text_OakDontGoOut
+	waitmessage
+	delay 85
+	closemessage
+	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFasterDown
+	waitmovement 0
+	playse SE_PIN
+	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_ExclamationMark
+	waitmovement 0
+	delay 30
+	addobject LOCALID_PROF_OAK
+	call_if_eq VAR_TEMP_1, 0, PalletTown_EventScript_OakEnterLeft
+	call_if_eq VAR_TEMP_1, 1, PalletTown_EventScript_OakEnterRight
+	delay 30
+	msgbox PalletTown_Text_OakGrassUnsafeNeedMon
+	closemessage
+	delay 30
+	call_if_eq VAR_TEMP_1, 0, PalletTown_EventScript_OakLeadPlayerToLabLeft
+	call_if_eq VAR_TEMP_1, 1, PalletTown_EventScript_OakLeadPlayerToLabRight
+	opendoor 16, 13
+	waitdooranim
+	applymovement LOCALID_PROF_OAK, PalletTown_Movement_OakEnterLab
+	applymovement OBJ_EVENT_ID_PLAYER, PalletTown_Movement_PlayerEnterLab
+	waitmovement 0
+	closedoor 16, 13
+	waitdooranim
+	setvar VAR_MAP_SCENE_PALLET_TOWN_PROFESSOR_OAKS_LAB, 1
+	clearflag FLAG_HIDE_OAK_IN_HIS_LAB
+	setvar VAR_MAP_SCENE_PALLET_TOWN_OAK, 1
+	setflag FLAG_HIDE_OAK_IN_PALLET_TOWN
+	setflag FLAG_DONT_TRANSITION_MUSIC
+	warp MAP_PALLET_TOWN_PROFESSOR_OAKS_LAB, 6, 12
+	waitstate
+	releaseall
+	end
 
 PalletTown_EventScript_OakEnterLeft::
 	applymovement LOCALID_PROF_OAK, PalletTown_Movement_OakEnterLeft

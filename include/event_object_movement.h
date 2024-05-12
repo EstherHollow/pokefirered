@@ -126,7 +126,7 @@ void MoveCoords(u8, s16 *, s16 *);
 bool8 ObjectEventIsHeldMovementActive(struct ObjectEvent *);
 u8 ObjectEventClearHeldMovementIfFinished(struct ObjectEvent *);
 u8 GetObjectEventIdByPosition(u16 x, u16 y, u8 elevation);
-void UpdateQuestLogObjectEventCurrentMovement(struct ObjectEvent *, struct Sprite *);
+void QL_UpdateObjectEventCurrentMovement(struct ObjectEvent *, struct Sprite *);
 bool8 ObjectEventSetHeldMovement(struct ObjectEvent *, u8);
 void ShiftStillObjectEventCoords(struct ObjectEvent *);
 void OverrideMovementTypeForObjectEvent(const struct ObjectEvent *, u8);
@@ -161,7 +161,6 @@ u8 GetFirstInactiveObjectEventId(void);
 u8 GetCollisionFlagsAtCoords(struct ObjectEvent * objectEvent, s16 x, s16 y, u8 direction);
 void OverrideTemplateCoordsForObjectEvent(const struct ObjectEvent *objectEvent);
 void CancelPlayerForcedMovement(void);
-bool8 IsObjectsFrozen(void);
 void FreezeObjectEvents(void);
 bool8 FreezeObjectEvent(struct ObjectEvent *);
 void UnfreezeObjectEvent(struct ObjectEvent *);
@@ -201,8 +200,6 @@ void SetAndStartSpriteAnim(struct Sprite *, u8, u8);
 bool8 SpriteAnimEnded(struct Sprite *);
 u8 ObjectEventGetHeldMovementActionId(struct ObjectEvent *objectEvent);
 u8 GetMoveDirectionAnimNum(u8 direction);
-void GetObjectEventMovingCameraOffset(s16 *, s16 *);
-u8 TrySpawnObjectEventTemplate(struct ObjectEventTemplate *objectEventTemplate, u8 mapNum, u8 mapGroup, s16 cameraX, s16 cameraY);
 
 // Exported data declarations
 

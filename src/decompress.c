@@ -3,6 +3,9 @@
 #include "decompress.h"
 #include "pokemon.h"
 
+extern const struct CompressedSpriteSheet gMonFrontPicTable[];
+extern const struct CompressedSpriteSheet gMonBackPicTable[];
+
 static void DuplicateDeoxysTiles(void *pointer, s32 species);
 
 void LZDecompressWram(const void *src, void *dest)
@@ -60,24 +63,24 @@ void LoadCompressedSpritePaletteOverrideBuffer(const struct CompressedSpritePale
 void DecompressPicFromTable(const struct CompressedSpriteSheet *src, void *buffer, s32 species)
 {
     if (species > NUM_SPECIES)
-        LZ77UnCompWram(GetMonFrontPicFromVariant(0, 0), buffer);
+        LZ77UnCompWram(gMonFrontPicTable[0].data, buffer);
     else
         LZ77UnCompWram(src->data, buffer);
     DuplicateDeoxysTiles(buffer, species);
 }
 
-void HandleLoadSpecialPokePic(const struct CompressedSpriteSheet *src, void *dest, s32 species, u16 variant, u32 personality)
+void HandleLoadSpecialPokePic(const struct CompressedSpriteSheet *src, void *dest, s32 species, u32 personality)
 {
     bool8 isFrontPic;
 
-    if (src == GetMonFrontPicStructFromVariant(species, variant))
+    if (src == &gMonFrontPicTable[species])
         isFrontPic = TRUE; // frontPic
     else
         isFrontPic = FALSE; // backPic
-    LoadSpecialPokePic(src, dest, species, variant, personality, isFrontPic);
+    LoadSpecialPokePic(src, dest, species, personality, isFrontPic);
 }
 
-void LoadSpecialPokePic(const struct CompressedSpriteSheet *src, void *dest, s32 species, u16 variant, u32 personality, bool8 isFrontPic)
+void LoadSpecialPokePic(const struct CompressedSpriteSheet *src, void *dest, s32 species, u32 personality, bool8 isFrontPic)
 {
     if (species == SPECIES_UNOWN)
     {
@@ -89,12 +92,12 @@ void LoadSpecialPokePic(const struct CompressedSpriteSheet *src, void *dest, s32
         else
             i += SPECIES_UNOWN_B - 1;
         if (!isFrontPic)
-            LZ77UnCompWram(GetMonBackPicFromVariant(i, variant), dest);
+            LZ77UnCompWram(gMonBackPicTable[i].data, dest);
         else
-            LZ77UnCompWram(GetMonFrontPicFromVariant(i, variant), dest);
+            LZ77UnCompWram(gMonFrontPicTable[i].data, dest);
     }
     else if (species > NUM_SPECIES) // is species unknown? draw the ? icon
-        LZ77UnCompWram(GetMonFrontPicFromVariant(0, 0), dest);
+        LZ77UnCompWram(gMonFrontPicTable[0].data, dest);
     else
         LZ77UnCompWram(src->data, dest);
 
@@ -305,23 +308,23 @@ u32 GetDecompressedDataSize(const u8 *ptr)
 void DecompressPicFromTable_DontHandleDeoxys(const struct CompressedSpriteSheet *src, void *buffer, s32 species)
 {
     if (species > NUM_SPECIES)
-        LZ77UnCompWram(GetMonFrontPicFromVariant(0, 0), buffer);
+        LZ77UnCompWram(gMonFrontPicTable[0].data, buffer);
     else
         LZ77UnCompWram(src->data, buffer);
 }
 
-void HandleLoadSpecialPokePic_DontHandleDeoxys(const struct CompressedSpriteSheet *src, void *dest, s32 species, u16 variant, u32 personality)
+void HandleLoadSpecialPokePic_DontHandleDeoxys(const struct CompressedSpriteSheet *src, void *dest, s32 species, u32 personality)
 {
     bool8 isFrontPic;
 
-    if (src == GetMonFrontPicStructFromVariant(species, variant))
+    if (src == &gMonFrontPicTable[species])
         isFrontPic = TRUE; // frontPic
     else
         isFrontPic = FALSE; // backPic
-    LoadSpecialPokePic_DontHandleDeoxys(src, dest, species, variant, personality, isFrontPic);
+    LoadSpecialPokePic_DontHandleDeoxys(src, dest, species, personality, isFrontPic);
 }
 
-void LoadSpecialPokePic_DontHandleDeoxys(const struct CompressedSpriteSheet *src, void *dest, s32 species, u16 variant, u32 personality, bool8 isFrontPic)
+void LoadSpecialPokePic_DontHandleDeoxys(const struct CompressedSpriteSheet *src, void *dest, s32 species, u32 personality, bool8 isFrontPic)
 {
     if (species == SPECIES_UNOWN)
     {
@@ -333,13 +336,13 @@ void LoadSpecialPokePic_DontHandleDeoxys(const struct CompressedSpriteSheet *src
         else
             i += SPECIES_UNOWN_B - 1;
         if (!isFrontPic)
-            LZ77UnCompWram(GetMonBackPicFromVariant(i, variant), dest);
+            LZ77UnCompWram(gMonBackPicTable[i].data, dest);
         else
-            LZ77UnCompWram(GetMonFrontPicFromVariant(i, variant), dest);
+            LZ77UnCompWram(gMonFrontPicTable[i].data, dest);
     }
     else if (species > NUM_SPECIES) // is species unknown? draw the ? icon
     {
-        LZ77UnCompWram(GetMonFrontPicFromVariant(0, 0), dest);
+        LZ77UnCompWram(gMonFrontPicTable[0].data, dest);
     }
     else
     {

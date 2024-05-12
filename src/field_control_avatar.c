@@ -70,10 +70,8 @@ static s8 GetWarpEventAtMapPosition(struct MapHeader * mapHeader, struct MapPosi
 static bool8 TryDoorWarp(struct MapPosition * position, u16 metatileBehavior, u8 playerDirection);
 static s8 GetWarpEventAtPosition(struct MapHeader * mapHeader, u16 x, u16 y, u8 z);
 static const u8 *GetCoordEventScriptAtPosition(struct MapHeader * mapHeader, u16 x, u16 y, u8 z);
-static u8 GetWildEncounterAtPosition(struct MapPosition *position);
-static void RemoveWildEncounterByLocalId(u8 localId);
 
-struct FieldInput gInputToStoreInQuestLogMaybe;
+struct FieldInput gFieldInputRecord;
 
 void FieldClearPlayerInput(struct FieldInput *input)
 {
@@ -105,7 +103,7 @@ void FieldGetPlayerInput(struct FieldInput *input, u16 newKeys, u16 heldKeys)
     }
     if ((tileTransitionState == T_TILE_CENTER && forcedMove == FALSE) || tileTransitionState == T_NOT_MOVING)
     {
-        if (GetPlayerSpeed() != 4)
+        if (GetPlayerSpeed() != PLAYER_SPEED_FASTEST)
         {
             if ((newKeys & START_BUTTON) && !(gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_FORCED))
                 input->pressedStartButton = TRUE;
@@ -198,7 +196,6 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
     u8 playerDirection;
     u16 metatileBehavior;
     u32 metatileAttributes;
-    u8 localId;
 
     ResetFacingNpcOrSignpostVars();
     playerDirection = GetPlayerFacingDirection();
@@ -206,8 +203,8 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
     metatileAttributes = MapGridGetMetatileAttributeAt(position.x, position.y, METATILE_ATTRIBUTES_ALL);
     metatileBehavior = MapGridGetMetatileBehaviorAt(position.x, position.y);
 
-    FieldClearPlayerInput(&gInputToStoreInQuestLogMaybe);
-    gInputToStoreInQuestLogMaybe.dpadDirection = input->dpadDirection;
+    FieldClearPlayerInput(&gFieldInputRecord);
+    gFieldInputRecord.dpadDirection = input->dpadDirection;
 
     if (CheckForTrainersWantingBattle() == TRUE)
         return TRUE;
@@ -225,7 +222,7 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
         IncrementBirthIslandRockStepCount();
         if (TryStartStepBasedScript(&position, metatileBehavior, playerDirection) == TRUE)
         {
-            gInputToStoreInQuestLogMaybe.tookStep = TRUE;
+            gFieldInputRecord.tookStep = TRUE;
             return TRUE;
         }
     }
@@ -237,27 +234,23 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
             metatileBehavior = MapGridGetMetatileBehaviorAt(position.x, position.y);
             if (TrySetUpWalkIntoSignpostScript(&position, metatileBehavior, playerDirection) == TRUE)
             {
-                gInputToStoreInQuestLogMaybe.checkStandardWildEncounter = TRUE;
+                gFieldInputRecord.checkStandardWildEncounter = TRUE;
                 return TRUE;
             }
             GetPlayerPosition(&position);
             metatileBehavior = MapGridGetMetatileBehaviorAt(position.x, position.y);
         }
-
-        localId = GetWildEncounterAtPosition(&position);
-        if (localId != OBJ_EVENT_ID_NULL && CheckStandardWildEncounter(metatileAttributes) == TRUE)
-        {
-            DebugPrintf("ProcessPlayerFieldInput encounter localId %d", localId);
-            gInputToStoreInQuestLogMaybe.checkStandardWildEncounter = TRUE;
-            RemoveWildEncounterByLocalId(localId);
-            return TRUE;
-        }
+    }
+    if (input->checkStandardWildEncounter && CheckStandardWildEncounter(metatileAttributes) == TRUE)
+    {
+        gFieldInputRecord.checkStandardWildEncounter = TRUE;
+        return TRUE;
     }
     if (input->heldDirection && input->dpadDirection == playerDirection)
     {
         if (TryArrowWarp(&position, metatileBehavior, playerDirection) == TRUE)
         {
-            gInputToStoreInQuestLogMaybe.heldDirection = TRUE;
+            gFieldInputRecord.heldDirection = TRUE;
             return TRUE;
         }
     }
@@ -268,14 +261,14 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
     {
         if (TrySetUpWalkIntoSignpostScript(&position, metatileBehavior, playerDirection) == TRUE)
         {
-            gInputToStoreInQuestLogMaybe.heldDirection = TRUE;
+            gFieldInputRecord.heldDirection = TRUE;
             return TRUE;
         }
     }
 
     if (input->pressedAButton && TryStartInteractionScript(&position, metatileBehavior, playerDirection) == TRUE)
     {
-        gInputToStoreInQuestLogMaybe.pressedAButton = TRUE;
+        gFieldInputRecord.pressedAButton = TRUE;
         return TRUE;
     }
 
@@ -283,14 +276,14 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
     {
         if (TryDoorWarp(&position, metatileBehavior, playerDirection) == TRUE)
         {
-            gInputToStoreInQuestLogMaybe.heldDirection2 = TRUE;
+            gFieldInputRecord.heldDirection2 = TRUE;
             return TRUE;
         }
     }
 
     if (input->pressedStartButton)
     {
-        gInputToStoreInQuestLogMaybe.pressedStartButton = TRUE;
+        gFieldInputRecord.pressedStartButton = TRUE;
         FlagSet(FLAG_OPENED_START_MENU);
         PlaySE(SE_WIN_OPEN);
         ShowStartMenu();
@@ -298,7 +291,7 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
     }
     if (input->pressedSelectButton && UseRegisteredKeyItemOnField() == TRUE)
     {
-        gInputToStoreInQuestLogMaybe.pressedSelectButton = TRUE;
+        gFieldInputRecord.pressedSelectButton = TRUE;
         return TRUE;
     }
 
@@ -455,10 +448,6 @@ static const u8 *GetInteractedObjectEventScript(struct MapPosition *position, u8
 
     if (InUnionRoom() == TRUE && !ObjectEventCheckHeldMovementStatus(&gObjectEvents[objectEventId]))
         return NULL;
-
-    if (IS_WILD_ENCOUNTER_ID(gObjectEvents[objectEventId].localId)) {
-        return NULL;
-    }
 
     gSelectedObjectEvent = objectEventId;
     gSpecialVar_LastTalked = gObjectEvents[objectEventId].localId;
@@ -968,30 +957,6 @@ static bool8 IsArrowWarpMetatileBehavior(u16 metatileBehavior, u8 direction)
     return FALSE;
 }
 
-static u8 GetWildEncounterAtPosition(struct MapPosition *position) {
-    struct ObjectEvent *object;
-    u8 i;
-
-    for (i = 0; i < OBJECT_EVENTS_COUNT; i++) {
-        object = &gObjectEvents[i];
-        if (object->active) {
-            if ((object->currentCoords.x == position->x && object->currentCoords.y == position->y) ||
-                (object->previousCoords.x == position->x && object->previousCoords.y == position->y)) {
-                if (IS_WILD_ENCOUNTER_ID(object->localId)) {
-                    return object->localId;
-                }
-            }
-        }
-    }
-
-    return OBJ_EVENT_ID_NULL;
-}
-
-static void RemoveWildEncounterByLocalId(u8 localId) {
-    DebugPrintf("RemoveWildEncounterByLocalId localId %d", localId);
-    RemoveObjectEventByLocalIdAndMap(localId, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
-}
-
 static s8 GetWarpEventAtMapPosition(struct MapHeader *mapHeader, struct MapPosition *position)
 {
     return GetWarpEventAtPosition(mapHeader, position->x - MAP_OFFSET, position->y - MAP_OFFSET, position->elevation);
@@ -1043,7 +1008,7 @@ static bool8 TryDoorWarp(struct MapPosition *position, u16 metatileBehavior, u8 
 static s8 GetWarpEventAtPosition(struct MapHeader *mapHeader, u16 x, u16 y, u8 elevation)
 {
     s32 i;
-    struct WarpEvent *warpEvent = mapHeader->events->warps;
+    const struct WarpEvent *warpEvent = mapHeader->events->warps;
     u8 warpCount = mapHeader->events->warpCount;
 
     for (i = 0; i < warpCount; i++, warpEvent++)
@@ -1057,7 +1022,7 @@ static s8 GetWarpEventAtPosition(struct MapHeader *mapHeader, u16 x, u16 y, u8 e
     return -1;
 }
 
-static const u8 *TryRunCoordEventScript(struct CoordEvent *coordEvent)
+static const u8 *TryRunCoordEventScript(const struct CoordEvent *coordEvent)
 {
     if (coordEvent != NULL)
     {
@@ -1080,7 +1045,7 @@ static const u8 *TryRunCoordEventScript(struct CoordEvent *coordEvent)
 static const u8 *GetCoordEventScriptAtPosition(struct MapHeader *mapHeader, u16 x, u16 y, u8 elevation)
 {
     s32 i;
-    struct CoordEvent *coordEvents = mapHeader->events->coordEvents;
+    const struct CoordEvent *coordEvents = mapHeader->events->coordEvents;
     u8 coordEventCount = mapHeader->events->coordEventCount;
 
     for (i = 0; i < coordEventCount; i++)
@@ -1136,7 +1101,7 @@ const u8 *GetCoordEventScriptAtMapPosition(struct MapPosition *position)
 static const struct BgEvent *GetBackgroundEventAtPosition(struct MapHeader *mapHeader, u16 x, u16 y, u8 elevation)
 {
     u8 i;
-    struct BgEvent *bgEvents = mapHeader->events->bgEvents;
+    const struct BgEvent *bgEvents = mapHeader->events->bgEvents;
     u8 bgEventCount = mapHeader->events->bgEventCount;
 
     for (i = 0; i < bgEventCount; i++)

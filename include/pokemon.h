@@ -5,25 +5,14 @@
 #include "sprite.h"
 #include "constants/pokemon.h"
 
-struct PokemonVariant
-{
-    u16 sprite:2;
-    u16 palette0:3;
-    u16 palette1:3;
-    u16 palette2:3;
-    u16 palette3:3;
-    u16 sparkle:1;
-    u16 zero:1;
-};
-
 struct PokemonSubstruct0
 {
     u16 species;
-    u16 variant;
     u16 heldItem;
     u32 experience;
     u8 ppBonuses;
     u8 friendship;
+    u16 filler;
 };
 
 struct PokemonSubstruct1
@@ -122,7 +111,8 @@ struct BoxPokemon
     u8 isBadEgg:1;
     u8 hasSpecies:1;
     u8 isEgg:1;
-    u8 unused:5;
+    u8 blockBoxRS:1; // Unused, but Pokémon Box Ruby & Sapphire will refuse to deposit a Pokémon with this flag set
+    u8 unused:4;
     u8 otName[PLAYER_NAME_LENGTH];
     u8 markings;
     u16 checksum;
@@ -213,7 +203,6 @@ struct BattlePokemon
     /*0x4C*/ u32 status1;
     /*0x50*/ u32 status2;
     /*0x54*/ u32 otId;
-    /*0x58*/ u16 variant;
 };
 
 struct SpeciesInfo
@@ -257,7 +246,6 @@ struct BattleMove
     u8 target;
     s8 priority;
     u8 flags;
-    u8 category;
 };
 
 #define SPINDA_SPOT_WIDTH 16
@@ -314,12 +302,8 @@ void ZeroBoxMonData(struct BoxPokemon *boxMon);
 void ZeroMonData(struct Pokemon *mon);
 void ZeroPlayerPartyMons(void);
 void ZeroEnemyPartyMons(void);
-u32 GetPlayerId(void);
-void CreatePlayerMon(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 hasFixedPersonality, u32 fixedPersonality);
-void CreateTrainerMon(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 hasFixedPersonality, u32 fixedPersonality, u16 trainerId, u8 partySlot, u16 variant);
-void CreateMon(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 hasFixedPersonality, u32 fixedPersonality, u32 otId, u16 variant, u32 variantSeed);
-void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, u8 hasFixedPersonality, u32 fixedPersonality, u32 otId, u16 variant, u32 variantSeed);
-void CreateMonWithFlags(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u32 flags);
+void CreateMon(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 hasFixedPersonality, u32 fixedPersonality, u8 otIdType, u32 fixedOtId);
+void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, u8 hasFixedPersonality, u32 fixedPersonality, u8 otIdType, u32 fixedOtId);
 void CreateMonWithNature(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 nature);
 void CreateMonWithGenderNatureLetter(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 gender, u8 nature, u8 unownLetter);
 void CreateMaleMon(struct Pokemon *mon, u16 species, u8 level);
@@ -413,7 +397,10 @@ u16 SpeciesToPokedexNum(u16 species);
 void ClearBattleMonForms(void);
 void PlayBattleBGM(void);
 void PlayMapChosenOrBattleBGM(u16 songId);
-
+const u32 *GetMonFrontSpritePal(struct Pokemon *mon);
+const u32 *GetMonSpritePalFromSpeciesAndPersonality(u16 species, u32 otId, u32 personality);
+const struct CompressedSpritePalette *GetMonSpritePalStruct(struct Pokemon *mon);
+const struct CompressedSpritePalette *GetMonSpritePalStructFromOtIdPersonality(u16 species, u32 otId , u32 personality);
 bool32 IsHMMove2(u16 move);
 bool8 IsMonSpriteNotFlipped(u16 species);
 s8 GetFlavorRelationByPersonality(u32 personality, u8 flavor);
@@ -437,24 +424,5 @@ bool8 CheckBattleTypeGhost(struct Pokemon *mon, u8 bank);
 struct MonSpritesGfxManager *CreateMonSpritesGfxManager(u8 battlePosition, u8 mode);
 void DestroyMonSpritesGfxManager(void);
 u8 *MonSpritesGfxManager_GetSpritePtr(u8 bufferId);
-
-bool8 IsTrainerRival(u16 trainerId);
-u16 GetWeightedResult(u32 random, u16 *values, u16 *weights);
-u16 GenerateMonVariant(u16 species, u32 variantSeed);
-
-const u32 *GetMonFrontPicFromVariant(u16 species, u16 variant);
-const u32 *GetMonBackPicFromVariant(u16 species, u16 variant);
-
-const struct CompressedSpriteSheet *GetMonFrontPicStructFromVariant(u16 species, u16 variant);
-const struct CompressedSpriteSheet *GetMonBackPicStructFromVariant(u16 species, u16 variant);
-
-extern struct SpritePalette dynamicPalette;
-const u16 *GetMonPalette(struct Pokemon *mon);
-const u16 *GetMonPaletteFromVariant(u16 species, u16 variant);
-const struct SpritePalette *GetMonPaletteStruct(struct Pokemon *mon);
-const struct SpritePalette *GetMonPaletteStructFromVariant(u16 species, u16 variant);
-
-const struct SpritePalette *MixPalettes(const struct SpritePalette *palette1, const struct SpritePalette *palette2, u16 weight);
-u16 MixColors(u16 color1, u16 color2, u16 weight);
 
 #endif // GUARD_POKEMON_H

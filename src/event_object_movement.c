@@ -15,7 +15,6 @@
 #include "script.h"
 #include "trainer_see.h"
 #include "trig.h"
-#include "wild_encounter.h"
 #include "constants/maps.h"
 #include "constants/event_object_movement.h"
 #include "constants/event_objects.h"
@@ -32,7 +31,6 @@ static void UpdateObjectEventSpriteAnimPause(struct ObjectEvent *, struct Sprite
 static bool8 IsCoordOutsideObjectEventMovementRange(struct ObjectEvent *, s16, s16);
 static bool8 IsMetatileDirectionallyImpassable(struct ObjectEvent *, s16, s16, u8);
 static bool8 DoesObjectCollideWithObjectAt(struct ObjectEvent *, s16, s16);
-//static bool8 IsWanderingEncounter(s16 x, s16 y);
 static void CalcWhetherObjectIsOffscreen(struct ObjectEvent *, struct Sprite *);
 static void UpdateObjEventSpriteVisibility(struct ObjectEvent *, struct Sprite *);
 static void ObjectEventUpdateMetatileBehaviors(struct ObjectEvent *);
@@ -69,8 +67,9 @@ static void SetObjectEventDynamicGraphicsId(struct ObjectEvent *);
 static void RemoveObjectEventInternal(struct ObjectEvent *);
 static u16 GetObjectEventFlagIdByObjectEventId(u8);
 static void UpdateObjectEventVisibility(struct ObjectEvent *, struct Sprite *);
-static void MakeObjectTemplateFromObjectEventTemplate(struct ObjectEventTemplate *, struct SpriteTemplate *, const struct SubspriteTable **);
-static struct ObjectEventTemplate *GetObjectEventTemplateByLocalIdAndMap(u8, u8, u8);
+static void MakeObjectTemplateFromObjectEventTemplate(const struct ObjectEventTemplate *, struct SpriteTemplate *, const struct SubspriteTable **);
+static void GetObjectEventMovingCameraOffset(s16 *, s16 *);
+static const struct ObjectEventTemplate *GetObjectEventTemplateByLocalIdAndMap(u8, u8, u8);
 static void LoadObjectEventPalette(u16);
 static void RemoveObjectEventIfOutsideView(struct ObjectEvent *);
 static void SpawnObjectEventOnReturnToField(u8 objectEventId, s16 x, s16 y);
@@ -85,13 +84,13 @@ static void ObjectCB_CameraObject(struct Sprite *);
 static void CameraObject_0(struct Sprite *);
 static void CameraObject_1(struct Sprite *);
 static void CameraObject_2(struct Sprite *);
-static struct ObjectEventTemplate *FindObjectEventTemplateByLocalId(u8 localId, struct ObjectEventTemplate *templates, u8 count);
+static const struct ObjectEventTemplate *FindObjectEventTemplateByLocalId(u8 localId, const struct ObjectEventTemplate *templates, u8 count);
 static void ClearObjectEventMovement(struct ObjectEvent *, struct Sprite *);
 static void ObjectEventSetSingleMovement(struct ObjectEvent *, struct Sprite *, u8);
-static bool8 ShouldInitObjectEventStateFromTemplate(struct ObjectEventTemplate *, u8, s16, s16);
-static bool8 TemplateIsObstacleAndWithinView(struct ObjectEventTemplate *, s16, s16);
-static bool8 TemplateIsObstacleAndVisibleFromConnectingMap(struct ObjectEventTemplate *, s16, s16);
-static void SetHideObstacleFlag(struct ObjectEventTemplate *);
+static bool8 ShouldInitObjectEventStateFromTemplate(const struct ObjectEventTemplate *, u8, s16, s16);
+static bool8 TemplateIsObstacleAndWithinView(const struct ObjectEventTemplate *, s16, s16);
+static bool8 TemplateIsObstacleAndVisibleFromConnectingMap(const struct ObjectEventTemplate *, s16, s16);
+static void SetHideObstacleFlag(const struct ObjectEventTemplate *);
 static bool8 MovementType_Disguise_Callback(struct ObjectEvent *, struct Sprite *);
 static bool8 MovementType_Buried_Callback(struct ObjectEvent *, struct Sprite *);
 static u8 MovementType_RaiseHandAndStop_Callback(struct ObjectEvent *, struct Sprite *);
@@ -469,7 +468,6 @@ static const u8 gInitialMovementTypeFacingDirections[MOVEMENT_TYPES_COUNT] = {
 #define OBJ_EVENT_PAL_TAG_RS_GROUDON                  0x1119
 #define OBJ_EVENT_PAL_TAG_RS_GROUDON_REFLECTION       0x111A
 #define OBJ_EVENT_PAL_TAG_RS_SUBMARINE_SHADOW         0x111B
-#define OBJ_EVENT_PAL_TAG_SPARKLE                     0x111C
 #define OBJ_EVENT_PAL_TAG_NONE                        0x11FF
 
 #include "data/object_events/object_event_graphics_info_pointers.h"
@@ -499,7 +497,6 @@ static const struct SpritePalette sObjectEventSpritePalettes[] = {
     {gObjectEventPal_Meteorite,               OBJ_EVENT_PAL_TAG_METEORITE},
     {gObjectEventPal_SSAnne,                  OBJ_EVENT_PAL_TAG_SS_ANNE},
     {gObjectEventPal_Seagallop,               OBJ_EVENT_PAL_TAG_SEAGALLOP},
-    {gObjectEventPal_Sparkle,                 OBJ_EVENT_PAL_TAG_SPARKLE},
     {},
 };
 
@@ -1312,7 +1309,7 @@ static u8 GetObjectEventIdByLocalId(u8 localId)
     return OBJECT_EVENTS_COUNT;
 }
 
-static u8 InitObjectEventStateFromTemplate(struct ObjectEventTemplate *template, u8 mapNum, u8 mapGroup)
+static u8 InitObjectEventStateFromTemplate(const struct ObjectEventTemplate *template, u8 mapNum, u8 mapGroup)
 {
     struct ObjectEvent *objectEvent;
     const struct MapHeader *mapHeader;
@@ -1391,7 +1388,7 @@ static u8 InitObjectEventStateFromTemplate(struct ObjectEventTemplate *template,
     return objectEventId;
 }
 
-static bool8 ShouldInitObjectEventStateFromTemplate(struct ObjectEventTemplate *template, bool8 isClone, s16 x, s16 y)
+static bool8 ShouldInitObjectEventStateFromTemplate(const struct ObjectEventTemplate *template, bool8 isClone, s16 x, s16 y)
 {
     if (isClone && !TemplateIsObstacleAndWithinView(template, x, y))
         return FALSE;
@@ -1402,7 +1399,7 @@ static bool8 ShouldInitObjectEventStateFromTemplate(struct ObjectEventTemplate *
     return TRUE;
 }
 
-static bool8 TemplateIsObstacleAndWithinView(struct ObjectEventTemplate *template, s16 x, s16 y)
+static bool8 TemplateIsObstacleAndWithinView(const struct ObjectEventTemplate *template, s16 x, s16 y)
 {
     if (template->graphicsId == OBJ_EVENT_GFX_CUT_TREE || template->graphicsId == OBJ_EVENT_GFX_ROCK_SMASH_ROCK)
     {
@@ -1425,7 +1422,7 @@ static bool8 TemplateIsObstacleAndWithinView(struct ObjectEventTemplate *templat
     return TRUE;
 }
 
-static bool8 TemplateIsObstacleAndVisibleFromConnectingMap(struct ObjectEventTemplate *template, s16 unused1, s16 unused2)
+static bool8 TemplateIsObstacleAndVisibleFromConnectingMap(const struct ObjectEventTemplate *template, s16 unused1, s16 unused2)
 {
     if (IsMapTypeOutdoors(GetCurrentMapType()))
     {
@@ -1462,7 +1459,7 @@ static bool8 TemplateIsObstacleAndVisibleFromConnectingMap(struct ObjectEventTem
     return TRUE;
 }
 
-static void SetHideObstacleFlag(struct ObjectEventTemplate *template)
+static void SetHideObstacleFlag(const struct ObjectEventTemplate *template)
 {
     if (template->flagId >= FLAG_TEMP_11 && template->flagId <= FLAG_TEMP_1F)
         FlagSet(template->flagId);
@@ -1526,10 +1523,8 @@ static void RemoveObjectEvent(struct ObjectEvent *objectEvent)
 void RemoveObjectEventByLocalIdAndMap(u8 localId, u8 mapNum, u8 mapGroup)
 {
     u8 objectEventId;
-    DebugPrintf("RemoveObjectEventByLocalIdAndMap localId %d mapNum %d mapGroup %d", localId, mapNum, mapGroup);
     if (!TryGetObjectEventIdByLocalIdAndMap(localId, mapNum, mapGroup, &objectEventId))
     {
-        DebugPrintf("RemoveObjectEventByLocalIdAndMap removing...");
         FlagSet(GetObjectEventFlagIdByObjectEventId(objectEventId));
         RemoveObjectEvent(&gObjectEvents[objectEventId]);
     }
@@ -1554,7 +1549,7 @@ void Unref_RemoveAllObjectEventsExceptPlayer(void)
     }
 }
 
-static u8 TrySetupObjectEventSprite(struct ObjectEventTemplate *objectEventTemplate, struct SpriteTemplate *spriteTemplate, u8 mapNum, u8 mapGroup, s16 cameraX, s16 cameraY)
+static u8 TrySetupObjectEventSprite(const struct ObjectEventTemplate *objectEventTemplate, struct SpriteTemplate *spriteTemplate, u8 mapNum, u8 mapGroup, s16 cameraX, s16 cameraY)
 {
     u8 spriteId;
     u8 objectEventId;
@@ -1604,7 +1599,7 @@ static u8 TrySetupObjectEventSprite(struct ObjectEventTemplate *objectEventTempl
     return objectEventId;
 }
 
-u8 TrySpawnObjectEventTemplate(struct ObjectEventTemplate *objectEventTemplate, u8 mapNum, u8 mapGroup, s16 cameraX, s16 cameraY)
+static u8 TrySpawnObjectEventTemplate(const struct ObjectEventTemplate *objectEventTemplate, u8 mapNum, u8 mapGroup, s16 cameraX, s16 cameraY)
 {
     u8 objectEventId;
     struct SpriteTemplate spriteTemplate;
@@ -1658,7 +1653,7 @@ int SpawnSpecialObjectEventParameterized(u8 graphicsId, u8 movementBehavior, u8 
 
 u8 TrySpawnObjectEvent(u8 localId, u8 mapNum, u8 mapGroup)
 {
-    struct ObjectEventTemplate *objectEventTemplate;
+    const struct ObjectEventTemplate *objectEventTemplate;
     s16 cameraX, cameraY;
 
     objectEventTemplate = GetObjectEventTemplateByLocalIdAndMap(localId, mapNum, mapGroup);
@@ -1682,8 +1677,8 @@ void CopyObjectGraphicsInfoToSpriteTemplate(u16 graphicsId, void (*callback)(str
     
     do
     {
-        if (ScriptContext_IsEnabled() != TRUE && sub_8112CAC() == 1)
-            spriteTemplate->callback = sub_811246C;
+        if (ScriptContext_IsEnabled() != TRUE && QL_GetPlaybackState() == QL_PLAYBACK_STATE_RUNNING)
+            spriteTemplate->callback = QL_UpdateObject;
         else
             spriteTemplate->callback = callback;
     } while (0);
@@ -1696,7 +1691,7 @@ static void CopyObjectGraphicsInfoToSpriteTemplate_WithMovementType(u16 graphics
     CopyObjectGraphicsInfoToSpriteTemplate(graphicsId, sMovementTypeCallbacks[movementType], spriteTemplate, subspriteTables);
 }
 
-static void MakeObjectTemplateFromObjectEventTemplate(struct ObjectEventTemplate *objectEventTemplate, struct SpriteTemplate *spriteTemplate, const struct SubspriteTable **subspriteTables)
+static void MakeObjectTemplateFromObjectEventTemplate(const struct ObjectEventTemplate *objectEventTemplate, struct SpriteTemplate *spriteTemplate, const struct SubspriteTable **subspriteTables)
 {
     CopyObjectGraphicsInfoToSpriteTemplate_WithMovementType(objectEventTemplate->graphicsId, objectEventTemplate->objUnion.normal.movementType, spriteTemplate, subspriteTables);
 }
@@ -2180,7 +2175,7 @@ void PatchObjectPalette(u16 paletteTag, u8 paletteSlot)
 {
     u8 paletteIndex = FindObjectEventPaletteIndexByTag(paletteTag);
 
-    LoadPalette(sObjectEventSpritePalettes[paletteIndex].data, 16 * paletteSlot + 0x100, 0x20);
+    LoadPalette(sObjectEventSpritePalettes[paletteIndex].data, OBJ_PLTT_ID(paletteSlot), PLTT_SIZE_4BPP);
     ApplyGlobalFieldPaletteTint(paletteSlot);
 }
 
@@ -2521,7 +2516,7 @@ const u8 *GetObjectEventScriptPointerByObjectEventId(u8 objectEventId)
 
 static u16 GetObjectEventFlagIdByLocalIdAndMap(u8 localId, u8 mapNum, u8 mapGroup)
 {
-    struct ObjectEventTemplate *obj = GetObjectEventTemplateByLocalIdAndMap(localId, mapNum, mapGroup);
+    const struct ObjectEventTemplate *obj = GetObjectEventTemplateByLocalIdAndMap(localId, mapNum, mapGroup);
 #ifdef UBFIX
     // BUG: The function may return NULL, and attempting to read from NULL may freeze the game using modern compilers.
     if (obj == NULL)
@@ -2576,9 +2571,9 @@ u8 GetObjectEventBerryTreeId(u8 objectEventId)
     return gObjectEvents[objectEventId].trainerRange_berryTreeId;
 }
 
-static struct ObjectEventTemplate *GetObjectEventTemplateByLocalIdAndMap(u8 localId, u8 mapNum, u8 mapGroup)
+static const struct ObjectEventTemplate *GetObjectEventTemplateByLocalIdAndMap(u8 localId, u8 mapNum, u8 mapGroup)
 {
-    struct ObjectEventTemplate *templates;
+    const struct ObjectEventTemplate *templates;
     const struct MapHeader *mapHeader;
     u8 count;
 
@@ -2596,7 +2591,7 @@ static struct ObjectEventTemplate *GetObjectEventTemplateByLocalIdAndMap(u8 loca
     return FindObjectEventTemplateByLocalId(localId, templates, count);
 }
 
-static struct ObjectEventTemplate *FindObjectEventTemplateByLocalId(u8 localId, struct ObjectEventTemplate *templates, u8 count)
+static const struct ObjectEventTemplate *FindObjectEventTemplateByLocalId(u8 localId, const struct ObjectEventTemplate *templates, u8 count)
 {
     u8 i;
 
@@ -4891,44 +4886,31 @@ static bool8 IsCoordOutsideObjectEventMovementRange(struct ObjectEvent *objectEv
 
 static bool8 IsMetatileDirectionallyImpassable(struct ObjectEvent *objectEvent, s16 x, s16 y, u8 direction)
 {
-    u32 currentAttributes;
-    u32 nextAttributes;
-
-    if (gOppositeDirectionBlockedMetatileFuncs[direction - 1](objectEvent->currentMetatileBehavior) ||
-        gDirectionBlockedMetatileFuncs[direction - 1](MapGridGetMetatileBehaviorAt(x, y))) {
+    if (gOppositeDirectionBlockedMetatileFuncs[direction - 1](objectEvent->currentMetatileBehavior)
+        || gDirectionBlockedMetatileFuncs[direction - 1](MapGridGetMetatileBehaviorAt(x, y)))
+    {
         return TRUE;
     }
-    else if (IS_WILD_ENCOUNTER_ID(objectEvent->localId)) {
-        currentAttributes = MapGridGetMetatileAttributeAt(
-                objectEvent->currentCoords.x,
-                objectEvent->currentCoords.y,
-                METATILE_ATTRIBUTE_ENCOUNTER_TYPE);
-        nextAttributes = MapGridGetMetatileAttributeAt(x, y, METATILE_ATTRIBUTE_ENCOUNTER_TYPE);
-        return currentAttributes != nextAttributes;
-    }
-
     return FALSE;
 }
 
 static bool8 DoesObjectCollideWithObjectAt(struct ObjectEvent *objectEvent, s16 x, s16 y)
 {
-    struct ObjectEvent *curObject;
     u8 i;
+    struct ObjectEvent *curObject;
 
-    for (i = 0; i < OBJECT_EVENTS_COUNT; i++) {
+    for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
+    {
         curObject = &gObjectEvents[i];
-        if (curObject->active && curObject != objectEvent) {
-            if ((curObject->currentCoords.x == x && curObject->currentCoords.y == y) ||
-                (curObject->previousCoords.x == x && curObject->previousCoords.y == y)) {
-                if (AreElevationsCompatible(objectEvent->currentElevation, curObject->currentElevation)) {
-                    if (!IS_WILD_ENCOUNTER_ID(curObject->localId) || objectEvent->localId != OBJ_EVENT_ID_PLAYER) {
-                        return TRUE;
-                    }
-                }
+        if (curObject->active && curObject != objectEvent)
+        {
+            if ((curObject->currentCoords.x == x && curObject->currentCoords.y == y) || (curObject->previousCoords.x == x && curObject->previousCoords.y == y))
+            {
+                if (AreElevationsCompatible(objectEvent->currentElevation, curObject->currentElevation))
+                    return TRUE;
             }
         }
     }
-
     return FALSE;
 }
 
@@ -4987,14 +4969,6 @@ void GetMapCoordsFromSpritePos(s16 x, s16 y, s16 *destX, s16 *destY)
     *destY = (y - gSaveBlock1Ptr->pos.y) << 4;
     *destX -= gTotalCameraPixelOffsetX;
     *destY -= gTotalCameraPixelOffsetY;
-    // These lines are necessary to correct for when the camera is "off-grid",
-    // such as when the player is moving between tiles.
-    // Normal map event objects don't seem to have this problem, as they are
-    // loaded while the player is still. (I think.)
-    // This is specifically for objects loaded dynamically, such as in particular,
-    // wandering encounters.
-    *destX -= gFieldCamera.x;
-    *destY -= gFieldCamera.y;
 }
 
 void SetSpritePosToMapCoords(s16 mapX, s16 mapY, s16 *destX, s16 *destY)
@@ -5024,7 +4998,7 @@ void SetSpritePosToOffsetMapCoords(s16 *x, s16 *y, s16 dx, s16 dy)
     *y += dy;
 }
 
-void GetObjectEventMovingCameraOffset(s16 *x, s16 *y)
+static void GetObjectEventMovingCameraOffset(s16 *x, s16 *y)
 {
     *x = 0;
     *y = 0;
@@ -5072,7 +5046,7 @@ bool8 ObjectEventIsHeldMovementActive(struct ObjectEvent *objectEvent)
 
 bool8 ObjectEventSetHeldMovement(struct ObjectEvent *objectEvent, u8 movementActionId)
 {
-    if(sub_8112CAC() == TRUE)
+    if (QL_GetPlaybackState() == QL_PLAYBACK_STATE_RUNNING)
         ObjectEventClearHeldMovementIfActive(objectEvent);
     else if (ObjectEventIsMovementOverridden(objectEvent))
         return TRUE;
@@ -5148,7 +5122,7 @@ void UpdateObjectEventCurrentMovement(struct ObjectEvent *objectEvent, struct Sp
     ObjectEventUpdateSubpriority(objectEvent, sprite);
 }
 
-void UpdateQuestLogObjectEventCurrentMovement(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+void QL_UpdateObjectEventCurrentMovement(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
     DoGroundEffects_OnSpawn(objectEvent, sprite);
     TryEnableObjectEventAnim(objectEvent, sprite);
@@ -5288,15 +5262,13 @@ static bool8 ObjectEventExecSingleMovementAction(struct ObjectEvent *objectEvent
     return FALSE;
 }
 
-static void ObjectEventSetSingleMovement(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 animId)
+static void ObjectEventSetSingleMovement(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 movementActionId)
 {
-    objectEvent->movementActionId = animId;
+    objectEvent->movementActionId = movementActionId;
     sprite->data[2] = 0;
     
-    if (gQuestLogPlaybackState == 2)
-    {
-        QuestLogRecordNPCStep(objectEvent->localId, objectEvent->mapNum, objectEvent->mapGroup, animId);
-    }
+    if (gQuestLogPlaybackState == QL_PLAYBACK_STATE_RECORDING)
+        QuestLogRecordNPCStep(objectEvent->localId, objectEvent->mapNum, objectEvent->mapGroup, movementActionId);
 }
 
 static void FaceDirection(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 direction)
@@ -8794,13 +8766,6 @@ static void DoGroundEffects_OnFinishStep(struct ObjectEvent *objEvent, struct Sp
     }
 }
 
-EWRAM_DATA bool8 sObjectsFrozen = FALSE;
-
-bool8 IsObjectsFrozen(void)
-{
-    return sObjectsFrozen;
-}
-
 bool8 FreezeObjectEvent(struct ObjectEvent *objectEvent)
 {
     if (objectEvent->heldMovementActive || objectEvent->frozen)
@@ -8816,7 +8781,6 @@ bool8 FreezeObjectEvent(struct ObjectEvent *objectEvent)
 void FreezeObjectEvents(void)
 {
     u8 i;
-    sObjectsFrozen = TRUE;
     for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
     {
         if (gObjectEvents[i].active && i != gPlayerAvatar.objectEventId)
@@ -8852,7 +8816,6 @@ void UnfreezeObjectEvents(void)
         if (gObjectEvents[i].active)
             UnfreezeObjectEvent(&gObjectEvents[i]);
     }
-    sObjectsFrozen = FALSE;
 }
 
 #define tDirection data[3]

@@ -477,7 +477,7 @@ static void InitMapView(void)
 {
     move_tilemap_camera_to_upper_left_corner();
     CopyMapTilesetsToVram(gMapHeader.mapLayout);
-    LoadMapTilesetPalettes(&gMapHeader);
+    LoadMapTilesetPalettes(gMapHeader.mapLayout);
     DrawWholeMapView();
     InitTilesetAnimations();
 }
@@ -766,13 +766,13 @@ void LoadMapFromCameraTransition(u8 mapGroup, u8 mapNum)
     TryRegenerateRenewableHiddenItems();
     InitMap();
     CopySecondaryTilesetToVramUsingHeap(gMapHeader.mapLayout);
-    LoadMapTilesetPalettes(&gMapHeader);
+    LoadSecondaryTilesetPalette(gMapHeader.mapLayout);
     for (paletteIndex = 7; paletteIndex < 13; paletteIndex++)
         ApplyWeatherGammaShiftToPal(paletteIndex);
     InitSecondaryTilesetAnimation();
     UpdateLocationHistoryForRoamer();
     RoamerMove();
-    sub_8110920();
+    QL_ResetDefeatedWildMonRecord();
     DoCurrentWeather();
     ResetFieldTasksArgs();
     RunOnResumeMapScript();
@@ -803,7 +803,7 @@ static void LoadMapFromWarp(bool32 unused)
     TryRegenerateRenewableHiddenItems();
     UpdateLocationHistoryForRoamer();
     RoamerMoveToOtherLocationSet();
-    sub_8110920();
+    QL_ResetDefeatedWildMonRecord();
     InitMap();
 }
 
@@ -818,8 +818,8 @@ static void QL_LoadMapNormal(void)
     SetSavedWeatherFromCurrMapHeader();
     ChooseAmbientCrySpecies();
     SetDefaultFlashLevel();
-    sub_8110920();
-    sub_8111708();
+    QL_ResetDefeatedWildMonRecord();
+    QL_RestoreMapLayoutId();
     LoadSaveblockMapHeader();
     InitMap();
 }
@@ -1390,7 +1390,7 @@ static void DoCB1_Overworld(u16 newKeys, u16 heldKeys)
 {
     struct FieldInput fieldInput;
 
-    sub_8112B3C();
+    QL_TryRunActions();
     UpdatePlayerAvatarTransitionState();
     FieldClearPlayerInput(&fieldInput);
     FieldGetPlayerInput(&fieldInput, newKeys, heldKeys);
@@ -1399,8 +1399,8 @@ static void DoCB1_Overworld(u16 newKeys, u16 heldKeys)
     {
         if (ProcessPlayerFieldInput(&fieldInput) == TRUE)
         {
-            if (gQuestLogPlaybackState == 2)
-                sub_81127F8(&gInputToStoreInQuestLogMaybe);
+            if (gQuestLogPlaybackState == QL_PLAYBACK_STATE_RECORDING)
+                QL_RecordFieldInput(&gFieldInputRecord);
             LockPlayerFieldControls();
             DismissMapNamePopup();
         }
@@ -1416,9 +1416,9 @@ static void DoCB1_Overworld_QuestLogPlayback(void)
 {
     struct FieldInput fieldInput;
 
-    sub_8112B3C();
+    QL_TryRunActions();
     UpdatePlayerAvatarTransitionState();
-    sub_8111C68();
+    QL_HandleInput();
     FieldClearPlayerInput(&fieldInput);
     fieldInput = gQuestLogFieldInput;
     FieldInput_HandleCancelSignpost(&fieldInput);
@@ -1445,7 +1445,7 @@ void CB1_Overworld(void)
 {
     if (gMain.callback2 == CB2_Overworld)
     {
-        if (sub_8112CAC() == 1 || gQuestLogState == QL_STATE_PLAYBACK)
+        if (QL_GetPlaybackState() == QL_PLAYBACK_STATE_RUNNING || gQuestLogState == QL_STATE_PLAYBACK)
             DoCB1_Overworld_QuestLogPlayback();
         else
             DoCB1_Overworld(gMain.newKeys, gMain.heldKeys);
@@ -1456,10 +1456,9 @@ static void OverworldBasic(void)
 {
     ScriptContext_RunScript();
     RunTasks();
-    UpdateWildEncounters();
     AnimateSprites();
     CameraUpdate();
-    sub_8115798();
+    SetQuestLogEvent_Arrived();
     UpdateCameraPanning();
     BuildOamBuffer();
     UpdatePaletteFade();
@@ -1803,7 +1802,7 @@ static bool32 LoadMapInStepsLink(u8 *state)
     case 8:
         if (FreeTempTileDataBuffersIfPossible() != TRUE)
         {
-            LoadMapTilesetPalettes(&gMapHeader);
+            LoadMapTilesetPalettes(gMapHeader.mapLayout);
             (*state)++;
         }
         break;
@@ -1888,7 +1887,7 @@ static bool32 LoadMapInStepsLocal(u8 *state, bool32 inLink)
     case 9:
         if (FreeTempTileDataBuffersIfPossible() != TRUE)
         {
-            LoadMapTilesetPalettes(&gMapHeader);
+            LoadMapTilesetPalettes(gMapHeader.mapLayout);
             (*state)++;
         }
         break;
@@ -1993,7 +1992,7 @@ static bool32 ReturnToFieldLink(u8 *state)
     case 7:
         if (FreeTempTileDataBuffersIfPossible() != TRUE)
         {
-            LoadMapTilesetPalettes(&gMapHeader);
+            LoadMapTilesetPalettes(gMapHeader.mapLayout);
             (*state)++;
         }
         break;
@@ -2240,8 +2239,8 @@ static bool32 LoadMap_QLPlayback(u8 *state)
         InitOverworldBgs();
         FieldClearVBlankHBlankCallbacks();
         QuestLog_InitPalettesBackup();
-        sub_81113E4();
-        sub_8111438();
+        QL_CopySaveState();
+        QL_ResetPartyAndPC();
         if (GetQuestLogStartType() == QL_START_WARP)
         {
             gExitStairsMovementDisabled = FALSE;
@@ -2255,7 +2254,7 @@ static bool32 LoadMap_QLPlayback(u8 *state)
         (*state)++;
         break;
     case 1:
-        sub_8110FCC();
+        QL_InitSceneObjectsAndActions();
         (*state)++;
         break;
     case 2:
@@ -2287,7 +2286,7 @@ static bool32 LoadMap_QLPlayback(u8 *state)
     case 8:
         if (FreeTempTileDataBuffersIfPossible() != TRUE)
         {
-            LoadMapTilesetPalettes(&gMapHeader);
+            LoadMapTilesetPalettes(gMapHeader.mapLayout);
             (*state)++;
         }
         break;
@@ -2297,7 +2296,7 @@ static bool32 LoadMap_QLPlayback(u8 *state)
         break;
     case 10:
         InitTilesetAnimations();
-        sub_815A540();
+        QL_TryStopSurfing();
         (*state)++;
         break;
     default:
@@ -2456,7 +2455,7 @@ static bool8 MapLdr_Credits(void)
     case 6:
         if (FreeTempTileDataBuffersIfPossible() != TRUE)
         {
-            LoadMapTilesetPalettes(&gMapHeader);
+            LoadMapTilesetPalettes(gMapHeader.mapLayout);
             (*state)++;
         }
         break;

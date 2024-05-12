@@ -780,7 +780,6 @@ static u32 CopyPokedudeMonData(u8 monId, u8 *dst)
         battleMon.isEgg = GetMonData(mon, MON_DATA_IS_EGG);
         battleMon.abilityNum = GetMonData(mon, MON_DATA_ABILITY_NUM);
         battleMon.otId = GetMonData(mon, MON_DATA_OT_ID);
-        battleMon.variant = GetMonData(mon, MON_DATA_VARIANT);
         GetMonData(mon, MON_DATA_NICKNAME, nickname);
         StringCopy_Nickname(battleMon.nickname, nickname);
         GetMonData(mon, MON_DATA_OT_NAME, battleMon.otName);
@@ -1859,7 +1858,7 @@ static void PokedudeHandleIntroTrainerBallThrow(void)
     StoreSpriteCallbackInData6(&gSprites[gBattlerSpriteIds[gActiveBattler]], SpriteCB_FreePlayerSpriteLoadMonSprite);
     StartSpriteAnim(&gSprites[gBattlerSpriteIds[gActiveBattler]], 1);
     paletteNum = AllocSpritePalette(0xD6F8);
-    LoadCompressedPalette(gTrainerBackPicPaletteTable[TRAINER_BACK_PIC_POKEDUDE].data, 0x100 + paletteNum * 16, 32);
+    LoadCompressedPalette(gTrainerBackPicPaletteTable[TRAINER_BACK_PIC_POKEDUDE].data, OBJ_PLTT_ID(paletteNum), PLTT_SIZE_4BPP);
     gSprites[gBattlerSpriteIds[gActiveBattler]].oam.paletteNum = paletteNum;
     taskId = CreateTask(Task_StartSendOutAnim, 5);
     gTasks[taskId].data[0] = gActiveBattler;

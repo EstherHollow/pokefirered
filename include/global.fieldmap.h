@@ -92,10 +92,10 @@ struct MapLayout
 {
     /*0x00*/ s32 width;
     /*0x04*/ s32 height;
-    /*0x08*/ u16 *border;
-    /*0x0c*/ u16 *map;
-    /*0x10*/ struct Tileset *primaryTileset;
-    /*0x14*/ struct Tileset *secondaryTileset;
+    /*0x08*/ const u16 *border;
+    /*0x0c*/ const u16 *map;
+    /*0x10*/ const struct Tileset *primaryTileset;
+    /*0x14*/ const struct Tileset *secondaryTileset;
     /*0x18*/ u8 borderWidth;
     /*0x19*/ u8 borderHeight;
 };
@@ -148,7 +148,7 @@ struct CoordEvent
     u8 elevation;
     u16 trigger;
     u16 index;
-    u8 *script;
+    const u8 *script;
 };
 
 struct BgEvent
@@ -157,7 +157,7 @@ struct BgEvent
     u8 elevation;
     u8 kind; // The "kind" field determines how to access bgUnion union below.
     union {
-        u8 *script;
+        const u8 *script;
         u32 hiddenItem; // Contains all the hidden item data. See GET_HIDDEN_ITEM_* defines further up
     } bgUnion;
 };
@@ -168,10 +168,10 @@ struct MapEvents
     u8 warpCount;
     u8 coordEventCount;
     u8 bgEventCount;
-    struct ObjectEventTemplate *objectEvents;
-    struct WarpEvent *warps;
-    struct CoordEvent *coordEvents;
-    struct BgEvent *bgEvents;
+    const struct ObjectEventTemplate *objectEvents;
+    const struct WarpEvent *warps;
+    const struct CoordEvent *coordEvents;
+    const struct BgEvent *bgEvents;
 };
 
 struct MapConnection
@@ -185,16 +185,7 @@ struct MapConnection
 struct MapConnections
 {
     s32 count;
-    struct MapConnection *connections;
-};
-
-struct PaletteTransition
-{
-    u8 axis;
-    u8 fromGroup;
-    u8 fromNum;
-    u8 toGroup;
-    u8 toNum;
+    const struct MapConnection *connections;
 };
 
 struct MapHeader
@@ -203,20 +194,19 @@ struct MapHeader
     /* 0x04 */ const struct MapEvents *events;
     /* 0x08 */ const u8 *mapScripts;
     /* 0x0C */ const struct MapConnections *connections;
-    /* 0x10 */ const struct PaletteTransition *transition;
-    /* 0x14 */ u16 music;
-    /* 0x16 */ u16 mapLayoutId;
-    /* 0x1A */ u8 regionMapSectionId;
-    /* 0x19 */ u8 cave;
-    /* 0x1A */ u8 weather;
-    /* 0x1B */ u8 mapType;
+    /* 0x10 */ u16 music;
+    /* 0x12 */ u16 mapLayoutId;
+    /* 0x14 */ u8 regionMapSectionId;
+    /* 0x15 */ u8 cave;
+    /* 0x16 */ u8 weather;
+    /* 0x17 */ u8 mapType;
                // fields correspond to the arguments in the map_header_flags macro
-    /* 0x1C */ bool8 bikingAllowed;
-    /* 0x1D */ bool8 allowEscaping:1; // Escape Rope and Dig
+    /* 0x18 */ bool8 bikingAllowed;
+    /* 0x19 */ bool8 allowEscaping:1; // Escape Rope and Dig
                bool8 allowRunning:1;
                bool8 showMapName:6; // the last 5 bits are unused
-    /* 0x1E */ s8 floorNum;
-    /* 0x1F */ u8 battleType;
+    /* 0x1A */ s8 floorNum;
+    /* 0x1B */ u8 battleType;
 };
 
 struct ObjectEvent
@@ -249,7 +239,6 @@ struct ObjectEvent
              /*25*/ u32 disableJumpLandingGroundEffect:1;
              /*26*/ u32 fixedPriority:1;
              /*27*/ u32 hideReflection:1;
-             /*28*/ u32 isWildEncounter:1;
     /*0x04*/        u8 spriteId;
     /*0x05*/        u8 graphicsId;
     /*0x06*/        u8 movementType;

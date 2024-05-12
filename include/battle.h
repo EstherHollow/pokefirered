@@ -65,10 +65,6 @@ enum {
 #define MOVE_TARGET_FOES_AND_ALLY       (1 << 5)
 #define MOVE_TARGET_OPPONENTS_FIELD     (1 << 6)
 
-#define MOVE_CATEGORY_PHYSICAL 0
-#define MOVE_CATEGORY_SPECIAL 1
-#define MOVE_CATEGORY_STATUS 2
-
 // For the second argument of GetMoveTarget, when no target override is needed
 #define NO_TARGET_OVERRIDE 0
 
@@ -77,7 +73,6 @@ struct TrainerMonNoItemDefaultMoves
     u16 iv;
     u8 lvl;
     u16 species;
-    u16 variant;
 };
 
 struct TrainerMonItemDefaultMoves
@@ -85,7 +80,6 @@ struct TrainerMonItemDefaultMoves
     u16 iv;
     u8 lvl;
     u16 species;
-    u16 variant;
     u16 heldItem;
 };
 
@@ -94,7 +88,6 @@ struct TrainerMonNoItemCustomMoves
     u16 iv;
     u8 lvl;
     u16 species;
-    u16 variant;
     u16 moves[MAX_MON_MOVES];
 };
 
@@ -103,7 +96,6 @@ struct TrainerMonItemCustomMoves
     u16 iv;
     u8 lvl;
     u16 species;
-    u16 variant;
     u16 heldItem;
     u16 moves[MAX_MON_MOVES];
 };
@@ -457,7 +449,7 @@ struct BattleStruct
     u16 castformPalette[MAX_BATTLERS_COUNT][16];
     u8 wishPerishSongState;
     u8 wishPerishSongBattlerId;
-    u8 field_182;
+    u8 lastAttackerToFaintOpponent;
     // align 4
     union {
         struct LinkBattlerHeader linkBattlerHeader;
@@ -480,9 +472,8 @@ extern struct BattleStruct *gBattleStruct;
         typeArg = gBattleMoves[move].type;                            \
 }
 
-#define IS_MOVE_PHYSICAL(move)(gBattleMoves[move].category == MOVE_CATEGORY_PHYSICAL)
-#define IS_MOVE_SPECIAL(move)(gBattleMoves[move].category == MOVE_CATEGORY_SPECIAL)
-#define IS_MOVE_STATUS(move)(gBattleMoves[move].category == MOVE_CATEGORY_STATUS)
+#define IS_TYPE_PHYSICAL(moveType)(moveType < TYPE_MYSTERY)
+#define IS_TYPE_SPECIAL(moveType)(moveType > TYPE_MYSTERY)
 
 #define TARGET_TURN_DAMAGED ((gSpecialStatuses[gBattlerTarget].physicalDmg != 0 || gSpecialStatuses[gBattlerTarget].specialDmg != 0))
 
@@ -502,6 +493,8 @@ extern struct BattleStruct *gBattleStruct;
 
 #define SET_STATCHANGER(statId, stage, goesDown)(gBattleScripting.statChanger = (statId) + (stage << 4) + (goesDown << 7))
 
+// NOTE: The members of this struct have hard-coded offsets
+//       in include/constants/battle_script_commands.h
 struct BattleScripting
 {
     s32 painSplitHp;
@@ -528,7 +521,6 @@ struct BattleScripting
     u8 reshowMainState;
     u8 reshowHelperState;
     u8 levelUpHP;
-    bool8 monCaught;
 };
 
 struct BattleSpriteInfo

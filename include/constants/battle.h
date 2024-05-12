@@ -163,7 +163,7 @@
 #define HITMARKER_ATTACKSTRING_PRINTED  (1 << 10)
 #define HITMARKER_NO_PPDEDUCT           (1 << 11)
 #define HITMARKER_SWAP_ATTACKER_TARGET  (1 << 12)
-#define HITMARKER_IGNORE_SAFEGUARD      (1 << 13)
+#define HITMARKER_STATUS_ABILITY_EFFECT (1 << 13)
 #define HITMARKER_SYNCHRONISE_EFFECT    (1 << 14)
 #define HITMARKER_RUN                   (1 << 15)
 #define HITMARKER_IGNORE_ON_AIR         (1 << 16)
@@ -335,7 +335,7 @@
 #define B_WIN_PP                  7
 #define B_WIN_MOVE_TYPE           8
 #define B_WIN_PP_REMAINING        9
-#define B_WIN_SPLIT_ICON         10
+#define B_WIN_DUMMY              10
 #define B_WIN_SWITCH_PROMPT      11 // "Switch which?"
 #define B_WIN_LEVEL_UP_BOX       12
 #define B_WIN_LEVEL_UP_BANNER    13

@@ -293,10 +293,8 @@ static void SetBattlePartyIds(void)
 
     if (!(gBattleTypeFlags & BATTLE_TYPE_MULTI))
     {
-        gAbsentBattlerFlags = 0;
         for (i = 0; i < gBattlersCount; i++)
         {
-            gAbsentBattlerFlags |= gBitTable[i];
             for (j = 0; j < PARTY_SIZE; ++j)
             {
                 if (i < 2)
@@ -309,7 +307,6 @@ static void SetBattlePartyIds(void)
                          && !GetMonData(&gPlayerParty[j], MON_DATA_IS_EGG))
                         {
                             gBattlerPartyIndexes[i] = j;
-                            gAbsentBattlerFlags &= ~gBitTable[i];
                             break;
                         }
                     }
@@ -321,24 +318,21 @@ static void SetBattlePartyIds(void)
                          && !GetMonData(&gEnemyParty[j], MON_DATA_IS_EGG))
                         {
                             gBattlerPartyIndexes[i] = j;
-                            gAbsentBattlerFlags &= ~gBitTable[i];
                             break;
                         }
                     }
                 }
                 else
                 {
-                    gBattlerPartyIndexes[i] = (gBattlerPartyIndexes[i ^ BIT_FLANK] + 1) % PARTY_SIZE;
                     if (GET_BATTLER_SIDE2(i) == B_SIDE_PLAYER)
                     {
                         if (GetMonData(&gPlayerParty[j], MON_DATA_HP) != 0
-                         && GetMonData(&gPlayerParty[j], MON_DATA_SPECIES_OR_EGG) != SPECIES_NONE
+                         && GetMonData(&gPlayerParty[j], MON_DATA_SPECIES) != SPECIES_NONE  // Probably a typo by Game Freak. The rest use SPECIES2.
                          && GetMonData(&gPlayerParty[j], MON_DATA_SPECIES_OR_EGG) != SPECIES_EGG
                          && !GetMonData(&gPlayerParty[j], MON_DATA_IS_EGG)
-                         && gBattlerPartyIndexes[i ^ BIT_FLANK] != j)
+                         && gBattlerPartyIndexes[i - 2] != j)
                         {
                             gBattlerPartyIndexes[i] = j;
-                            gAbsentBattlerFlags &= ~gBitTable[i];
                             break;
                         }
                     }
@@ -348,10 +342,9 @@ static void SetBattlePartyIds(void)
                          && GetMonData(&gEnemyParty[j], MON_DATA_SPECIES_OR_EGG) != SPECIES_NONE
                          && GetMonData(&gEnemyParty[j], MON_DATA_SPECIES_OR_EGG) != SPECIES_EGG
                          && !GetMonData(&gEnemyParty[j], MON_DATA_IS_EGG)
-                         && gBattlerPartyIndexes[i ^ BIT_FLANK] != j)
+                         && gBattlerPartyIndexes[i - 2] != j)
                         {
                             gBattlerPartyIndexes[i] = j;
-                            gAbsentBattlerFlags &= ~gBitTable[i];
                             break;
                         }
                     }

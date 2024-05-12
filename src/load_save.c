@@ -10,7 +10,6 @@
 #include "berry_powder.h"
 #include "overworld.h"
 #include "quest_log.h"
-#include "constants/event_objects.h"
 
 #define SAVEBLOCK_MOVE_RANGE    128
 
@@ -79,7 +78,7 @@ void SetSaveBlocksPointers(void)
     gPokemonStoragePtr = (void *)(&gPokemonStorage) + offset;
 
     SetBagPocketsPointers();
-    SetQuestLogRecordAndPlaybackPointers(oldSave);
+    QL_AddASLROffset(oldSave);
 }
 
 void MoveSaveBlocks_ResetHeap(void)
@@ -177,13 +176,9 @@ void LoadPlayerParty(void)
 void SaveObjectEvents(void)
 {
     int i;
-    struct ObjectEvent emptyObject = {0};
 
     for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
-        if (!IS_WILD_ENCOUNTER_ID(gObjectEvents[i].localId))
-            gSaveBlock1Ptr->objectEvents[i] = gObjectEvents[i];
-        else
-            gSaveBlock1Ptr->objectEvents[i] = emptyObject;
+        gSaveBlock1Ptr->objectEvents[i] = gObjectEvents[i];
 }
 
 void LoadObjectEvents(void)

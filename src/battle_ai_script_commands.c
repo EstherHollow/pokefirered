@@ -136,11 +136,6 @@ static void Cmd_end(void);
 static void Cmd_if_level_compare(void);
 static void Cmd_if_target_taunted(void);
 static void Cmd_if_target_not_taunted(void);
-static void Cmd_check_ability(void);
-static void Cmd_is_of_type(void);
-static void Cmd_if_target_is_ally(void);
-static void Cmd_if_flash_fired(void);
-static void Cmd_if_holds_item(void);
 
 static void RecordLastUsedMoveByTarget(void);
 static void BattleAI_DoAIProcessing(void);
@@ -245,11 +240,6 @@ static const BattleAICmdFunc sBattleAICmdTable[] =
     Cmd_if_level_compare,                 // 0x5B
     Cmd_if_target_taunted,                // 0x5C
     Cmd_if_target_not_taunted,            // 0x5D
-    Cmd_if_target_is_ally,                // 0x5E
-    Cmd_is_of_type,                       // 0x5F
-    Cmd_check_ability,                    // 0x60
-    Cmd_if_flash_fired,                   // 0x61
-    Cmd_if_holds_item,                    // 0x62
 };
 
 static const u16 sDiscouragedPowerfulMoveEffects[] =
@@ -967,34 +957,6 @@ static void Cmd_get_type(void)
     sAIScriptPtr += 2;
 }
 
-static u8 BattleAI_GetWantedBattler(u8 wantedBattler)
-{
-    switch (wantedBattler)
-    {
-    case AI_USER:
-        return gBattlerAttacker;
-    case AI_TARGET:
-    default:
-        return gBattlerTarget;
-    case AI_USER_PARTNER:
-        return BATTLE_PARTNER(gBattlerAttacker);
-    case AI_TARGET_PARTNER:
-        return BATTLE_PARTNER(gBattlerTarget);
-    }
-}
-
-static void Cmd_is_of_type(void)
-{
-    u8 battlerId = BattleAI_GetWantedBattler(sAIScriptPtr[1]);
-
-    if (IS_BATTLER_OF_TYPE(battlerId, sAIScriptPtr[2]))
-        AI_THINKING_STRUCT->funcResult = TRUE;
-    else
-        AI_THINKING_STRUCT->funcResult = FALSE;
-
-    sAIScriptPtr += 3;
-}
-
 static void Cmd_get_considered_move_power(void)
 {
     AI_THINKING_STRUCT->funcResult = gBattleMoves[AI_THINKING_STRUCT->moveConsidered].power;
@@ -1231,66 +1193,6 @@ static void Cmd_get_ability(void)
     }
 
     sAIScriptPtr += 2;
-}
-
-static void Cmd_check_ability(void)
-{
-    u32 battlerId = BattleAI_GetWantedBattler(sAIScriptPtr[1]);
-    u32 ability = sAIScriptPtr[2];
-
-    if (sAIScriptPtr[1] == AI_TARGET || sAIScriptPtr[1] == AI_TARGET_PARTNER)
-    {
-        if (BATTLE_HISTORY->abilities[battlerId] != ABILITY_NONE)
-        {
-            ability = BATTLE_HISTORY->abilities[battlerId];
-            AI_THINKING_STRUCT->funcResult = ability;
-        }
-        // Abilities that prevent fleeing.
-        else if (gBattleMons[battlerId].ability == ABILITY_SHADOW_TAG
-        || gBattleMons[battlerId].ability == ABILITY_MAGNET_PULL
-        || gBattleMons[battlerId].ability == ABILITY_ARENA_TRAP)
-        {
-            ability = gBattleMons[battlerId].ability;
-        }
-        else if (gSpeciesInfo[gBattleMons[battlerId].species].abilities[0] != ABILITY_NONE)
-        {
-            if (gSpeciesInfo[gBattleMons[battlerId].species].abilities[1] != ABILITY_NONE)
-            {
-                u8 abilityDummyVariable = ability; // Needed to match.
-                if (gSpeciesInfo[gBattleMons[battlerId].species].abilities[0] != abilityDummyVariable
-                && gSpeciesInfo[gBattleMons[battlerId].species].abilities[1] != abilityDummyVariable)
-                {
-                    ability = gSpeciesInfo[gBattleMons[battlerId].species].abilities[0];
-                }
-                else
-                {
-                    ability = ABILITY_NONE;
-                }
-            }
-            else
-            {
-                ability = gSpeciesInfo[gBattleMons[battlerId].species].abilities[0];
-            }
-        }
-        else
-        {
-            ability = gSpeciesInfo[gBattleMons[battlerId].species].abilities[1]; // AI can't actually reach this part since no pokemon has ability 2 and no ability 1.
-        }
-    }
-    else
-    {
-        // The AI knows its own or partner's ability.
-        ability = gBattleMons[battlerId].ability;
-    }
-
-    if (ability == 0)
-        AI_THINKING_STRUCT->funcResult = 2; // Unable to answer.
-    else if (ability == sAIScriptPtr[2])
-        AI_THINKING_STRUCT->funcResult = 1; // Pokemon has the ability we wanted to check.
-    else
-        AI_THINKING_STRUCT->funcResult = 0; // Pokemon doesn't have the ability we wanted to check.
-
-    sAIScriptPtr += 3;
 }
 
 static void Cmd_get_highest_type_effectiveness(void)
@@ -1859,33 +1761,6 @@ static void Cmd_get_hold_effect(void)
     sAIScriptPtr += 2;
 }
 
-static void Cmd_if_holds_item(void)
-{
-    u8 battlerId = BattleAI_GetWantedBattler(sAIScriptPtr[1]);
-    u16 item;
-    u8 itemLo, itemHi;
-
-    if ((battlerId & BIT_SIDE) == (gBattlerAttacker & BIT_SIDE))
-        item = gBattleMons[battlerId].item;
-    else
-        item = BATTLE_HISTORY->itemEffects[battlerId];
-
-    itemHi = sAIScriptPtr[2];
-    itemLo = sAIScriptPtr[3];
-
-#ifdef BUGFIX
-    // This bug doesn't affect the vanilla game because this script command
-    // is only used to check ITEM_PERSIM_BERRY, whose high byte happens to
-    // be 0.
-    if (((itemHi << 8) | itemLo) == item)
-#else
-    if ((itemLo | itemHi) == item)
-#endif
-        sAIScriptPtr = T1_READ_PTR(sAIScriptPtr + 4);
-    else
-        sAIScriptPtr += 8;
-}
-
 static void Cmd_get_gender(void)
 {
     u8 battlerId;
@@ -2069,24 +1944,6 @@ static void Cmd_if_target_not_taunted(void)
         sAIScriptPtr = T1_READ_PTR(sAIScriptPtr + 1);
     else
         sAIScriptPtr += 5;
-}
-
-static void Cmd_if_target_is_ally(void)
-{
-    if ((gBattlerAttacker & BIT_SIDE) == (gBattlerTarget & BIT_SIDE))
-        sAIScriptPtr = T1_READ_PTR(sAIScriptPtr + 1);
-    else
-        sAIScriptPtr += 5;
-}
-
-static void Cmd_if_flash_fired(void)
-{
-    u8 battlerId = BattleAI_GetWantedBattler(sAIScriptPtr[1]);
-
-    if (gBattleResources->flags->flags[battlerId] & RESOURCE_FLAG_FLASH_FIRE)
-        sAIScriptPtr = T1_READ_PTR(sAIScriptPtr + 2);
-    else
-        sAIScriptPtr += 6;
 }
 
 static void AIStackPushVar(const u8 *var)

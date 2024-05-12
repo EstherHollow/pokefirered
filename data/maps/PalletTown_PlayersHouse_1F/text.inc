@@ -22,15 +22,15 @@ PalletTown_PlayersHouse_1F_Text_LookingGreatTakeCare::
     .string "Take care now!$"
 
 PalletTown_PlayersHouse_1F_Text_MovieOnTVFourBoysOnRailroad::
-    .string "There's a show on TV.\n"
-    .string "Two brothers are searching for a way\l"
-    .string "to restore their bodies.\p"
+    .string "There's a movie on TV.\n"
+    .string "Four boys are walking on railroad\l"
+    .string "tracks.\p"
     .string "…I better go, too.$"
 
 PalletTown_PlayersHouse_1F_Text_MovieOnTVGirlOnBrickRoad::
-    .string "There's a show on TV.\n"
-    .string "Two girls are driving a kettenkrad\l"
-    .string "tank in an empty city.\p"
+    .string "There's a movie on TV.\n"
+    .string "A girl with her hair in pigtails is\l"
+    .string "walking up a brick road.\p"
     .string "…I better go, too.$"
 
 PalletTown_PlayersHouse_1F_Text_OopsWrongSide::

@@ -670,8 +670,8 @@ static bool8 AllocPartyMenuBgGfx(void)
         }
         break;
     case 2:
-        LoadCompressedPalette(gPartyMenuBg_Pal, 0, 0x160);
-        CpuCopy16(gPlttBufferUnfaded, sPartyMenuInternal->palBuffer, 0x160);
+        LoadCompressedPalette(gPartyMenuBg_Pal, BG_PLTT_ID(0), 11 * PLTT_SIZE_4BPP);
+        CpuCopy16(gPlttBufferUnfaded, sPartyMenuInternal->palBuffer, 11 * PLTT_SIZE_4BPP);
         ++sPartyMenuInternal->data[0];
         break;
     case 3:
@@ -702,9 +702,9 @@ static bool8 AllocPartyMenuBgGfx(void)
 
 static void PartyPaletteBufferCopy(u8 offset)
 {
-    offset *= 16;
-    CpuCopy16(&gPlttBufferUnfaded[0x30], &gPlttBufferUnfaded[offset], 32);
-    CpuCopy16(&gPlttBufferUnfaded[0x30], &gPlttBufferFaded[offset], 32);
+    offset = PLTT_ID(offset);
+    CpuCopy16(&gPlttBufferUnfaded[BG_PLTT_ID(3)], &gPlttBufferUnfaded[offset], PLTT_SIZE_4BPP);
+    CpuCopy16(&gPlttBufferUnfaded[BG_PLTT_ID(3)], &gPlttBufferFaded[offset], PLTT_SIZE_4BPP);
 }
 
 static void FreePartyPointers(void)
@@ -2006,8 +2006,8 @@ static void Task_FirstBattleEnterParty_WaitFadeNormal(u8 taskId)
 {
     if (!gPaletteFade.active)
     {
-        LoadUserWindowGfx(0, 0x4F, 0xD0);
-        LoadStdWindowGfx(0, 0x58, 0xF0);
+        LoadUserWindowGfx(0, 0x4F, BG_PLTT_ID(13));
+        LoadStdWindowGfx(0, 0x58, BG_PLTT_ID(15));
         if (gPartyMenu.action == PARTY_ACTION_USE_ITEM)
             DisplayPartyMenuStdMessage(PARTY_MSG_USE_ON_WHICH_MON);
         else
@@ -2117,10 +2117,10 @@ static void InitPartyMenuWindows(u8 layout)
     DeactivateAllTextPrinters();
     for (i = 0; i < PARTY_SIZE; ++i)
         FillWindowPixelBuffer(i, PIXEL_FILL(0));
-    LoadUserWindowGfx(0, 0x4F, 0xD0);
-    LoadStdWindowGfx(0, 0x58, 0xF0);
-    LoadPalette(GetTextWindowPalette(2), 0xC0, 0x20);
-    LoadPalette(GetTextWindowPalette(0), 0xE0, 0x20);
+    LoadUserWindowGfx(0, 0x4F, BG_PLTT_ID(13));
+    LoadStdWindowGfx(0, 0x58, BG_PLTT_ID(15));
+    LoadPalette(GetTextWindowPalette(2), BG_PLTT_ID(12), PLTT_SIZE_4BPP);
+    LoadPalette(GetTextWindowPalette(0), BG_PLTT_ID(14), PLTT_SIZE_4BPP);
 }
 
 static void CreateCancelConfirmWindows(bool8 chooseMultiple)
@@ -2215,16 +2215,16 @@ static void DrawEmptySlot(u8 windowId)
     BlitBitmapToPartyWindow(windowId, sSlotTilemap_WideEmpty, 18, 0, 0, 18, 3);
 }
 
-#define LOAD_PARTY_BOX_PAL(paletteIds, paletteOffsets)                                    \
-{                                                                                         \
-    LoadPalette(GetPartyMenuPalBufferPtr(paletteIds[0]), paletteOffsets[0] + palNum, 2);  \
-    LoadPalette(GetPartyMenuPalBufferPtr(paletteIds[1]), paletteOffsets[1] + palNum, 2);  \
-    LoadPalette(GetPartyMenuPalBufferPtr(paletteIds[2]), paletteOffsets[2] + palNum, 2);  \
+#define LOAD_PARTY_BOX_PAL(paletteIds, paletteOffsets)                                                    \
+{                                                                                                         \
+    LoadPalette(GetPartyMenuPalBufferPtr(paletteIds[0]), paletteOffsets[0] + palOffset, PLTT_SIZEOF(1));  \
+    LoadPalette(GetPartyMenuPalBufferPtr(paletteIds[1]), paletteOffsets[1] + palOffset, PLTT_SIZEOF(1));  \
+    LoadPalette(GetPartyMenuPalBufferPtr(paletteIds[2]), paletteOffsets[2] + palOffset, PLTT_SIZEOF(1));  \
 }
 
 static void LoadPartyBoxPalette(struct PartyMenuBox *menuBox, u8 palFlags)
 {
-    u8 palNum = GetWindowAttribute(menuBox->windowId, WINDOW_PALETTE_NUM) * 16;
+    u8 palOffset = BG_PLTT_ID(GetWindowAttribute(menuBox->windowId, WINDOW_PALETTE_NUM));
 
     if (palFlags & PARTY_PAL_TO_SOFTBOIL)
     {
@@ -2349,7 +2349,7 @@ static void DisplayPartyPokemonGenderNidoranCheck(struct Pokemon *mon, struct Pa
 
 static void DisplayPartyPokemonGender(u8 gender, u16 species, u8 *nickname, struct PartyMenuBox *menuBox)
 {
-    u8 palNum = GetWindowAttribute(menuBox->windowId, WINDOW_PALETTE_NUM) * 16;
+    u8 palOffset = BG_PLTT_ID(GetWindowAttribute(menuBox->windowId, WINDOW_PALETTE_NUM));
 
     if (species == SPECIES_NONE)
         return;
@@ -2358,13 +2358,13 @@ static void DisplayPartyPokemonGender(u8 gender, u16 species, u8 *nickname, stru
     switch (gender)
     {
     case MON_MALE:
-        LoadPalette(GetPartyMenuPalBufferPtr(sGenderMalePalIds[0]), sGenderPalOffsets[0] + palNum, 2);
-        LoadPalette(GetPartyMenuPalBufferPtr(sGenderMalePalIds[1]), sGenderPalOffsets[1] + palNum, 2);
+        LoadPalette(GetPartyMenuPalBufferPtr(sGenderMalePalIds[0]), sGenderPalOffsets[0] + palOffset, PLTT_SIZEOF(1));
+        LoadPalette(GetPartyMenuPalBufferPtr(sGenderMalePalIds[1]), sGenderPalOffsets[1] + palOffset, PLTT_SIZEOF(1));
         DisplayPartyPokemonBarDetail(menuBox->windowId, gText_MaleSymbol, 2, &menuBox->infoRects->dimensions[8]);
         break;
     case MON_FEMALE:
-        LoadPalette(GetPartyMenuPalBufferPtr(sGenderFemalePalIds[0]), sGenderPalOffsets[0] + palNum, 2);
-        LoadPalette(GetPartyMenuPalBufferPtr(sGenderFemalePalIds[1]), sGenderPalOffsets[1] + palNum, 2);
+        LoadPalette(GetPartyMenuPalBufferPtr(sGenderFemalePalIds[0]), sGenderPalOffsets[0] + palOffset, PLTT_SIZEOF(1));
+        LoadPalette(GetPartyMenuPalBufferPtr(sGenderFemalePalIds[1]), sGenderPalOffsets[1] + palOffset, PLTT_SIZEOF(1));
         DisplayPartyPokemonBarDetail(menuBox->windowId, gText_FemaleSymbol, 2, &menuBox->infoRects->dimensions[8]);
         break;
     }
@@ -2417,23 +2417,23 @@ static void DisplayPartyPokemonHPBarCheck(struct Pokemon *mon, struct PartyMenuB
 
 static void DisplayPartyPokemonHPBar(u16 hp, u16 maxhp, struct PartyMenuBox *menuBox)
 {
-    u8 palNum = GetWindowAttribute(menuBox->windowId, WINDOW_PALETTE_NUM) * 16;
+    u8 palOffset = BG_PLTT_ID(GetWindowAttribute(menuBox->windowId, WINDOW_PALETTE_NUM));
     u8 hpFraction;
 
     switch (GetHPBarLevel(hp, maxhp))
     {
     case HP_BAR_GREEN:
     case HP_BAR_FULL:
-        LoadPalette(GetPartyMenuPalBufferPtr(sHPBarGreenPalIds[0]), sHPBarPalOffsets[0] + palNum, 2);
-        LoadPalette(GetPartyMenuPalBufferPtr(sHPBarGreenPalIds[1]), sHPBarPalOffsets[1] + palNum, 2);
+        LoadPalette(GetPartyMenuPalBufferPtr(sHPBarGreenPalIds[0]), sHPBarPalOffsets[0] + palOffset, PLTT_SIZEOF(1));
+        LoadPalette(GetPartyMenuPalBufferPtr(sHPBarGreenPalIds[1]), sHPBarPalOffsets[1] + palOffset, PLTT_SIZEOF(1));
         break;
     case HP_BAR_YELLOW:
-        LoadPalette(GetPartyMenuPalBufferPtr(sHPBarYellowPalIds[0]), sHPBarPalOffsets[0] + palNum, 2);
-        LoadPalette(GetPartyMenuPalBufferPtr(sHPBarYellowPalIds[1]), sHPBarPalOffsets[1] + palNum, 2);
+        LoadPalette(GetPartyMenuPalBufferPtr(sHPBarYellowPalIds[0]), sHPBarPalOffsets[0] + palOffset, PLTT_SIZEOF(1));
+        LoadPalette(GetPartyMenuPalBufferPtr(sHPBarYellowPalIds[1]), sHPBarPalOffsets[1] + palOffset, PLTT_SIZEOF(1));
         break;
     default:
-        LoadPalette(GetPartyMenuPalBufferPtr(sHPBarRedPalIds[0]), sHPBarPalOffsets[0] + palNum, 2);
-        LoadPalette(GetPartyMenuPalBufferPtr(sHPBarRedPalIds[1]), sHPBarPalOffsets[1] + palNum, 2);
+        LoadPalette(GetPartyMenuPalBufferPtr(sHPBarRedPalIds[0]), sHPBarPalOffsets[0] + palOffset, PLTT_SIZEOF(1));
+        LoadPalette(GetPartyMenuPalBufferPtr(sHPBarRedPalIds[1]), sHPBarPalOffsets[1] + palOffset, PLTT_SIZEOF(1));
         break;
     }
     hpFraction = GetScaledHPFraction(hp, maxhp, menuBox->infoRects->dimensions[22]);
@@ -2503,7 +2503,7 @@ void DisplayPartyMenuStdMessage(u32 stringId)
             else if (!ShouldUseChooseMonText())
                 stringId = PARTY_MSG_CHOOSE_MON_OR_CANCEL;
         }
-        DrawStdFrameWithCustomTileAndPalette(*windowPtr, FALSE, 0x58, 0xF);
+        DrawStdFrameWithCustomTileAndPalette(*windowPtr, FALSE, 0x58, 15);
         StringExpandPlaceholders(gStringVar4, sActionStringTable[stringId]);
         AddTextPrinterParameterized(*windowPtr, FONT_NORMAL, gStringVar4, 0, 2, 0, 0);
         ScheduleBgCopyTilemapToVram(2);
@@ -2571,7 +2571,7 @@ static void PartyMenuPrintText(const u8 *text)
 {
     DrawStdFrameWithCustomTileAndPalette(6, FALSE, 0x4F, 13);
     gTextFlags.canABSpeedUpPrint = TRUE;
-    AddTextPrinterParameterized2(6, FONT_NORMAL, text, GetTextSpeedFrameDelay(), 0, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+    AddTextPrinterParameterized2(6, FONT_NORMAL, text, GetTextSpeedSetting(), 0, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
 }
 
 static void PartyMenuDisplayYesNoMenu(void)
@@ -2596,14 +2596,14 @@ static void PartyMenu_Oak_PrintText(u8 windowId, const u8 *str)
 {
     StringExpandPlaceholders(gStringVar4, str);
     gTextFlags.canABSpeedUpPrint = TRUE;
-    AddTextPrinterParameterized2(windowId, FONT_MALE, gStringVar4, GetTextSpeedFrameDelay(), NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+    AddTextPrinterParameterized2(windowId, FONT_MALE, gStringVar4, GetTextSpeedSetting(), NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
 }
 
 static bool8 FirstBattleEnterParty_CreateWindowAndMsg1Printer(void)
 {
     u8 windowId = AddWindow(&sWindowTemplate_FirstBattleOakVoiceover);
 
-    LoadMenuMessageWindowGfx(windowId, 0x4F, 0xE0);
+    LoadMenuMessageWindowGfx(windowId, 0x4F, BG_PLTT_ID(14));
     DrawDialogFrameWithCustomTileAndPalette(windowId, 1, 0x4F, 0xE);
     PartyMenu_Oak_PrintText(windowId, gText_OakImportantToGetToKnowPokemonThroughly);
     return windowId;
@@ -2962,18 +2962,20 @@ static void SetPartyMonSelectionActions(struct Pokemon *mons, u8 slotId, u8 acti
 
 static void SetPartyMonFieldSelectionActions(struct Pokemon *mons, u8 slotId)
 {
-    u8 i;
-    u16 item;
+    u8 i, j;
 
     sPartyMenuInternal->numActions = 0;
     AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, CURSOR_OPTION_SUMMARY);
     // Add field moves to action list
-    for (i = 0; sFieldMoves[i] != FIELD_MOVE_END; ++i)
+    for (i = 0; i < MAX_MON_MOVES; ++i)
     {
-        item = BattleMoveIdToItemId(sFieldMoves[i]);
-        if (CanMonLearnTMHM(&mons[slotId], item - ITEM_TM01))
+        for (j = 0; sFieldMoves[j] != FIELD_MOVE_END; ++j)
         {
-            AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, i + CURSOR_OPTION_FIELD_MOVES);
+            if (GetMonData(&mons[slotId], i + MON_DATA_MOVE1) == sFieldMoves[j])
+            {
+                AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, j + CURSOR_OPTION_FIELD_MOVES);
+                break;
+            }
         }
     }
     if (GetMonData(&mons[1], MON_DATA_SPECIES) != SPECIES_NONE)
@@ -3353,12 +3355,12 @@ static void SwitchPartyMon(void)
 
 static void SetSwitchedPartyOrderQuestLogEvent(void)
 {
-    u16 *buffer = Alloc(2 * sizeof(u16));
+    struct QuestLogEvent_SwitchedPartyOrder * data = Alloc(sizeof(*data));
 
-    buffer[0] = GetMonData(&gPlayerParty[gPartyMenu.slotId], MON_DATA_SPECIES_OR_EGG);
-    buffer[1] = GetMonData(&gPlayerParty[gPartyMenu.slotId2], MON_DATA_SPECIES_OR_EGG);
-    SetQuestLogEvent(QL_EVENT_SWITCHED_PARTY_ORDER, buffer);
-    Free(buffer);
+    data->species1 = GetMonData(&gPlayerParty[gPartyMenu.slotId], MON_DATA_SPECIES_OR_EGG);
+    data->species2 = GetMonData(&gPlayerParty[gPartyMenu.slotId2], MON_DATA_SPECIES_OR_EGG);
+    SetQuestLogEvent(QL_EVENT_SWITCHED_PARTY_ORDER, (const u16 *)data);
+    Free(data);
 }
 
 // Finish switching mons or using Softboiled
@@ -4129,67 +4131,61 @@ static bool8 SetUpFieldMove_Waterfall(void)
 
 static void SetSwappedHeldItemQuestLogEvent(struct Pokemon *mon, u16 item, u16 item2)
 {
-    u16 *ptr = Alloc(4 * sizeof(u16));
+    struct QuestLogEvent_SwappedHeldItem *data = Alloc(sizeof(*data));
 
-    ptr[2] = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
-    ptr[0] = item;
-    ptr[1] = item2;
+    data->species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
+    data->takenItemId = item;
+    data->givenItemId = item2;
     if (gPartyMenu.action == PARTY_ACTION_GIVE_PC_ITEM)
-        SetQuestLogEvent(QL_EVENT_SWAPPED_HELD_ITEM_PC, ptr);
+        SetQuestLogEvent(QL_EVENT_SWAPPED_HELD_ITEM_PC, (void *)data);
     else
-        SetQuestLogEvent(QL_EVENT_SWAPPED_HELD_ITEM, ptr);
-    Free(ptr);
+        SetQuestLogEvent(QL_EVENT_SWAPPED_HELD_ITEM, (void *)data);
+    Free(data);
 }
-
-struct FieldMoveWarpParams
-{
-    u16 species;
-    u8 fieldMove;
-    u8 regionMapSectionId;
-};
 
 static void SetUsedFieldMoveQuestLogEvent(struct Pokemon *mon, u8 fieldMove)
 {
-    struct FieldMoveWarpParams *ptr = Alloc(sizeof(*ptr));
+    struct QuestLogEvent_FieldMove *data = Alloc(sizeof(*data));
 
-    ptr->species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
-    ptr->fieldMove = fieldMove;
-    switch (ptr->fieldMove)
+    data->species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
+    data->fieldMove = fieldMove;
+    switch (data->fieldMove)
     {
     case FIELD_MOVE_TELEPORT:
-        ptr->regionMapSectionId = Overworld_GetMapHeaderByGroupAndId(gSaveBlock1Ptr->lastHealLocation.mapGroup, gSaveBlock1Ptr->lastHealLocation.mapNum)->regionMapSectionId;
+        data->mapSec = Overworld_GetMapHeaderByGroupAndId(gSaveBlock1Ptr->lastHealLocation.mapGroup, gSaveBlock1Ptr->lastHealLocation.mapNum)->regionMapSectionId;
         break;
     case FIELD_MOVE_DIG:
-        ptr->regionMapSectionId = gMapHeader.regionMapSectionId;
+        data->mapSec = gMapHeader.regionMapSectionId;
         break;
     default:
-        ptr->regionMapSectionId = 0xFF;
+        data->mapSec = 0xFF;
     }
-    SetQuestLogEvent(QL_EVENT_USED_FIELD_MOVE, (u16 *)ptr);
-    Free(ptr);
+    SetQuestLogEvent(QL_EVENT_USED_FIELD_MOVE, (const u16 *)data);
+    Free(data);
 }
 
 void SetUsedFlyQuestLogEvent(const u8 *healLocCtrlData)
 {
     const struct MapHeader *mapHeader;
-    struct FieldMoveWarpParams *ptr2;
+    struct QuestLogEvent_FieldMove *data;
     struct
     {
-        s8 mapGroup;
-        s8 mapNum;
-        u32 unk_4;
-    } *ptr = Alloc(sizeof(*ptr));
+        s8 group;
+        s8 num;
+        u32 unused;
+    } *map = Alloc(sizeof(*map));
 
-    ptr->mapGroup = healLocCtrlData[0];
-    ptr->mapNum = healLocCtrlData[1];
-    mapHeader = Overworld_GetMapHeaderByGroupAndId(ptr->mapGroup, ptr->mapNum);
-    Free(ptr);
-    ptr2 = Alloc(4);
-    ptr2->species = GetMonData(&gPlayerParty[GetCursorSelectionMonId()], MON_DATA_SPECIES_OR_EGG);
-    ptr2->fieldMove = FIELD_MOVE_FLY;
-    ptr2->regionMapSectionId = mapHeader->regionMapSectionId;
-    SetQuestLogEvent(QL_EVENT_USED_FIELD_MOVE, (u16 *)ptr2);
-    Free(ptr2);
+    map->group = healLocCtrlData[0];
+    map->num = healLocCtrlData[1];
+    mapHeader = Overworld_GetMapHeaderByGroupAndId(map->group, map->num);
+    Free(map);
+
+    data = Alloc(sizeof(*data));
+    data->species = GetMonData(&gPlayerParty[GetCursorSelectionMonId()], MON_DATA_SPECIES_OR_EGG);
+    data->fieldMove = FIELD_MOVE_FLY;
+    data->mapSec = mapHeader->regionMapSectionId;
+    SetQuestLogEvent(QL_EVENT_USED_FIELD_MOVE, (const u16 *)data);
+    Free(data);
 }
 
 void CB2_ShowPartyMenuForItemUse(void)
@@ -4289,7 +4285,7 @@ static void CB2_UseItem(void)
     {
         GiveMoveToMon(&gPlayerParty[gPartyMenu.slotId], ItemIdToBattleMoveId(gSpecialVar_ItemId));
         AdjustFriendship(&gPlayerParty[gPartyMenu.slotId], FRIENDSHIP_EVENT_LEARN_TMHM);
-        if (gSpecialVar_ItemId <= ITEM_TM50)
+        if (gSpecialVar_ItemId < ITEM_HM01)
             RemoveBagItem(gSpecialVar_ItemId, 1);
         SetMainCallback2(gPartyMenu.exitCallback);
     }
@@ -4309,7 +4305,7 @@ static void CB2_UseTMHMAfterForgettingMove(void)
         SetMonMoveSlot(mon, ItemIdToBattleMoveId(gSpecialVar_ItemId), moveIdx);
         AdjustFriendship(mon, FRIENDSHIP_EVENT_LEARN_TMHM);
         ItemUse_SetQuestLogEvent(QL_EVENT_USED_ITEM, mon, gSpecialVar_ItemId, move);
-        if (gSpecialVar_ItemId <= ITEM_TM50)
+        if (gSpecialVar_ItemId < ITEM_HM01)
             RemoveBagItem(gSpecialVar_ItemId, 1);
         SetMainCallback2(gPartyMenu.exitCallback);
     }
@@ -4725,18 +4721,6 @@ u16 ItemIdToBattleMoveId(u16 item)
     return sTMHMMoves[tmNumber];
 }
 
-u16 BattleMoveIdToItemId(u16 move)
-{
-    u16 i;
-    for (i = ITEM_TM01; i <= ITEM_HM08; i++) {
-        if (ItemIdToBattleMoveId(i) == move) {
-            return i;
-        }
-    }
-
-    return 0xFFFF;
-}
-
 bool8 IsMoveHm(u16 move)
 {
     u8 i;
@@ -4825,7 +4809,7 @@ static void Task_LearnedMove(u8 taskId)
     if (learnMoveMethod == LEARN_VIA_TMHM)
     {
         AdjustFriendship(mon, FRIENDSHIP_EVENT_LEARN_TMHM);
-        if (item <= ITEM_TM50)
+        if (item < ITEM_HM01)
             RemoveBagItem(item, 1);
     }
     GetMonNickname(mon, gStringVar1);
@@ -5842,9 +5826,7 @@ static u8 GetPartyLayoutFromBattleType(void)
         return PARTY_LAYOUT_SINGLE;
     if (IsMultiBattle() == TRUE)
         return PARTY_LAYOUT_MULTI;
-    if (PlayerHasTwoUsableMons() == TRUE)
-        return PARTY_LAYOUT_DOUBLE;
-    return PARTY_LAYOUT_SINGLE;
+    return PARTY_LAYOUT_DOUBLE;
 }
 
 void OpenPartyMenuInTutorialBattle(u8 partyAction)
@@ -6089,14 +6071,13 @@ static void BufferBattlePartyOrderBySide(u8 *partyBattleOrder, u8 flankId, u8 ba
         }
         return;
     }
-    if (IsDoubleBattle() && PlayerHasTwoUsableMons())
+    else if (IsDoubleBattle() == FALSE)
     {
-        j = 2;
+        j = 1;
         partyIndexes[0] = gBattlerPartyIndexes[leftBattler];
-        partyIndexes[1] = gBattlerPartyIndexes[rightBattler];
         for (i = 0; i < PARTY_SIZE; ++i)
         {
-            if (i != partyIndexes[0] && i != partyIndexes[1])
+            if (i != partyIndexes[0])
             {
                 partyIndexes[j] = i;
                 ++j;
@@ -6105,11 +6086,12 @@ static void BufferBattlePartyOrderBySide(u8 *partyBattleOrder, u8 flankId, u8 ba
     }
     else
     {
-        j = 1;
+        j = 2;
         partyIndexes[0] = gBattlerPartyIndexes[leftBattler];
+        partyIndexes[1] = gBattlerPartyIndexes[rightBattler];
         for (i = 0; i < PARTY_SIZE; ++i)
         {
-            if (i != partyIndexes[0])
+            if (i != partyIndexes[0] && i != partyIndexes[1])
             {
                 partyIndexes[j] = i;
                 ++j;

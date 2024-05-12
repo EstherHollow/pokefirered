@@ -23,7 +23,7 @@ static void ItemSpriteZoom_UpdateYPos(struct Sprite *sprite, u8 closeness);
 static void StartMonWiggleAnim(struct PokemonSpecialAnimScene * scene, u8 frameLen, u8 niter, u8 amplitude);
 static void StopMonWiggleAnim(struct PokemonSpecialAnimScene * scene);
 static void SpriteCallback_MonSpriteWiggle(struct Sprite *sprite);
-static void LoadMonSpriteGraphics(u16 *tiles, const u16 *palette);
+static void LoadMonSpriteGraphics(u16 *tilees, u16 *palette);
 static struct Sprite *PSA_CreateItemIconObject(u16 itemId);
 static u16 GetBlendColorByItemId(u16 itemId);
 static void Task_ItemUseOnMonAnim(u8 taskId);
@@ -341,7 +341,7 @@ void InitPokemonSpecialAnimScene(struct PokemonSpecialAnimScene * buffer, u16 an
     FillBgTilemapBufferRect_Palette0(0, 0x000, 0, 0, 32, 32);
     LoadBgGfxByAnimType(animType);
     FillWindowPixelBuffer(0, PIXEL_FILL(0));
-    LoadUserWindowGfx(0, 0x000, 0xe0);
+    LoadUserWindowGfx(0, 0x000, BG_PLTT_ID(14));
     CopyWindowToVram(0, COPYWIN_FULL);
     ShowBg(0);
     ShowBg(3);
@@ -370,7 +370,7 @@ void PSA_ShowMessageWindow(void)
 {
     PutWindowTilemap(0);
     FillWindowPixelBuffer(0, PIXEL_FILL(1));
-    DrawTextBorderOuter(0, 0x001, 0xE);
+    DrawTextBorderOuter(0, 0x001, 14);
     CopyWindowToVram(0, COPYWIN_FULL);
 }
 
@@ -386,7 +386,7 @@ void PSA_PrintMessage(u8 messageId)
     struct PokemonSpecialAnimScene * scene = PSA_GetSceneWork();
     u16 itemId = PSA_GetItemId();
     u16 strWidth = 0;
-    u8 textSpeed = GetTextSpeedFrameDelay();
+    u8 textSpeed = GetTextSpeedSetting();
     struct Pokemon * pokemon = PSA_GetPokemon();
     u16 level;
     u8 *str;
@@ -612,7 +612,7 @@ bool8 PSA_LevelUpVerticalSpritesTaskIsRunning(void)
 // Unused
 void PSA_DrawLevelUpWindowPg1(u16 *statsBefore, u16 *statsAfter)
 {
-    DrawTextBorderOuter(1, 0x001, 0xE);
+    DrawTextBorderOuter(1, 0x001, 14);
     DrawLevelUpWindowPg1(1, statsBefore, statsAfter, TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_LIGHT_GRAY);
     PutWindowTilemap(1);
     CopyWindowToVram(1, COPYWIN_FULL);
@@ -636,22 +636,21 @@ static void LoadBgGfxByAnimType(u16 animType)
     CopyToBgTilemapBuffer(3, sBg_Tilemap, 0, 0x000);
     DecompressAndCopyTileDataToVram(3, sBg_Gfx, 0, 0x000, 0);
     if (animType != 4)
-        LoadPalette(sBg_Pal, 0x00, 0x20);
+        LoadPalette(sBg_Pal, BG_PLTT_ID(0), sizeof(sBg_Pal));
     else
-        LoadPalette(sBg_TmHm_Pal, 0x00, 0x20);
+        LoadPalette(sBg_TmHm_Pal, BG_PLTT_ID(0), sizeof(sBg_TmHm_Pal));
 }
 
 void PSA_CreateMonSpriteAtCloseness(u8 closeness)
 {
     struct PokemonSpecialAnimScene * scene = PSA_GetSceneWork();
     struct Pokemon * pokemon = PSA_GetPokemon();
-    const u16 *palette;
     u16 species = GetMonData(pokemon, MON_DATA_SPECIES);
     u32 personality = GetMonData(pokemon, MON_DATA_PERSONALITY);
-    u16 variant = GetMonData(pokemon, MON_DATA_VARIANT);
     u8 r1 = Menu2_GetMonSpriteAnchorCoord(species, personality, 2);
     void *r6;
     void *r9;
+    void *r4;
     u8 spriteId;
 
     if (r1 != 0xFF)
@@ -667,11 +666,12 @@ void PSA_CreateMonSpriteAtCloseness(u8 closeness)
 
     r6 = Alloc(0x2000);
     r9 = Alloc(0x2000);
-    if (r6 != NULL && r9 != NULL)
+    r4 = Alloc(0x100);
+    if (r6 != NULL && r9 != NULL && r4 != NULL)
     {
-        HandleLoadSpecialPokePic(GetMonFrontPicStructFromVariant(species, variant), r6, species, variant, personality);
-        palette = GetMonPalette(pokemon);
-        LoadMonSpriteGraphics(r6, palette);
+        HandleLoadSpecialPokePic(&gMonFrontPicTable[species], r6, species, personality);
+        LZ77UnCompWram(GetMonFrontSpritePal(pokemon), r4);
+        LoadMonSpriteGraphics(r6, r4);
         spriteId = CreateSprite(&sSpriteTemplate_MonSprite, 120, scene->monSpriteY1, 4);
         if (spriteId != MAX_SPRITES)
         {
@@ -684,6 +684,7 @@ void PSA_CreateMonSpriteAtCloseness(u8 closeness)
     }
     if (r6 != NULL) Free(r6);
     if (r9 != NULL) Free(r9);
+    if (r4 != NULL) Free(r4);
 }
 
 #define tState          data[0]
@@ -835,7 +836,7 @@ static void SpriteCallback_MonSpriteWiggle(struct Sprite *sprite)
     }
 }
 
-static void LoadMonSpriteGraphics(u16 *tiles, const u16 *palette)
+static void LoadMonSpriteGraphics(u16 *tiles, u16 *palette)
 {
     struct SpriteSheet spriteSheet;
     struct SpritePalette spritePalette;

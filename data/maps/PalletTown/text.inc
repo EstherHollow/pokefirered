@@ -1,9 +1,3 @@
-PalletTown_Text_WoahItsDangerous::
-    .string "Woah!\n"
-    .string "I shouldn't go into tall grass\l"
-    .string "without a POKéMON!\p"
-    .string "Let's find PROF. OAK first.$"
-
 PalletTown_Text_OakDontGoOut::
     .string "OAK: Hey! Wait!\n"
     .string "Don't go out!$"
@@ -22,8 +16,9 @@ PalletTown_Text_RaisingMonsToo::
     .string "protect me.$"
 
 PalletTown_Text_CanStoreItemsAndMonsInPC::
-    .string "Everything is mutable!\p"
-    .string "Even the words I'm speaking!$"
+    .string "Technology is incredible!\p"
+    .string "You can now store and recall items\n"
+    .string "and POKéMON as data via PC.$"
 
 PalletTown_Text_OakPokemonResearchLab::
     .string "OAK POKéMON RESEARCH LAB$"

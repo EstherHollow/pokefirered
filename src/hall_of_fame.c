@@ -35,7 +35,6 @@ struct HallofFameMon
     u32 personality;
     u16 species:9;
     u16 lvl:7;
-    u16 variant;
     u8 nick[POKEMON_NAME_LENGTH];
 };
 
@@ -294,7 +293,6 @@ static const struct HallofFameMon sDummyHofMon = {
     .personality = 0,
     .species = SPECIES_NONE,
     .lvl = 0,
-    .variant = 0,
     .nick = __("          ")
 };
 
@@ -396,7 +394,6 @@ static void Task_Hof_InitMonData(u8 taskId)
             sHofMonPtr[0].mon[i].tid = GetMonData(&gPlayerParty[i], MON_DATA_OT_ID);
             sHofMonPtr[0].mon[i].personality = GetMonData(&gPlayerParty[i], MON_DATA_PERSONALITY);
             sHofMonPtr[0].mon[i].lvl = GetMonData(&gPlayerParty[i], MON_DATA_LEVEL);
-            sHofMonPtr[0].mon[i].variant = GetMonData(&gPlayerParty[i], MON_DATA_VARIANT);
             GetMonData(&gPlayerParty[i], MON_DATA_NICKNAME, nick);
             for (j = 0; j < 10; j++)
                 sHofMonPtr[0].mon[i].nick[j] = nick[j];
@@ -408,7 +405,6 @@ static void Task_Hof_InitMonData(u8 taskId)
             sHofMonPtr[0].mon[i].tid = 0;
             sHofMonPtr[0].mon[i].personality = 0;
             sHofMonPtr[0].mon[i].lvl = 0;
-            sHofMonPtr[0].mon[i].variant = 0;
             sHofMonPtr[0].mon[i].nick[0] = EOS;
         }
     }
@@ -512,7 +508,7 @@ static void Task_Hof_DisplayMon(u8 taskId)
         dstY = sHallOfFame_MonHalfTeamPositions[currMonId][3];
     }
 
-    spriteId = CreateMonPicSprite_HandleDeoxys(currMon->species, currMon->variant, currMon->personality, 1, srcX, srcY, currMonId, 0xFFFF);
+    spriteId = CreateMonPicSprite_HandleDeoxys(currMon->species, currMon->tid, currMon->personality, 1, srcX, srcY, currMonId, 0xFFFF);
     gSprites[spriteId].data[1] = dstX;
     gSprites[spriteId].data[2] = dstY;
     gSprites[spriteId].data[0] = 0;
@@ -624,7 +620,7 @@ static void Task_Hof_SpawnPlayerPic(u8 taskId)
     ShowBg(3);
     gTasks[taskId].data[4] = CreateTrainerPicSprite(PlayerGenderToFrontTrainerPicId(gSaveBlock2Ptr->playerGender, TRUE), TRUE, 0x78, 0x48, 6, 0xFFFF);
     AddWindow(&sWindowTemplate);
-    LoadStdWindowGfx(1, 0x21D, 0xD0);
+    LoadStdWindowGfx(1, 0x21D, BG_PLTT_ID(13));
     gTasks[taskId].data[3] = 120;
     gTasks[taskId].func = Task_Hof_WaitAndPrintPlayerInfo;
 }
@@ -661,7 +657,7 @@ static void Task_Hof_ExitOnKeyPressed(u8 taskId)
 
 static void Task_Hof_HandlePaletteOnExit(u8 taskId)
 {
-    CpuCopy16(gPlttBufferFaded, gPlttBufferUnfaded, PLTT_BUFFER_SIZE * sizeof(u16));
+    CpuCopy16(gPlttBufferFaded, gPlttBufferUnfaded, PLTT_SIZE);
     BeginNormalPaletteFade(PALETTES_ALL, 8, 0, 16, RGB_BLACK);
     gTasks[taskId].func = Task_Hof_HandleExit;
 }
@@ -830,7 +826,7 @@ static void Task_HofPC_DrawSpritesPrintText(u8 taskId)
                 posY = sHallOfFame_MonHalfTeamPositions[i][3];
             }
 
-            spriteId = CreateMonPicSprite_HandleDeoxys(currMon->species, currMon->variant, currMon->personality, TRUE, posX,
+            spriteId = CreateMonPicSprite_HandleDeoxys(currMon->species, currMon->tid, currMon->personality, TRUE, posX,
                                                        posY, i, 0xFFFF);
             gSprites[spriteId].oam.priority = 1;
             gTasks[taskId].data[5 + i] = spriteId;
@@ -942,7 +938,7 @@ static void Task_HofPC_HandlePaletteOnExit(u8 taskId)
 {
     struct HallofFameTeam* fameTeam;
 
-    CpuCopy16(gPlttBufferFaded, gPlttBufferUnfaded, 0x400);
+    CpuCopy16(gPlttBufferFaded, gPlttBufferUnfaded, PLTT_SIZE);
     BeginPCScreenEffect_TurnOff(0, 0, 0);
     gTasks[taskId].func = Task_HofPC_HandleExit;
 }
@@ -1089,7 +1085,7 @@ static void HallOfFame_PrintPlayerInfo(u8 unused1, u8 unused2)
     
     FillWindowPixelBuffer(1, PIXEL_FILL(1));
     PutWindowTilemap(1);
-    DrawStdFrameWithCustomTileAndPalette(1, FALSE, 0x21D, 0xD);
+    DrawStdFrameWithCustomTileAndPalette(1, FALSE, 0x21D, 13);
     AddTextPrinterParameterized4(1, FONT_NORMAL, 4, 3, 0, 0, sTextColors[1], 0, gText_Name);
 
     AddTextPrinterParameterized3(1, FONT_NORMAL, textWidth - GetStringWidth(FONT_NORMAL, gSaveBlock2Ptr->playerName, 0), 3, sTextColors[1], 0, gSaveBlock2Ptr->playerName);
@@ -1152,7 +1148,7 @@ static void ClearVramOamPltt_LoadHofPal(void)
     DmaFill16(3, 0, plttOffset, plttSize);
 
     ResetPaletteFade();
-    LoadPalette(sHallOfFame_Pal, 0, 0x20);
+    LoadPalette(sHallOfFame_Pal, BG_PLTT_ID(0), sizeof(sHallOfFame_Pal));
 }
 
 static void HofInit_ResetGpuBuffersAndLoadConfettiGfx(void)

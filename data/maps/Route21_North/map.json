@@ -16,12 +16,12 @@
   "connections": [
     {
       "map": "MAP_PALLET_TOWN",
-      "offset": -7,
+      "offset": 0,
       "direction": "up"
     },
     {
       "map": "MAP_ROUTE21_SOUTH",
-      "offset": 4,
+      "offset": 0,
       "direction": "down"
     }
   ],
@@ -105,12 +105,8 @@
       "target_map": "MAP_PALLET_TOWN"
     }
   ],
-  "warp_events": [
-
-  ],
-  "coord_events": [
-
-  ],
+  "warp_events": [],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "hidden_item",

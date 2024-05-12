@@ -16,12 +16,12 @@
   "connections": [
     {
       "map": "MAP_ROUTE2",
-      "offset": 7,
+      "offset": 12,
       "direction": "up"
     },
     {
       "map": "MAP_ROUTE1",
-      "offset": 5,
+      "offset": 12,
       "direction": "down"
     },
     {
@@ -198,19 +198,46 @@
   "coord_events": [
     {
       "type": "trigger",
+      "x": 22,
+      "y": 11,
+      "elevation": 3,
+      "var": "VAR_MAP_SCENE_VIRIDIAN_CITY_OLD_MAN",
+      "var_value": "0",
+      "script": "ViridianCity_EventScript_RoadBlocked"
+    },
+    {
+      "type": "trigger",
       "x": 36,
       "y": 11,
       "elevation": 3,
       "var": "VAR_MAP_SCENE_VIRIDIAN_CITY_GYM_DOOR",
       "var_value": "0",
       "script": "ViridianCity_EventScript_GymDoorLocked"
+    },
+    {
+      "type": "trigger",
+      "x": 20,
+      "y": 8,
+      "elevation": 3,
+      "var": "VAR_MAP_SCENE_VIRIDIAN_CITY_OLD_MAN",
+      "var_value": "1",
+      "script": "ViridianCity_EventScript_TutorialTriggerLeft"
+    },
+    {
+      "type": "trigger",
+      "x": 22,
+      "y": 8,
+      "elevation": 3,
+      "var": "VAR_MAP_SCENE_VIRIDIAN_CITY_OLD_MAN",
+      "var_value": "1",
+      "script": "ViridianCity_EventScript_TutorialTriggerRight"
     }
   ],
   "bg_events": [
     {
       "type": "sign",
-      "x": 36,
-      "y": 24,
+      "x": 23,
+      "y": 1,
       "elevation": 3,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "ViridianCity_EventScript_TrainerTips1"
@@ -225,8 +252,8 @@
     },
     {
       "type": "sign",
-      "x": 37,
-      "y": 24,
+      "x": 20,
+      "y": 31,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "ViridianCity_EventScript_TrainerTips2"

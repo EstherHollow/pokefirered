@@ -1,6 +1,3 @@
-.set FLDEFF_PAL_ID_GENERAL_0, 0
-.set FLDEFF_PAL_ID_GENERAL_1, 1
-
 	.macro loadtiles address
 	.byte 0
 	.4byte \address

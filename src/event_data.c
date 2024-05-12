@@ -106,14 +106,12 @@ void EnableNationalPokedex(void)
 
 bool32 IsNationalPokedexEnabled(void)
 {
-//    if (gSaveBlock2Ptr->pokedex.nationalMagic == 0xB9
-//            && VarGet(VAR_NATIONAL_DEX) == 0x6258
-//            && FlagGet(FLAG_SYS_NATIONAL_DEX))
-//        return TRUE;
-//
-//    return FALSE;
+    if (gSaveBlock2Ptr->pokedex.nationalMagic == 0xB9
+            && VarGet(VAR_NATIONAL_DEX) == 0x6258
+            && FlagGet(FLAG_SYS_NATIONAL_DEX))
+        return TRUE;
 
-    return TRUE; // Hack, do a more thorough fix later.
+    return FALSE;
 }
 
 void DisableMysteryGift(void)
@@ -194,15 +192,15 @@ u16 *GetVarPointer(u16 idx)
     {
         switch (gQuestLogPlaybackState)
         {
-        case 0:
+        case QL_PLAYBACK_STATE_STOPPED:
         default:
             break;
-        case 1:
+        case QL_PLAYBACK_STATE_RUNNING:
             ptr = QuestLogGetFlagOrVarPtr(FALSE, idx);
             if (ptr != NULL)
                 gSaveBlock1Ptr->vars[idx - VARS_START] = *ptr;
             break;
-        case 2:
+        case QL_PLAYBACK_STATE_RECORDING:
             if (IsFlagOrVarStoredInQuestLog(idx - VARS_START, TRUE) == TRUE)
             {
                 gLastQuestLogStoredFlagOrVarIdx = idx - VARS_START;
@@ -265,15 +263,15 @@ u8 *GetFlagAddr(u16 idx)
     {
         switch (gQuestLogPlaybackState)
         {
-        case 0:
+        case QL_PLAYBACK_STATE_STOPPED:
         default:
             break;
-        case 1:
+        case QL_PLAYBACK_STATE_RUNNING:
             ptr = QuestLogGetFlagOrVarPtr(TRUE, idx);
             if (ptr != NULL)
-                gSaveBlock1Ptr->flags[idx >> 3] = *ptr;
+                gSaveBlock1Ptr->flags[idx / 8] = *ptr;
             break;
-        case 2:
+        case QL_PLAYBACK_STATE_RECORDING:
             if (IsFlagOrVarStoredInQuestLog(idx, FALSE) == TRUE)
             {
                 gLastQuestLogStoredFlagOrVarIdx = idx;

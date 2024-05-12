@@ -45,17 +45,14 @@ void HealPlayerParty(void)
     }
 }
 
-u8 ScriptGiveMon(u16 species, u8 level, u8 flags, u16 item, u32 unused1, u32 unused2, u8 unused3)
+u8 ScriptGiveMon(u16 species, u8 level, u16 item, u32 unused1, u32 unused2, u8 unused3)
 {
     u16 nationalDexNum;
     int sentToPc;
     u8 heldItem[2];
     struct Pokemon *mon = AllocZeroed(sizeof(struct Pokemon));
 
-    if (flags)
-        CreateMonWithFlags(mon, species, level, 32, flags);
-    else
-        CreatePlayerMon(mon, species, level, 32, 0, 0);
+    CreateMon(mon, species, level, 32, 0, 0, OT_ID_PLAYER_ID, 0);
     heldItem[0] = item;
     heldItem[1] = item >> 8;
     SetMonData(mon, MON_DATA_HELD_ITEM, heldItem);
@@ -133,7 +130,7 @@ void CreateScriptedWildMon(u16 species, u8 level, u16 item)
     u8 heldItem[2];
 
     ZeroEnemyPartyMons();
-    CreatePlayerMon(&gEnemyParty[0], species, level, 32, 0, 0);
+    CreateMon(&gEnemyParty[0], species, level, 32, 0, 0, OT_ID_PLAYER_ID, 0);
     if (item)
     {
         heldItem[0] = item;

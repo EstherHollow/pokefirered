@@ -34,7 +34,7 @@ PalletTown_ProfessorOaksLab_Text_RivalLetsCheckOutMons::
 PalletTown_ProfessorOaksLab_Text_RivalDefeat::
     .string "WHAT?\n"
     .string "Unbelievable!\l"
-    .string "So much for type advantage!$"
+    .string "I picked the wrong POKéMON!$"
 
 @ Also used for early Route 22 battle
 Text_RivalVictory::
@@ -47,23 +47,41 @@ PalletTown_ProfessorOaksLab_Text_RivalGoToughenMyMon::
     .string "{PLAYER}! Gramps!\n"
     .string "Smell you later!$"
 
+PalletTown_ProfessorOaksLab_Text_RivalGramps::
+    .string "{RIVAL}: Gramps!$"
+
+PalletTown_ProfessorOaksLab_Text_RivalWhatDidYouCallMeFor::
+    .string "{RIVAL}: I almost forgot!\n"
+    .string "What did you call me for?$"
+
 PalletTown_ProfessorOaksLab_Text_RivalLeaveItToMeGramps::
     .string "{RIVAL}: All right, Gramps!\n"
     .string "Leave it all to me!$"
 
-PalletTown_ProfessorOaksLab_Text_RivalHateToSayIt::
-    .string "{PLAYER}, you won't be necessary\n"
-    .string "for this. Just sit back and watch!$"
+PalletTown_ProfessorOaksLab_Text_RivalTellSisNotToGiveYouMap::
+    .string "{PLAYER}, I hate to say it, but you\n"
+    .string "won't be necessary for this.\p"
+    .string "I know! I'll borrow a TOWN MAP\n"
+    .string "from my sis!\p"
+    .string "I'll tell her not to lend you one,\n"
+    .string "{PLAYER}! Hahaha!\p"
+    .string "Don't bother coming around to\n"
+    .string "my place after this!$"
 
 PalletTown_ProfessorOaksLab_Text_OakThreeMonsChooseOne::
     .string "OAK: {RIVAL}?\n"
     .string "Let me think…\p"
     .string "Oh, that's right, I told you to\n"
     .string "come! Just wait!\p"
-    .string "Look, {PLAYER},\n"
-    .string "I have three POKéMON here.\p"
-    .string "They are all FIRERED variants,\n"
-    .string "native to this game version.\p"
+    .string "Here, {PLAYER}.\p"
+    .string "There are three POKéMON here.\p"
+    .string "Haha!\p"
+    .string "The POKéMON are held inside\n"
+    .string "these POKé BALLS.\p"
+    .string "When I was young, I was a serious\n"
+    .string "POKéMON TRAINER.\p"
+    .string "But now, in my old age, I have\n"
+    .string "only these three left.\p"
     .string "You can have one.\n"
     .string "Go on, choose!$"
 
@@ -80,7 +98,7 @@ PalletTown_ProfessorOaksLab_Text_OakWhichOneWillYouChoose::
 
 PalletTown_ProfessorOaksLab_Text_OakHeyDontGoAwayYet::
     .string "OAK: Hey!\n"
-    .string "Don't leave yet!$"
+    .string "Don't go away yet!$"
 
 PalletTown_ProfessorOaksLab_Text_OakChoosingCharmander::
     .string "Ah! CHARMANDER is your choice.\n"
@@ -101,8 +119,8 @@ PalletTown_ProfessorOaksLab_Text_OakChoosingBulbasaur::
     .string "the GRASS POKéMON BULBASAUR?$"
 
 PalletTown_ProfessorOaksLab_Text_OakThisMonIsEnergetic::
-    .string "This POKéMON seems quite\n"
-    .string "excited!$"
+    .string "This POKéMON is really quite\n"
+    .string "energetic!$"
 
 PalletTown_ProfessorOaksLab_Text_ReceivedMonFromOak::
     .string "{PLAYER} received the {STR_VAR_1}\n"
@@ -140,8 +158,7 @@ PalletTown_ProfessorOaksLab_Text_OakCustomBallIOrdered::
 
 PalletTown_ProfessorOaksLab_Text_OakHaveRequestForYouTwo::
     .string "OAK: Oh, right!\n"
-    .string "I have a request for you two.\p"
-    .string "Come back over here.$"
+    .string "I have a request for you two.$"
 
 PalletTown_ProfessorOaksLab_Text_OakPokedexOnDesk::
     .string "On the desk there is my invention,\n"
@@ -182,6 +199,10 @@ PalletTown_ProfessorOaksLab_Text_OakCompleteMonGuideWasMyDream::
     .string "To make a complete guide on all\n"
     .string "the POKéMON in the world…\p"
     .string "That was my dream!\p"
+    .string "But, I'm too old.\n"
+    .string "I can't get the job done.\p"
+    .string "So, I want you two to fulfill my\n"
+    .string "dream for me.\p"
     .string "Get moving, you two.\p"
     .string "This is a great undertaking in\n"
     .string "POKéMON history!$"
@@ -255,7 +276,9 @@ PalletTown_ProfessorOaksLab_Text_DaisyWillGroomMons::
     .string "If you show DAISY your POKéMON,\n"
     .string "she can tell how much it likes you.\p"
     .string "Occasionally, she will even groom\n"
-    .string "a POKéMON for you.$"
+    .string "a POKéMON for you.\p"
+    .string "This is a secret, so please don't\n"
+    .string "tell anyone.$"
 
 PalletTown_ProfessorOaksLab_Text_OakIsGoingToHaveRadioShow::
     .string "PROF. OAK is going to have his own\n"

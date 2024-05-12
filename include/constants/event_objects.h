@@ -153,9 +153,8 @@
 #define OBJ_EVENT_GFX_DEOXYS_A 149
 #define OBJ_EVENT_GFX_DEOXYS_N 150
 #define OBJ_EVENT_GFX_SS_ANNE 151
-#define OBJ_EVENT_GFX_WILD_ENCOUNTER 152
 
-#define NUM_OBJ_EVENT_GFX     153
+#define NUM_OBJ_EVENT_GFX     152
 
 // These are dynamic object gfx ids.
 // They correspond with the values of the VAR_OBJ_GFX_ID_X vars.
@@ -196,11 +195,6 @@
 // Special object event local ids
 #define OBJ_EVENT_ID_PLAYER  0xFF
 #define OBJ_EVENT_ID_CAMERA  0x7F
-
-#define MAX_WILD_ENCOUNTER_IDS 16
-#define OBJ_EVENT_ID_WILD_ENCOUNTER 0x64
-#define OBJ_EVENT_ID_NULL (OBJ_EVENT_ID_WILD_ENCOUNTER - 1)
-#define IS_WILD_ENCOUNTER_ID(id) (id >= OBJ_EVENT_ID_WILD_ENCOUNTER && id < OBJ_EVENT_ID_WILD_ENCOUNTER + MAX_WILD_ENCOUNTER_IDS)
 
 // Object event local ids referenced in C files
 #define LOCALID_UNION_ROOM_PLAYER_4 2

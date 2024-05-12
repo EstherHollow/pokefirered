@@ -986,11 +986,10 @@
 
 	@ Gives the player a Pokémon of the specified species and level, holding the specified item. The trailing 0s are unused parameters.
 	@ VAR_RESULT will be set to MON_GIVEN_TO_PARTY, MON_GIVEN_TO_PC, or MON_CANT_GIVE depending on the outcome. 
-	.macro givemon species:req, level:req, flags=0, item=ITEM_NONE
+	.macro givemon species:req, level:req, item=ITEM_NONE
 	.byte 0x79
 	.2byte \species
 	.byte \level
-	.byte \flags
 	.2byte \item
 	.4byte 0
 	.4byte 0

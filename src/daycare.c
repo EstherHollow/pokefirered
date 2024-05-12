@@ -1092,7 +1092,7 @@ void CreateEgg(struct Pokemon *mon, u16 species, bool8 setHotSpringsLocation)
     u8 metLocation;
     u8 isEgg;
 
-    CreatePlayerMon(mon, species, EGG_HATCH_LEVEL, DEFAULT_IVS, FALSE, 0);
+    CreateMon(mon, species, EGG_HATCH_LEVEL, USE_RANDOM_IVS, FALSE, 0, OT_ID_PLAYER_ID, 0);
     metLevel = 0;
     ball = ITEM_POKE_BALL;
     language = LANGUAGE_JAPANESE;
@@ -1119,7 +1119,7 @@ static void SetInitialEggData(struct Pokemon *mon, u16 species, struct DayCare *
     u8 language;
 
     personality = daycare->offspringPersonality | (Random() << 16);
-    CreatePlayerMon(mon, species, EGG_HATCH_LEVEL, DEFAULT_IVS, TRUE, personality);
+    CreateMon(mon, species, EGG_HATCH_LEVEL, USE_RANDOM_IVS, TRUE, personality, OT_ID_PLAYER_ID, 0);
     metLevel = 0;
     ball = ITEM_POKE_BALL;
     language = LANGUAGE_JAPANESE;
@@ -1615,7 +1615,7 @@ static void CreatedHatchedMon(struct Pokemon *egg, struct Pokemon *temp)
     pokerus = GetMonData(egg, MON_DATA_POKERUS);
     isModernFatefulEncounter = GetMonData(egg, MON_DATA_MODERN_FATEFUL_ENCOUNTER);
 
-    CreatePlayerMon(temp, species, EGG_HATCH_LEVEL, DEFAULT_IVS, TRUE, personality);
+    CreateMon(temp, species, EGG_HATCH_LEVEL, USE_RANDOM_IVS, TRUE, personality, OT_ID_PLAYER_ID, 0);
 
     for (i = 0; i < MAX_MON_MOVES; i++)
         SetMonData(temp, MON_DATA_MOVE1 + i,  &moves[i]);
@@ -1700,6 +1700,8 @@ bool8 DaycareMonReceivedMail(void)
     return BufferDayCareMonReceivedMail(&gSaveBlock1Ptr->daycare, gSpecialVar_0x8004);
 }
 
+extern const struct CompressedSpriteSheet gMonFrontPicTable[];
+
 static u8 EggHatchCreateMonSprite(u8 a0, u8 switchID, u8 pokeID, u16 *speciesLoc)
 {
     u8 r4 = 0;
@@ -1721,15 +1723,14 @@ static u8 EggHatchCreateMonSprite(u8 a0, u8 switchID, u8 pokeID, u16 *speciesLoc
     case 0:
     {
         u16 species = GetMonData(mon, MON_DATA_SPECIES);
-        u16 variant = GetMonData(mon, MON_DATA_VARIANT);
         u32 pid = GetMonData(mon, MON_DATA_PERSONALITY);
-        HandleLoadSpecialPokePic(GetMonFrontPicStructFromVariant(species, variant), gMonSpritesGfxPtr->sprites[(a0 * 2) + 1], species, variant, pid);
-        LoadSpritePalette(GetMonPaletteStruct(mon));
+        HandleLoadSpecialPokePic(&gMonFrontPicTable[species], gMonSpritesGfxPtr->sprites[(a0 * 2) + 1], species, pid);
+        LoadCompressedSpritePalette(GetMonSpritePalStruct(mon));
         *speciesLoc = species;
     }
         break;
     case 1:
-        SetMultiuseSpriteTemplateToPokemon(GetMonPaletteStruct(mon)->tag, r4);
+        SetMultiuseSpriteTemplateToPokemon(GetMonSpritePalStruct(mon)->tag, r4);
         spriteID = CreateSprite(&gMultiuseSpriteTemplate, 120, 70, 6);
         gSprites[spriteID].invisible = TRUE;
         gSprites[spriteID].callback = SpriteCallbackDummy;
@@ -1809,7 +1810,7 @@ static void CB2_EggHatch_0(void)
     case 2:
         DecompressAndLoadBgGfxUsingHeap(0, gBattleInterface_Textbox_Gfx, 0, 0, 0);
         CopyToBgTilemapBuffer(0, gBattleInterface_Textbox_Tilemap, 0, 0);
-        LoadCompressedPalette(gBattleInterface_Textbox_Pal, 0, 0x20);
+        LoadCompressedPalette(gBattleInterface_Textbox_Pal, BG_PLTT_ID(0), PLTT_SIZE_4BPP);
         gMain.state++;
         break;
     case 3:
@@ -1833,7 +1834,7 @@ static void CB2_EggHatch_0(void)
         break;
     case 7:
         SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_OBJ_ON | DISPCNT_OBJ_1D_MAP);
-        LoadPalette(gTradeGba2_Pal, 0x10, 0xA0);
+        LoadPalette(gTradeGba2_Pal, BG_PLTT_ID(1), 5 * PLTT_SIZE_4BPP);
         LoadBgTiles(1, gTradeGba_Gfx, 0x1420, 0);
         CopyToBgTilemapBuffer(1, gTradeOrHatchMonShadowTilemap, 0x1000, 0);
         CopyBgTilemapBufferToVram(1);
@@ -1947,8 +1948,8 @@ static void CB2_EggHatch_1(void)
     case 9:
         if (!IsTextPrinterActive(sEggHatchData->windowId))
         {
-            LoadUserWindowGfx2(sEggHatchData->windowId, 0x140, 0xE0);
-            CreateYesNoMenu(&sYesNoWinTemplate, FONT_NORMAL_COPY_2, 0, 2, 0x140, 0xE, 0);
+            LoadUserWindowGfx2(sEggHatchData->windowId, 0x140, BG_PLTT_ID(14));
+            CreateYesNoMenu(&sYesNoWinTemplate, FONT_NORMAL_COPY_2, 0, 2, 0x140, 14, 0);
             sEggHatchData->CB2_state++;
         }
         break;

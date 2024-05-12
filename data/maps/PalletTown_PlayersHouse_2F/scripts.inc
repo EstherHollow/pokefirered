@@ -21,13 +21,7 @@ PalletTown_PlayersHouse_2F_FirstWarpIn::
 	end
 
 PalletTown_PlayersHouse_2F_EventScript_NES::
-    .ifdef FIRERED
-	msgbox PalletTown_PlayersHouse_2F_Text_PlayedWithSwitchScarlet, MSGBOX_SIGN
-	.else
-	.ifdef LEAFGREEN
-    msgbox PalletTown_PlayersHouse_2F_Text_PlayedWithSwitchViolet, MSGBOX_SIGN
-	.endif
-	.endif
+	msgbox PalletTown_PlayersHouse_2F_Text_PlayedWithNES, MSGBOX_SIGN
 	end
 
 PalletTown_PlayersHouse_2F_EventScript_Sign::

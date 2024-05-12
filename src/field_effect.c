@@ -29,7 +29,7 @@
 #include "constants/songs.h"
 #include "constants/sound.h"
 
-extern struct SpritePalette gMonPaletteTable[][8];
+extern struct CompressedSpritePalette gMonPaletteTable[]; // Intentionally declared (incorrectly) without const in order to match
 extern const struct CompressedSpritePalette gTrainerFrontPicPaletteTable[];
 extern const struct CompressedSpriteSheet gTrainerFrontPicTable[];
 
@@ -51,7 +51,6 @@ static bool8 FieldEffectCmd_loadtiles_callnative(const u8 **script, u32 *result)
 static bool8 FieldEffectCmd_loadfadedpal_callnative(const u8 **script, u32 *result);
 static void FieldEffectScript_LoadTiles(const u8 **script);
 static void FieldEffectScript_LoadFadedPal(const u8 **script);
-static void FieldEffectScript_LoadFadedPalGeneralIndex(const u8 **script);
 static void FieldEffectScript_LoadPal(const u8 **script);
 static void FieldEffectScript_CallNative(const u8 **script, u32 *result);
 static void FieldEffectFreeTilesIfUnused(u16 tilesTag);
@@ -107,7 +106,7 @@ static const struct OamData sNewGameOakOamAttributes = {
     .size = SPRITE_SIZE(64x64),
     .tileNum = 0x000,
     .priority = 0,
-    .paletteNum = 0x0,
+    .paletteNum = 0,
     .affineParam = 0
 };
 
@@ -123,7 +122,7 @@ static const struct OamData sOamData_8x8 = {
     .size = SPRITE_SIZE(8x8),
     .tileNum = 0x000,
     .priority = 0,
-    .paletteNum = 0x0,
+    .paletteNum = 0,
     .affineParam = 0
 };
 
@@ -139,7 +138,7 @@ static const struct OamData sOamData_16x16 = {
     .size = SPRITE_SIZE(16x16),
     .tileNum = 0x000,
     .priority = 0,
-    .paletteNum = 0x0,
+    .paletteNum = 0,
     .affineParam = 0
 };
 
@@ -190,7 +189,7 @@ static const struct OamData sOamData_32x16 = {
     .size = SPRITE_SIZE(32x16),
     .tileNum = 0x000,
     .priority = 0,
-    .paletteNum = 0x0,
+    .paletteNum = 0,
     .affineParam = 0
 };
 
@@ -418,7 +417,7 @@ static bool8 FieldEffectCmd_loadtiles_callnative(const u8 **script, u32 *result)
 static bool8 FieldEffectCmd_loadfadedpal_callnative(const u8 **script, u32 *result)
 {
     (*script)++;
-    FieldEffectScript_LoadFadedPalGeneralIndex(script);
+    FieldEffectScript_LoadFadedPal(script);
     FieldEffectScript_CallNative(script, result);
     return TRUE;
 }
@@ -443,19 +442,19 @@ void ApplyGlobalFieldPaletteTint(u8 paletteIdx)
     case 0:
         return;
     case 1:
-        TintPalette_GrayScale(&gPlttBufferUnfaded[(paletteIdx + 16) * 16], 0x10);
+        TintPalette_GrayScale(&gPlttBufferUnfaded[OBJ_PLTT_ID2(paletteIdx)], 16);
         break;
     case 2:
-        TintPalette_SepiaTone(&gPlttBufferUnfaded[(paletteIdx + 16) * 16], 0x10);
+        TintPalette_SepiaTone(&gPlttBufferUnfaded[OBJ_PLTT_ID2(paletteIdx)], 16);
         break;
     case 3:
-        QuestLog_BackUpPalette((paletteIdx + 16) * 16, 0x10);
-        TintPalette_GrayScale(&gPlttBufferUnfaded[(paletteIdx + 16) * 16], 0x10);
+        QuestLog_BackUpPalette(OBJ_PLTT_ID2(paletteIdx), 16);
+        TintPalette_GrayScale(&gPlttBufferUnfaded[OBJ_PLTT_ID2(paletteIdx)], 16);
         break;
     default:
         return;
     }
-    CpuFastCopy(&gPlttBufferUnfaded[(paletteIdx + 16) * 16], &gPlttBufferFaded[(paletteIdx + 16) * 16], 0x20);
+    CpuFastCopy(&gPlttBufferUnfaded[OBJ_PLTT_ID2(paletteIdx)], &gPlttBufferFaded[OBJ_PLTT_ID2(paletteIdx)], PLTT_SIZE_4BPP);
 }
 
 static void FieldEffectScript_LoadFadedPal(const u8 **script)
@@ -466,19 +465,6 @@ static void FieldEffectScript_LoadFadedPal(const u8 **script)
     if (idx == 0xFF)
         ApplyGlobalFieldPaletteTint(IndexOfSpritePaletteTag(spritePalette->tag));
     UpdateSpritePaletteWithWeather(IndexOfSpritePaletteTag(spritePalette->tag));
-    *script += sizeof(u32);
-}
-
-static void FieldEffectScript_LoadFadedPalGeneralIndex(const u8 **script)
-{
-    u32 paletteId = FieldEffectScript_ReadWord(script);
-    u8 paletteIndex = (paletteId == 0) ? FLDEFF_PAL_INDEX_0 : FLDEFF_PAL_INDEX_1;
-    u16 tag = (paletteId == 0) ? FLDEFF_PAL_TAG_GENERAL_0 : FLDEFF_PAL_TAG_GENERAL_1;
-    u8 idx = IndexOfSpritePaletteTag(tag);
-    LoadFieldEffectPalette(paletteIndex, tag);
-    if (idx == 0xFF)
-        ApplyGlobalFieldPaletteTint(IndexOfSpritePaletteTag(tag));
-    UpdateSpritePaletteWithWeather(IndexOfSpritePaletteTag(tag));
     *script += sizeof(u32);
 }
 
@@ -605,10 +591,11 @@ u8 CreateTrainerSprite(u8 trainerSpriteID, s16 x, s16 y, u8 subpriority, u8 *buf
     return CreateSprite(&spriteTemplate, x, y, subpriority);
 }
 
+// Unused
 static void LoadTrainerGfx_TrainerCard(u8 gender, u16 palOffset, u8 *dest)
 {
     LZDecompressVram(gTrainerFrontPicTable[gender].data, dest);
-    LoadCompressedPalette(gTrainerFrontPicPaletteTable[gender].data, palOffset, 0x20);
+    LoadCompressedPalette(gTrainerFrontPicPaletteTable[gender].data, palOffset, PLTT_SIZE_4BPP);
 }
 
 // Unused
@@ -620,35 +607,18 @@ static u8 AddNewGameBirchObject(s16 x, s16 y, u8 subpriority)
 
 u8 CreateMonSprite_PicBox(u16 species, s16 x, s16 y, u8 subpriority)
 {
-    u16 variant;
-    u16 spriteId;
-
-    // Hack to display the correct palette
-    // when checking the starter pokeballs.
-    // TODO Maybe implement a flags parameter?
-    switch(species) {
-//    case SPECIES_BULBASAUR:
-//    case SPECIES_CHARMANDER:
-//    case SPECIES_SQUIRTLE:
-//        variant = VARIANT_FROM_GAME_VERSION;
-//        break;
-    default:
-        variant = VARIANT_DEFAULT;
-        break;
-    }
-
-    spriteId = CreateMonPicSprite_HandleDeoxys(species, variant, 0x8000, TRUE, x, y, 0, gMonPaletteTable[species][0].tag);
-    PreservePaletteInWeather(IndexOfSpritePaletteTag(gMonPaletteTable[species][0].tag) + 0x10);
+    u16 spriteId = CreateMonPicSprite_HandleDeoxys(species, 0, 0x8000, TRUE, x, y, 0, gMonPaletteTable[species].tag);
+    PreservePaletteInWeather(IndexOfSpritePaletteTag(gMonPaletteTable[species].tag) + 0x10);
     if (spriteId == 0xFFFF)
         return MAX_SPRITES;
     else
         return spriteId;
 }
 
-static u8 CreateMonSprite_FieldMove(u16 species, u16 variant, u32 personality, s16 x, s16 y, u8 subpriority)
+static u8 CreateMonSprite_FieldMove(u16 species, u32 otId, u32 personality, s16 x, s16 y, u8 subpriority)
 {
-    const struct SpritePalette * spritePalette = GetMonPaletteStructFromVariant(species, variant);
-    u16 spriteId = CreateMonPicSprite_HandleDeoxys(species, variant, personality, 1, x, y, 0, spritePalette->tag);
+    const struct CompressedSpritePalette * spritePalette = GetMonSpritePalStructFromOtIdPersonality(species, otId, personality);
+    u16 spriteId = CreateMonPicSprite_HandleDeoxys(species, otId, personality, 1, x, y, 0, spritePalette->tag);
     PreservePaletteInWeather(IndexOfSpritePaletteTag(spritePalette->tag) + 0x10);
     if (spriteId == 0xFFFF)
         return MAX_SPRITES;
@@ -976,14 +946,14 @@ static void PokeballGlowEffect_FlashFirstThree(struct Sprite *sprite)
             sprite->sNumFlashed++;
     }
     phase = (sprite->sCounter + 3) & 3;
-    MultiplyInvertedPaletteRGBComponents((IndexOfSpritePaletteTag(0x1007) << 4) + 0x108, sPokeballGlowReds[phase], sPokeballGlowGreens[phase], sPokeballGlowBlues[phase]);
+    MultiplyInvertedPaletteRGBComponents(OBJ_PLTT_ID(IndexOfSpritePaletteTag(0x1007)) + 8, sPokeballGlowReds[phase], sPokeballGlowGreens[phase], sPokeballGlowBlues[phase]);
     phase = (sprite->sCounter + 2) & 3;
-    MultiplyInvertedPaletteRGBComponents((IndexOfSpritePaletteTag(0x1007) << 4) + 0x106, sPokeballGlowReds[phase], sPokeballGlowGreens[phase], sPokeballGlowBlues[phase]);
+    MultiplyInvertedPaletteRGBComponents(OBJ_PLTT_ID(IndexOfSpritePaletteTag(0x1007)) + 6, sPokeballGlowReds[phase], sPokeballGlowGreens[phase], sPokeballGlowBlues[phase]);
     phase = (sprite->sCounter + 1) & 3;
-    MultiplyInvertedPaletteRGBComponents((IndexOfSpritePaletteTag(0x1007) << 4) + 0x102, sPokeballGlowReds[phase], sPokeballGlowGreens[phase], sPokeballGlowBlues[phase]);
+    MultiplyInvertedPaletteRGBComponents(OBJ_PLTT_ID(IndexOfSpritePaletteTag(0x1007)) + 2, sPokeballGlowReds[phase], sPokeballGlowGreens[phase], sPokeballGlowBlues[phase]);
     phase = sprite->sCounter;
-    MultiplyInvertedPaletteRGBComponents((IndexOfSpritePaletteTag(0x1007) << 4) + 0x105, sPokeballGlowReds[phase], sPokeballGlowGreens[phase], sPokeballGlowBlues[phase]);
-    MultiplyInvertedPaletteRGBComponents((IndexOfSpritePaletteTag(0x1007) << 4) + 0x103, sPokeballGlowReds[phase], sPokeballGlowGreens[phase], sPokeballGlowBlues[phase]);
+    MultiplyInvertedPaletteRGBComponents(OBJ_PLTT_ID(IndexOfSpritePaletteTag(0x1007)) + 5, sPokeballGlowReds[phase], sPokeballGlowGreens[phase], sPokeballGlowBlues[phase]);
+    MultiplyInvertedPaletteRGBComponents(OBJ_PLTT_ID(IndexOfSpritePaletteTag(0x1007)) + 3, sPokeballGlowReds[phase], sPokeballGlowGreens[phase], sPokeballGlowBlues[phase]);
     if (sprite->sNumFlashed >= 3)
     {
         sprite->sState++;
@@ -1007,11 +977,11 @@ static void PokeballGlowEffect_FlashLast(struct Sprite *sprite)
         }
     }
     phase = sprite->sCounter;
-    MultiplyInvertedPaletteRGBComponents((IndexOfSpritePaletteTag(0x1007) << 4) + 0x108, sPokeballGlowReds[phase], sPokeballGlowGreens[phase], sPokeballGlowBlues[phase]);
-    MultiplyInvertedPaletteRGBComponents((IndexOfSpritePaletteTag(0x1007) << 4) + 0x106, sPokeballGlowReds[phase], sPokeballGlowGreens[phase], sPokeballGlowBlues[phase]);
-    MultiplyInvertedPaletteRGBComponents((IndexOfSpritePaletteTag(0x1007) << 4) + 0x102, sPokeballGlowReds[phase], sPokeballGlowGreens[phase], sPokeballGlowBlues[phase]);
-    MultiplyInvertedPaletteRGBComponents((IndexOfSpritePaletteTag(0x1007) << 4) + 0x105, sPokeballGlowReds[phase], sPokeballGlowGreens[phase], sPokeballGlowBlues[phase]);
-    MultiplyInvertedPaletteRGBComponents((IndexOfSpritePaletteTag(0x1007) << 4) + 0x103, sPokeballGlowReds[phase], sPokeballGlowGreens[phase], sPokeballGlowBlues[phase]);
+    MultiplyInvertedPaletteRGBComponents(OBJ_PLTT_ID(IndexOfSpritePaletteTag(0x1007)) + 8, sPokeballGlowReds[phase], sPokeballGlowGreens[phase], sPokeballGlowBlues[phase]);
+    MultiplyInvertedPaletteRGBComponents(OBJ_PLTT_ID(IndexOfSpritePaletteTag(0x1007)) + 6, sPokeballGlowReds[phase], sPokeballGlowGreens[phase], sPokeballGlowBlues[phase]);
+    MultiplyInvertedPaletteRGBComponents(OBJ_PLTT_ID(IndexOfSpritePaletteTag(0x1007)) + 2, sPokeballGlowReds[phase], sPokeballGlowGreens[phase], sPokeballGlowBlues[phase]);
+    MultiplyInvertedPaletteRGBComponents(OBJ_PLTT_ID(IndexOfSpritePaletteTag(0x1007)) + 5, sPokeballGlowReds[phase], sPokeballGlowGreens[phase], sPokeballGlowBlues[phase]);
+    MultiplyInvertedPaletteRGBComponents(OBJ_PLTT_ID(IndexOfSpritePaletteTag(0x1007)) + 3, sPokeballGlowReds[phase], sPokeballGlowGreens[phase], sPokeballGlowBlues[phase]);
 }
 
 static void PokeballGlowEffect_WaitAfterFlash(struct Sprite *sprite)
@@ -2589,7 +2559,7 @@ static void VBlankCB_ShowMonEffect_Indoors(void);
 static void AnimateIndoorShowMonBg(struct Task *task);
 static bool8 SlideIndoorBannerOnscreen(struct Task *task);
 static bool8 SlideIndoorBannerOffscreen(struct Task *task);
-static u8 InitFieldMoveMonSprite(u32 species, u16 variant, u32 personality);
+static u8 InitFieldMoveMonSprite(u32 species, u32 otId, u32 personality);
 static void SpriteCB_FieldMoveMonSlideOnscreen(struct Sprite *sprite);
 static void SpriteCB_FieldMoveMonWaitAfterCry(struct Sprite *sprite);
 static void SpriteCB_FieldMoveMonSlideOffscreen(struct Sprite *sprite);
@@ -2620,7 +2590,7 @@ u32 FldEff_FieldMoveShowMonInit(void)
     u32 r6 = gFieldEffectArguments[0] & 0x80000000;
     u8 partyIdx = gFieldEffectArguments[0];
     gFieldEffectArguments[0] = GetMonData(&gPlayerParty[partyIdx], MON_DATA_SPECIES);
-    gFieldEffectArguments[1] = GetMonData(&gPlayerParty[partyIdx], MON_DATA_VARIANT);
+    gFieldEffectArguments[1] = GetMonData(&gPlayerParty[partyIdx], MON_DATA_OT_ID);
     gFieldEffectArguments[2] = GetMonData(&gPlayerParty[partyIdx], MON_DATA_PERSONALITY);
     gFieldEffectArguments[0] |= r6;
     FieldEffectStart(FLDEFF_FIELD_MOVE_SHOW_MON);
@@ -2656,7 +2626,7 @@ static void ShowMonEffect_Outdoors_2(struct Task *task)
     u16 screenbase = ((GetGpuReg(REG_OFFSET_BG0CNT) >> 8) << 11);
     CpuCopy16(sFieldMoveStreaksOutdoors_Gfx, (void *)(VRAM + charbase), 0x200);
     CpuFill32(0, (void *)(VRAM + screenbase), 0x800);
-    LoadPalette(sFieldMoveStreaksOutdoors_Pal, 0xf0, 0x20);
+    LoadPalette(sFieldMoveStreaksOutdoors_Pal, BG_PLTT_ID(15), sizeof(sFieldMoveStreaksOutdoors_Pal));
     LoadFieldMoveStreaksTilemapToVram(screenbase);
     task->data[0]++;
 }
@@ -2807,7 +2777,7 @@ static void ShowMonEffect_Indoors_2(struct Task *task)
     task->data[12] = screenbase;
     CpuCopy16(sFieldMoveStreaksIndoors_Gfx, (void *)(VRAM + charbase), 0x80);
     CpuFill32(0, (void *)(VRAM + screenbase), 0x800);
-    LoadPalette(sFieldMoveStreaksIndoors_Pal, 0xf0, 0x20);
+    LoadPalette(sFieldMoveStreaksIndoors_Pal, BG_PLTT_ID(15), sizeof(sFieldMoveStreaksIndoors_Pal));
     task->data[0]++;
 }
 
@@ -2940,14 +2910,14 @@ static bool8 SlideIndoorBannerOffscreen(struct Task *task)
     return FALSE;
 }
 
-static u8 InitFieldMoveMonSprite(u32 species, u16 variant, u32 personality)
+static u8 InitFieldMoveMonSprite(u32 species, u32 otId, u32 personality)
 {
     bool16 playCry;
     u8 monSprite;
     struct Sprite *sprite;
     playCry = (species & 0x80000000) >> 16;
     species &= 0x7fffffff;
-    monSprite = CreateMonSprite_FieldMove(species, variant, personality, 0x140, 0x50, 0);
+    monSprite = CreateMonSprite_FieldMove(species, otId, personality, 0x140, 0x50, 0);
     sprite = &gSprites[monSprite];
     sprite->callback = SpriteCallbackDummy;
     sprite->oam.priority = 0;

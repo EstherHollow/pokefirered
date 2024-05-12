@@ -25,8 +25,4 @@
 // use the given coordinates rather than the coordinates of a target warp.
 #define WARP_ID_NONE (-1)
 
-#define NO_TRANSITION   0
-#define AXIS_HORIZONTAL 1
-#define AXIS_VERTICAL   2
-
 #endif  // GUARD_CONSTANTS_MAPS_H

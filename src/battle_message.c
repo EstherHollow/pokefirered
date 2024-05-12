@@ -1349,7 +1349,6 @@ const u8 gText_APsychicMove[] = _("a PSYCHIC move");
 const u8 gText_AnIceMove[] = _("an ICE move");
 const u8 gText_ADragonMove[] = _("a DRAGON move");
 const u8 gText_ADarkMove[] = _("a DARK move");
-const u8 gText_AFairyMove[] = _("a FAIRY move");
 const u8 gText_TimeBoard[] = _("TIME BOARD");
 const u8 gText_ClearTime[] = _("CLEAR TIME"); // Unused
 const u8 gText_XMinYZSec[] = _("{STR_VAR_1}MIN. {STR_VAR_2}.{STR_VAR_3}SEC.");
@@ -1393,8 +1392,7 @@ static const u8 *const sATypeMove_Table[NUMBER_OF_MON_TYPES] =
     [TYPE_PSYCHIC]  = gText_APsychicMove,
     [TYPE_ICE]      = gText_AnIceMove,
     [TYPE_DRAGON]   = gText_ADragonMove,
-    [TYPE_DARK]     = gText_ADarkMove,
-    [TYPE_FAIRY]    = gText_AFairyMove
+    [TYPE_DARK]     = gText_ADarkMove
 };
 
 static const u16 sGrammarMoveUsedTable[] =
@@ -1593,7 +1591,7 @@ void BufferStringBattle(u16 stringId)
     case STRINGID_INTROSENDOUT: // poke first send-out
         if (GetBattlerSide(gActiveBattler) == B_SIDE_PLAYER)
         {
-            if (gBattleTypeFlags & BATTLE_TYPE_DOUBLE && PlayerHasTwoUsableMons())
+            if (gBattleTypeFlags & BATTLE_TYPE_DOUBLE)
             {
                 if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
                     stringPtr = sText_LinkPartnerSentOutPkmnGoPkmn;
@@ -2518,7 +2516,7 @@ static const struct BattleWindowText sTextOnWindowsInfo_Normal[] = {
     [B_WIN_PP_REMAINING] = {
         .fillValue = PIXEL_FILL(0xe),
         .fontId = FONT_NORMAL_COPY_1,
-        .x = 2,
+        .x = 10,
         .y = 2,
         .letterSpacing = 0,
         .lineSpacing = 2,
@@ -2527,7 +2525,7 @@ static const struct BattleWindowText sTextOnWindowsInfo_Normal[] = {
         .bgColor = 14,
         .shadowColor = 11,
     },
-    [B_WIN_SPLIT_ICON] = {
+    [B_WIN_DUMMY] = {
         .fillValue = PIXEL_FILL(0xe),
         .fontId = FONT_NORMAL_COPY_1,
         .x = 0,
@@ -2788,7 +2786,7 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId) {
         if (gBattleTypeFlags & BATTLE_TYPE_LINK)
             speed = 1;
         else
-            speed = GetTextSpeedFrameDelay();
+            speed = GetTextSpeedSetting();
         gTextFlags.canABSpeedUpPrint = TRUE;
     }
     else
@@ -2822,11 +2820,11 @@ void SetPpNumbersPaletteInMoveSelection(void)
     u8 var = GetCurrentPpToMaxPpState(chooseMoveStruct->currentPp[gMoveSelectionCursor[gActiveBattler]],
                                       chooseMoveStruct->maxPp[gMoveSelectionCursor[gActiveBattler]]);
 
-    gPlttBufferUnfaded[92] = palPtr[(var * 2) + 0];
-    gPlttBufferUnfaded[91] = palPtr[(var * 2) + 1];
+    gPlttBufferUnfaded[BG_PLTT_ID(5) + 12] = palPtr[(var * 2) + 0];
+    gPlttBufferUnfaded[BG_PLTT_ID(5) + 11] = palPtr[(var * 2) + 1];
 
-    CpuCopy16(&gPlttBufferUnfaded[92], &gPlttBufferFaded[92], sizeof(u16));
-    CpuCopy16(&gPlttBufferUnfaded[91], &gPlttBufferFaded[91], sizeof(u16));
+    CpuCopy16(&gPlttBufferUnfaded[BG_PLTT_ID(5) + 12], &gPlttBufferFaded[BG_PLTT_ID(5) + 12], PLTT_SIZEOF(1));
+    CpuCopy16(&gPlttBufferUnfaded[BG_PLTT_ID(5) + 11], &gPlttBufferFaded[BG_PLTT_ID(5) + 11], PLTT_SIZEOF(1));
 }
 
 u8 GetCurrentPpToMaxPpState(u8 currentPp, u8 maxPp)

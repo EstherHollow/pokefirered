@@ -163,7 +163,7 @@ MID_OBJS := $(patsubst $(MID_SUBDIR)/%.mid,$(MID_BUILDDIR)/%.o,$(MID_SRCS))
 OBJS := $(C_OBJS) $(C_ASM_OBJS) $(ASM_OBJS) $(DATA_ASM_OBJS) $(SONG_OBJS) $(MID_OBJS)
 OBJS_REL := $(patsubst $(OBJ_DIR)/%,%,$(OBJS))
 
-TOOLDIRS := $(filter-out tools/agbcc tools/binutils tools/analyze_source tools/variantgen,$(wildcard tools/*))
+TOOLDIRS := $(filter-out tools/agbcc tools/binutils tools/analyze_source,$(wildcard tools/*))
 TOOLBASE = $(TOOLDIRS:tools/%=%)
 TOOLS = $(foreach tool,$(TOOLBASE),tools/$(tool)/$(tool)$(EXE))
 
@@ -201,7 +201,7 @@ mostlyclean: tidy
 	find . \( -iname '*.1bpp' -o -iname '*.4bpp' -o -iname '*.8bpp' -o -iname '*.gbapal' -o -iname '*.lz' -o -iname '*.latfont' -o -iname '*.hwjpnfont' -o -iname '*.fwjpnfont' \) -exec rm {} +
 	$(RM) $(DATA_ASM_SUBDIR)/layouts/layouts.inc $(DATA_ASM_SUBDIR)/layouts/layouts_table.inc
 	$(RM) $(DATA_ASM_SUBDIR)/maps/connections.inc $(DATA_ASM_SUBDIR)/maps/events.inc $(DATA_ASM_SUBDIR)/maps/groups.inc $(DATA_ASM_SUBDIR)/maps/headers.inc
-	find $(DATA_ASM_SUBDIR)/maps \( -iname 'connections.inc' -o -iname 'transition.inc' -o -iname 'events.inc' -o -iname 'header.inc' \) -exec rm {} +
+	find $(DATA_ASM_SUBDIR)/maps \( -iname 'connections.inc' -o -iname 'events.inc' -o -iname 'header.inc' \) -exec rm {} +
 	$(RM) $(AUTO_GEN_TARGETS)
 
 clean-tools:
@@ -219,7 +219,6 @@ include map_data_rules.mk
 include spritesheet_rules.mk
 include json_data_rules.mk
 include songs.mk
-include variant_data_rules.mk
 
 %.s: ;
 %.png: ;
@@ -321,26 +320,22 @@ $(SONG_BUILDDIR)/%.o: $(SONG_SUBDIR)/%.s
 $(OBJ_DIR)/sym_bss.ld: sym_bss.txt
 	$(RAMSCRGEN) .bss $< ENGLISH > $@
 
-$(OBJ_DIR)/sym_common.ld: sym_common.txt $(VARIANT_FILES) $(C_OBJS) $(wildcard common_syms/*.txt)
+$(OBJ_DIR)/sym_common.ld: sym_common.txt $(C_OBJS) $(wildcard common_syms/*.txt)
 	$(RAMSCRGEN) COMMON $< ENGLISH -c $(C_BUILDDIR),common_syms > $@
 
 $(OBJ_DIR)/sym_ewram.ld: sym_ewram.txt
 	$(RAMSCRGEN) ewram_data $< ENGLISH > $@
 
 ifeq ($(MODERN),0)
-LD_SCRIPT := ld_script.txt
+LD_SCRIPT := ld_script.ld
 LD_SCRIPT_DEPS := $(OBJ_DIR)/sym_bss.ld $(OBJ_DIR)/sym_common.ld $(OBJ_DIR)/sym_ewram.ld
 else
-LD_SCRIPT := ld_script_modern.txt
+LD_SCRIPT := ld_script_modern.ld
 LD_SCRIPT_DEPS :=
 endif
 
-$(OBJ_DIR)/ld_script.ld: $(LD_SCRIPT) $(LD_SCRIPT_DEPS)
-	cd $(OBJ_DIR) && sed -f ../../ld_script.sed ../../$< | sed "s#tools/#../../tools/#g" > ld_script.ld
-
-$(ELF): $(OBJ_DIR)/ld_script.ld $(OBJS)
-	@echo "cd $(OBJ_DIR) && $(LD) $(LDFLAGS) -T ld_script.ld -o ../../$@ <objects> <lib>"
-	@cd $(OBJ_DIR) && $(LD) $(LDFLAGS) -T ld_script.ld -o ../../$@ $(OBJS_REL) $(LIB)
+$(ELF): $(LD_SCRIPT) $(LD_SCRIPT_DEPS) $(OBJS)
+	@cd $(OBJ_DIR) && $(LD) $(LDFLAGS) -T ../../$< -o ../../$@ $(OBJS_REL) $(LIB)
 	$(FIX) $@ -t"$(TITLE)" -c$(GAME_CODE) -m$(MAKER_CODE) -r$(GAME_REVISION) --silent
 
 $(ROM): $(ELF)

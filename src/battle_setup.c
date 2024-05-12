@@ -538,7 +538,7 @@ static u8 GetBattleTransitionTypeByMap(void)
     }
 }
 
-static u16 GetSumOfPlayerPartyLevel(void)
+static u16 GetSumOfPlayerPartyLevel(u8 numMons)
 {
     u8 sum = 0;
     s32 i;
@@ -550,17 +550,21 @@ static u16 GetSumOfPlayerPartyLevel(void)
         if (species != SPECIES_EGG && species != SPECIES_NONE && GetMonData(&gPlayerParty[i], MON_DATA_HP) != 0)
         {
             sum += GetMonData(&gPlayerParty[i], MON_DATA_LEVEL);
+            if (--numMons == 0)
+                break;
         }
     }
     return sum;
 }
 
-static u8 GetSumOfEnemyPartyLevel(u16 opponentId)
+static u8 GetSumOfEnemyPartyLevel(u16 opponentId, u8 numMons)
 {
     u8 i;
     u8 sum;
-    u32 count = gTrainers[opponentId].partySize;
+    u32 count = numMons;
 
+    if (gTrainers[opponentId].partySize < count)
+        count = gTrainers[opponentId].partySize;
     sum = 0;
     switch (gTrainers[opponentId].partyFlags)
     {
@@ -608,7 +612,7 @@ static u8 GetWildBattleTransition(void)
 {
     u8 transitionType = GetBattleTransitionTypeByMap();
     u8 enemyLevel = GetMonData(&gEnemyParty[0], MON_DATA_LEVEL);
-    u8 playerLevel = GetSumOfPlayerPartyLevel();
+    u8 playerLevel = GetSumOfPlayerPartyLevel(1);
 
     if (enemyLevel < playerLevel)
         return sBattleTransitionTable_Wild[transitionType][0];
@@ -618,6 +622,7 @@ static u8 GetWildBattleTransition(void)
 
 static u8 GetTrainerBattleTransition(void)
 {
+    u8 minPartyCount;
     u8 transitionType;
     u8 enemyLevel;
     u8 playerLevel;
@@ -638,9 +643,13 @@ static u8 GetTrainerBattleTransition(void)
     }
     if (gTrainers[gTrainerBattleOpponent_A].trainerClass == TRAINER_CLASS_CHAMPION)
         return B_TRANSITION_BLUE;
+    if (gTrainers[gTrainerBattleOpponent_A].doubleBattle == TRUE)
+        minPartyCount = 2; // double battles always at least have 2 pokemon.
+    else
+        minPartyCount = 1;
     transitionType = GetBattleTransitionTypeByMap();
-    enemyLevel = GetSumOfEnemyPartyLevel(gTrainerBattleOpponent_A);
-    playerLevel = GetSumOfPlayerPartyLevel();
+    enemyLevel = GetSumOfEnemyPartyLevel(gTrainerBattleOpponent_A, minPartyCount);
+    playerLevel = GetSumOfPlayerPartyLevel(minPartyCount);
     if (enemyLevel < playerLevel)
         return sBattleTransitionTable_Trainer[transitionType][0];
     else
@@ -650,7 +659,7 @@ static u8 GetTrainerBattleTransition(void)
 u8 BattleSetup_GetBattleTowerBattleTransition(void)
 {
     u8 enemyLevel = GetMonData(&gEnemyParty[0], MON_DATA_LEVEL);
-    u8 playerLevel = GetSumOfPlayerPartyLevel();
+    u8 playerLevel = GetSumOfPlayerPartyLevel(1);
 
     if (enemyLevel < playerLevel)
         return B_TRANSITION_POKEBALLS_TRAIL;
@@ -798,13 +807,13 @@ const u8 *BattleSetup_ConfigureTrainerBattle(const u8 *data)
         SetMapVarsToTrainer();
         return EventScript_TryDoDoubleTrainerBattle;
     case TRAINER_BATTLE_REMATCH_DOUBLE:
-        FinishRecordingQuestLogScene();
+        QL_FinishRecordingScene();
         TrainerBattleLoadArgs(sDoubleBattleParams, data);
         SetMapVarsToTrainer();
         gTrainerBattleOpponent_A = GetRematchTrainerId(gTrainerBattleOpponent_A);
         return EventScript_TryDoDoubleRematchBattle;
     case TRAINER_BATTLE_REMATCH:
-        FinishRecordingQuestLogScene();
+        QL_FinishRecordingScene();
         TrainerBattleLoadArgs(sOrdinaryBattleParams, data);
         SetMapVarsToTrainer();
         gTrainerBattleOpponent_A = GetRematchTrainerId(gTrainerBattleOpponent_A);

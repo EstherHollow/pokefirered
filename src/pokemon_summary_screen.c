@@ -2006,22 +2006,22 @@ static u8 PokeSum_HandleLoadBgGfx(void)
     switch (sMonSummaryScreen->loadBgGfxStep)
     {
     case 0:
-        LoadPalette(gSummaryScreen_Bg_Pal, 0, 0x20 * 5);
+        LoadPalette(gSummaryScreen_Bg_Pal, BG_PLTT_ID(0), 5 * PLTT_SIZE_4BPP);
         if (IsMonShiny(&sMonSummaryScreen->currentMon) == TRUE && !sMonSummaryScreen->isEgg)
         {
-            LoadPalette(&gSummaryScreen_Bg_Pal[16 * 6], 0, 0x20);
-            LoadPalette(&gSummaryScreen_Bg_Pal[16 * 5], 0x10, 0x20);
+            LoadPalette(&gSummaryScreen_Bg_Pal[16 * 6], BG_PLTT_ID(0), PLTT_SIZE_4BPP);
+            LoadPalette(&gSummaryScreen_Bg_Pal[16 * 5], BG_PLTT_ID(1), PLTT_SIZE_4BPP);
         }
         else
         {
-            LoadPalette(&gSummaryScreen_Bg_Pal[16 * 0], 0, 0x20);
-            LoadPalette(&gSummaryScreen_Bg_Pal[16 * 1], 0x10, 0x20);
+            LoadPalette(&gSummaryScreen_Bg_Pal[16 * 0], BG_PLTT_ID(0), PLTT_SIZE_4BPP);
+            LoadPalette(&gSummaryScreen_Bg_Pal[16 * 1], BG_PLTT_ID(1), PLTT_SIZE_4BPP);
         }
 
         break;
     case 1:
-        ListMenuLoadStdPalAt(0x60, 1);
-        LoadPalette(sTextHeaderPalette, 0x70, 0x20);
+        ListMenuLoadStdPalAt(BG_PLTT_ID(6), 1);
+        LoadPalette(sTextHeaderPalette, BG_PLTT_ID(7), PLTT_SIZE_4BPP);
         break;
     case 2:
         ResetTempTileDataBuffers();
@@ -2039,7 +2039,7 @@ static u8 PokeSum_HandleLoadBgGfx(void)
         break;
 
     default:
-        LoadPalette(sTextMovesPalette, 0x80, 0x20);
+        LoadPalette(sTextMovesPalette, BG_PLTT_ID(8), PLTT_SIZE_4BPP);
         return TRUE;
     }
 
@@ -2084,7 +2084,6 @@ static void BufferMonInfo(void)
     u16 gender;
     u16 heldItem;
     u32 otId;
-    u16 variant;
 
     dexNum = SpeciesToPokedexNum(GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_SPECIES));
     if (dexNum == 0xffff)
@@ -2105,9 +2104,8 @@ static void BufferMonInfo(void)
         return;
     }
 
-    variant = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_VARIANT);
-    sMonSummaryScreen->monTypes[0] = GetVariantType1(dexNum, variant);
-    sMonSummaryScreen->monTypes[1] = GetVariantType2(dexNum, variant);
+    sMonSummaryScreen->monTypes[0] = gSpeciesInfo[dexNum].types[0];
+    sMonSummaryScreen->monTypes[1] = gSpeciesInfo[dexNum].types[1];
 
     GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_NICKNAME, tempStr);
     StringCopyN_Multibyte(sMonSummaryScreen->summary.nicknameStrBuf, tempStr, POKEMON_NAME_LENGTH);
@@ -2921,11 +2919,11 @@ static void PokeSum_DrawMoveTypeIcons(void)
         if (sMonSummaryScreen->moveIds[i] == MOVE_NONE)
             continue;
 
-        BlitMoveInfoIcon(sMonSummaryScreen->windowIds[5], sMonSummaryScreen->moveTypes[i] + 1, 3, GetMoveNamePrinterYpos(i));
+        BlitMenuInfoIcon(sMonSummaryScreen->windowIds[5], sMonSummaryScreen->moveTypes[i] + 1, 3, GetMoveNamePrinterYpos(i));
     }
 
     if (sMonSummaryScreen->mode == PSS_MODE_SELECT_MOVE)
-        BlitMoveInfoIcon(sMonSummaryScreen->windowIds[5], sMonSummaryScreen->moveTypes[4] + 1, 3, GetMoveNamePrinterYpos(4));
+        BlitMenuInfoIcon(sMonSummaryScreen->windowIds[5], sMonSummaryScreen->moveTypes[4] + 1, 3, GetMoveNamePrinterYpos(4));
 }
 
 static void PokeSum_PrintPageHeaderText(u8 curPageIndex)
@@ -3364,10 +3362,10 @@ static void PokeSum_PrintMonTypeIcons(void)
     case PSS_PAGE_INFO:
         if (!sMonSummaryScreen->isEgg)
         {
-            BlitMoveInfoIcon(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], sMonSummaryScreen->monTypes[0] + 1, 47, 35);
+            BlitMenuInfoIcon(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], sMonSummaryScreen->monTypes[0] + 1, 47, 35);
 
             if (sMonSummaryScreen->monTypes[0] != sMonSummaryScreen->monTypes[1])
-                BlitMoveInfoIcon(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], sMonSummaryScreen->monTypes[1] + 1, 83, 35);
+                BlitMenuInfoIcon(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], sMonSummaryScreen->monTypes[1] + 1, 83, 35);
         }
         break;
     case PSS_PAGE_SKILLS:
@@ -3376,10 +3374,10 @@ static void PokeSum_PrintMonTypeIcons(void)
         break;
     case PSS_PAGE_MOVES_INFO:
         FillWindowPixelBuffer(sMonSummaryScreen->windowIds[6], 0);
-        BlitMoveInfoIcon(sMonSummaryScreen->windowIds[6], sMonSummaryScreen->monTypes[0] + 1, 0, 3);
+        BlitMenuInfoIcon(sMonSummaryScreen->windowIds[6], sMonSummaryScreen->monTypes[0] + 1, 0, 3);
 
         if (sMonSummaryScreen->monTypes[0] != sMonSummaryScreen->monTypes[1])
-            BlitMoveInfoIcon(sMonSummaryScreen->windowIds[6], sMonSummaryScreen->monTypes[1] + 1, 36, 3);
+            BlitMenuInfoIcon(sMonSummaryScreen->windowIds[6], sMonSummaryScreen->monTypes[1] + 1, 36, 3);
 
         PutWindowTilemap(sMonSummaryScreen->windowIds[6]);
         break;
@@ -4011,27 +4009,27 @@ static void PokeSum_CreateMonPicSprite(void)
     u16 spriteId;
     u16 species;
     u32 personality;
-    u16 variant;
+    u32 trainerId;
 
     sMonPicBounceState = AllocZeroed(sizeof(struct MonPicBounceState));
 
     species = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_SPECIES_OR_EGG);
     personality = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_PERSONALITY);
-    variant = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_VARIANT);
+    trainerId = GetMonData(&sMonSummaryScreen->currentMon, MON_DATA_OT_ID);
 
     if (sMonSummaryScreen->savedCallback == CB2_ReturnToTradeMenuFromSummary)
     {
         if (sMonSummaryScreen->isEnemyParty == TRUE)
-            spriteId = CreateMonPicSprite(species, variant, personality, TRUE, 60, 65, 12, 0xffff, TRUE);
+            spriteId = CreateMonPicSprite(species, trainerId, personality, TRUE, 60, 65, 12, 0xffff, TRUE);
         else
-            spriteId = CreateMonPicSprite_HandleDeoxys(species, variant, personality, TRUE, 60, 65, 12, 0xffff);
+            spriteId = CreateMonPicSprite_HandleDeoxys(species, trainerId, personality, TRUE, 60, 65, 12, 0xffff);
     }
     else
     {
         if (ShouldIgnoreDeoxysForm(DEOXYS_CHECK_TRADE_MAIN, sLastViewedMonIndex))
-            spriteId = CreateMonPicSprite(species, variant, personality, TRUE, 60, 65, 12, 0xffff, TRUE);
+            spriteId = CreateMonPicSprite(species, trainerId, personality, TRUE, 60, 65, 12, 0xffff, TRUE);
         else
-            spriteId = CreateMonPicSprite_HandleDeoxys(species, variant, personality, TRUE, 60, 65, 12, 0xffff);
+            spriteId = CreateMonPicSprite_HandleDeoxys(species, trainerId, personality, TRUE, 60, 65, 12, 0xffff);
     }
 
     FreeSpriteOamMatrix(&gSprites[spriteId]);
@@ -5080,13 +5078,13 @@ static void Task_PokeSum_SwitchDisplayedPokemon(u8 taskId)
 
         if (IsMonShiny(&sMonSummaryScreen->currentMon) == TRUE && !sMonSummaryScreen->isEgg)
         {
-            LoadPalette(&gSummaryScreen_Bg_Pal[16 * 6], 0, 0x20);
-            LoadPalette(&gSummaryScreen_Bg_Pal[16 * 5], 0x10, 0x20);
+            LoadPalette(&gSummaryScreen_Bg_Pal[16 * 6], BG_PLTT_ID(0), PLTT_SIZE_4BPP);
+            LoadPalette(&gSummaryScreen_Bg_Pal[16 * 5], BG_PLTT_ID(1), PLTT_SIZE_4BPP);
         }
         else
         {
-            LoadPalette(&gSummaryScreen_Bg_Pal[16 * 0], 0, 0x20);
-            LoadPalette(&gSummaryScreen_Bg_Pal[16 * 1], 0x10, 0x20);
+            LoadPalette(&gSummaryScreen_Bg_Pal[16 * 0], BG_PLTT_ID(0), PLTT_SIZE_4BPP);
+            LoadPalette(&gSummaryScreen_Bg_Pal[16 * 1], BG_PLTT_ID(1), PLTT_SIZE_4BPP);
         }
 
         sMonSummaryScreen->switchMonTaskState++;

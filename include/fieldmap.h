@@ -9,8 +9,6 @@
 #define NUM_METATILES_TOTAL 1024
 #define NUM_PALS_IN_PRIMARY 7
 #define NUM_PALS_TOTAL 13
-#define FLDEFF_PAL_INDEX_0 NUM_PALS_TOTAL
-#define FLDEFF_PAL_INDEX_1 (FLDEFF_PAL_INDEX_0 + 1)
 #define MAX_MAP_DATA_SIZE 0x2800
 #define VIRTUAL_MAP_SIZE (MAX_MAP_DATA_SIZE)
 
@@ -21,11 +19,6 @@
 #define MAP_OFFSET 7
 #define MAP_OFFSET_W (MAP_OFFSET * 2 + 1)
 #define MAP_OFFSET_H (MAP_OFFSET * 2)
-
-#define NO_TRANSITION   0
-#define AXIS_HORIZONTAL 1
-#define AXIS_VERTICAL   2
-#define PALETTE_TRANSITION_STEPS    3
 
 extern struct BackupMapLayout VMap;
 extern const struct MapLayout Route1_Layout;
@@ -40,8 +33,8 @@ void GetCameraCoords(u16 *, u16 *);
 bool8 MapGridGetCollisionAt(s32, s32);
 s32 GetMapBorderIdAt(s32, s32);
 bool32 CanCameraMoveInDirection(s32);
-const struct MapHeader * GetMapHeaderFromConnection(struct MapConnection * connection);
-struct MapConnection * GetMapConnectionAtPos(s16 x, s16 y);
+const struct MapHeader * GetMapHeaderFromConnection(const struct MapConnection * connection);
+const struct MapConnection * GetMapConnectionAtPos(s16 x, s16 y);
 void ApplyGlobalTintToPaletteSlot(u8 slot, u8 count);
 void SaveMapView(void);
 u32 ExtractMetatileAttribute(u32 attributes, u8 attributeType);
@@ -49,11 +42,10 @@ u32 MapGridGetMetatileAttributeAt(s16 x, s16 y, u8 attributeType);
 void MapGridSetMetatileImpassabilityAt(s32 x, s32 y, bool32 arg2);
 bool8 CameraMove(s32 x, s32 y);
 void CopyMapTilesetsToVram(struct MapLayout const * mapLayout);
-void LoadMapTilesetPalettes(const struct MapHeader *mapHeader);
-void LoadFieldEffectPalette(u8 paletteIndex, u16 tag);
-void LoadTransitionPalettes();
+void LoadMapTilesetPalettes(struct MapLayout const * mapLayout);
 void InitMap(void);
 void CopySecondaryTilesetToVramUsingHeap(const struct MapLayout * mapLayout);
+void LoadSecondaryTilesetPalette(const struct MapLayout * mapLayout);
 void InitMapFromSavedGame(void);
 void CopyPrimaryTilesetToVram(const struct MapLayout *mapLayout);
 void CopySecondaryTilesetToVram(const struct MapLayout *mapLayout);

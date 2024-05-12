@@ -91,7 +91,6 @@
 #define MON_DATA_SPEED2                   86
 #define MON_DATA_SPATK2                   87
 #define MON_DATA_SPDEF2                   88
-#define MON_DATA_VARIANT                  89
 
 // Pokemon types
 #define TYPE_NONE           255
@@ -113,8 +112,7 @@
 #define TYPE_ICE            15
 #define TYPE_DRAGON         16
 #define TYPE_DARK           17
-#define TYPE_FAIRY          18
-#define NUMBER_OF_MON_TYPES 19
+#define NUMBER_OF_MON_TYPES 18
 
 // Pokemon egg groups
 #define EGG_GROUP_NONE         0
@@ -186,8 +184,11 @@
 // Shiny odds
 #define SHINY_ODDS 8 // Actual probability is SHINY_ODDS/65536
 
-#define MAX_LEVEL_UP_MOVES  20
-#define MAX_LEVEL          100
+#define MAX_LEVEL 100
+
+#define OT_ID_PLAYER_ID       0
+#define OT_ID_PRESET          1
+#define OT_ID_RANDOM_NO_SHINY 2
 
 #define MON_GIVEN_TO_PARTY 0
 #define MON_GIVEN_TO_PC    1
@@ -205,11 +206,11 @@
 #define LEVEL_UP_MOVE_LV   0xFE00
 #define LEVEL_UP_END       0xFFFF
 
+#define MAX_LEVEL_UP_MOVES       20
+
 #define MON_MALE       0x00
 #define MON_FEMALE     0xFE
 #define MON_GENDERLESS 0xFF
-
-#define MON_FLAG_IS_STARTER     1
 
 #define FRIENDSHIP_EVENT_GROW_LEVEL           0
 #define FRIENDSHIP_EVENT_VITAMIN              1
@@ -226,11 +227,9 @@
 #define MAX_SHEEN       255
 #define MAX_CONDITION   255
 
-#define MIN_IVS      0
-#define DEFAULT_IVS 23
-#define MAX_IVS     31
-#define IV_MASK     0x1F
-
+#define MAX_PER_STAT_IVS 31
+#define MAX_IV_MASK 31
+#define USE_RANDOM_IVS (MAX_PER_STAT_IVS + 1)
 #define MAX_PER_STAT_EVS 255
 #define MAX_TOTAL_EVS 510
 #define EV_ITEM_RAISE_LIMIT 100
@@ -281,11 +280,6 @@
 #define EVO_BEAUTY           15 // Pokémon levels up with beauty ≥ specified value
 
 #define EVOS_PER_MON 5
-
-#define EXP_MODIFIER 5
-
-#define PARTY_SIZE 6
-#define BOX_NAME_LENGTH 8
 
 #define EVO_MODE_NORMAL     0
 #define EVO_MODE_TRADE      1

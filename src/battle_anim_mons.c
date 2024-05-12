@@ -862,11 +862,6 @@ bool8 IsDoubleBattle(void)
     return IS_DOUBLE_BATTLE();
 }
 
-bool8 PlayerHasTwoUsableMons(void)
-{
-    return GetMonsStateToDoubles() == PLAYER_HAS_TWO_USABLE_MONS;
-}
-
 #define BG_ANIM_PAL_1        8
 #define BG_ANIM_PAL_2        9
 
@@ -1296,7 +1291,7 @@ void SetGreyscaleOrOriginalPalette(u16 paletteNum, bool8 restoreOriginalColor)
     struct PlttData *destColor;
     u16 average;
 
-    paletteNum *= 16;
+    paletteNum = PLTT_ID(paletteNum);
 
     if (!restoreOriginalColor)
     {
@@ -1313,7 +1308,7 @@ void SetGreyscaleOrOriginalPalette(u16 paletteNum, bool8 restoreOriginalColor)
     }
     else
     {
-        CpuCopy32(&gPlttBufferUnfaded[paletteNum], &gPlttBufferFaded[paletteNum], 32);
+        CpuCopy32(&gPlttBufferUnfaded[paletteNum], &gPlttBufferFaded[paletteNum], PLTT_SIZE_4BPP);
     }
 }
 
@@ -1614,7 +1609,7 @@ void AnimTask_BlendMonInAndOut(u8 task)
         DestroyAnimVisualTask(task);
         return;
     }
-    gTasks[task].data[0] = (gSprites[spriteId].oam.paletteNum * 0x10) + 0x101;
+    gTasks[task].data[0] = OBJ_PLTT_ID(gSprites[spriteId].oam.paletteNum) + 1;
     AnimTask_BlendMonInAndOutSetup(&gTasks[task]);
 }
 
@@ -1947,7 +1942,7 @@ u8 GetBattlerSpriteBGPriorityRank(u8 battlerId)
 }
 
 // Create pokemon sprite to be used for a move animation effect (e.g. Role Play / Snatch)
-u8 CreateAdditionalMonSpriteForMoveAnim(u16 species, u16 variant, u32 personality, bool8 isBackpic, u8 templateId, s16 x, s16 y, u8 subpriority, u32 battlerId, bool32 ignoreDeoxys)
+u8 CreateAdditionalMonSpriteForMoveAnim(u16 species, bool8 isBackpic, u8 templateId, s16 x, s16 y, u8 subpriority, u32 personality, u32 trainerId, u32 battlerId, bool32 ignoreDeoxys)
 {
     u8 spriteId;
     u16 sheet = LoadSpriteSheet(&sSpriteSheets_MoveEffectMons[templateId]);
@@ -1957,37 +1952,33 @@ u8 CreateAdditionalMonSpriteForMoveAnim(u16 species, u16 variant, u32 personalit
         gMonSpritesGfxPtr->multiUseBuffer = AllocZeroed(0x2000);
     if (!isBackpic)
     {
-        LoadPalette(GetMonPaletteFromVariant(species, variant), (palette * 0x10) + 0x100, 0x20);
+        LoadCompressedPalette(GetMonSpritePalFromSpeciesAndPersonality(species, trainerId, personality), OBJ_PLTT_ID(palette), PLTT_SIZE_4BPP);
         if (ignoreDeoxys == TRUE || ShouldIgnoreDeoxysForm(DEOXYS_CHECK_BATTLE_ANIM, battlerId) == TRUE || gBattleSpritesDataPtr->battlerData[battlerId].transformSpecies != 0)
-            LoadSpecialPokePic_DontHandleDeoxys(GetMonFrontPicStructFromVariant(species, variant),
+            LoadSpecialPokePic_DontHandleDeoxys(&gMonFrontPicTable[species],
                                                 gMonSpritesGfxPtr->multiUseBuffer,
                                                 species,
-                                                variant,
                                                 personality,
                                                 TRUE);
         else
-            LoadSpecialPokePic(GetMonFrontPicStructFromVariant(species, variant),
+            LoadSpecialPokePic(&gMonFrontPicTable[species],
                                gMonSpritesGfxPtr->multiUseBuffer,
                                species,
-                               variant,
                                personality,
                                TRUE);
     }
     else
     {
-        LoadPalette(GetMonPaletteFromVariant(species, variant), (palette * 0x10) + 0x100, 0x20);
+        LoadCompressedPalette(GetMonSpritePalFromSpeciesAndPersonality(species, trainerId, personality), OBJ_PLTT_ID(palette), PLTT_SIZE_4BPP);
         if (ignoreDeoxys == TRUE || ShouldIgnoreDeoxysForm(DEOXYS_CHECK_BATTLE_ANIM, battlerId) == TRUE || gBattleSpritesDataPtr->battlerData[battlerId].transformSpecies != 0)
-            LoadSpecialPokePic_DontHandleDeoxys(GetMonBackPicStructFromVariant(species, variant),
+            LoadSpecialPokePic_DontHandleDeoxys(&gMonBackPicTable[species],
                                                 gMonSpritesGfxPtr->multiUseBuffer,
                                                 species,
-                                                variant,
                                                 personality,
                                                 FALSE);
         else
-            LoadSpecialPokePic(GetMonBackPicStructFromVariant(species, variant),
+            LoadSpecialPokePic(&gMonBackPicTable[species],
                                gMonSpritesGfxPtr->multiUseBuffer,
                                species,
-                               variant,
                                personality,
                                FALSE);
     }
@@ -2233,8 +2224,8 @@ void AnimTask_AttackerPunchWithTrace(u8 taskId)
     task->tPaletteNum = AllocSpritePalette(ANIM_TAG_BENT_SPOON);
     task->tNumTracesActive = 0;
 
-    dest = (task->tPaletteNum + 16) * 16;
-    src = (gSprites[task->tBattlerSpriteId].oam.paletteNum + 0x10) * 0x10;
+    dest = OBJ_PLTT_ID2(task->tPaletteNum);
+    src = OBJ_PLTT_ID2(gSprites[task->tBattlerSpriteId].oam.paletteNum);
     
     // Set trace's priority based on battler's subpriority
     task->tPriority = GetBattlerSpriteSubpriority(gBattleAnimAttacker);
@@ -2243,7 +2234,7 @@ void AnimTask_AttackerPunchWithTrace(u8 taskId)
     else
         task->tPriority = 3;
 
-    CpuCopy32(&gPlttBufferUnfaded[src], &gPlttBufferFaded[dest], 0x20);
+    CpuCopy32(&gPlttBufferUnfaded[src], &gPlttBufferFaded[dest], PLTT_SIZE_4BPP);
     BlendPalette(dest, 16, gBattleAnimArgs[1], gBattleAnimArgs[0]);
     task->func = AnimTask_AttackerPunchWithTrace_Step;
 }

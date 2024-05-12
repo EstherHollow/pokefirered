@@ -309,12 +309,10 @@ static const s8 sPlayerThrowXTranslation[] = { -32, -16, -16, -32, -32, 0, 0, 0 
 // 10 is ×1.0 TYPE_MUL_NORMAL
 // 05 is ×0.5 TYPE_MUL_NOT_EFFECTIVE
 // 00 is ×0.0 TYPE_MUL_NO_EFFECT
-const u8 gTypeEffectiveness[375] =
+const u8 gTypeEffectiveness[336] =
 {
     TYPE_NORMAL, TYPE_ROCK, TYPE_MUL_NOT_EFFECTIVE,
-    TYPE_NORMAL, TYPE_GHOST, TYPE_MUL_NO_EFFECT,
     TYPE_NORMAL, TYPE_STEEL, TYPE_MUL_NOT_EFFECTIVE,
-
     TYPE_FIRE, TYPE_FIRE, TYPE_MUL_NOT_EFFECTIVE,
     TYPE_FIRE, TYPE_WATER, TYPE_MUL_NOT_EFFECTIVE,
     TYPE_FIRE, TYPE_GRASS, TYPE_MUL_SUPER_EFFECTIVE,
@@ -323,22 +321,18 @@ const u8 gTypeEffectiveness[375] =
     TYPE_FIRE, TYPE_ROCK, TYPE_MUL_NOT_EFFECTIVE,
     TYPE_FIRE, TYPE_DRAGON, TYPE_MUL_NOT_EFFECTIVE,
     TYPE_FIRE, TYPE_STEEL, TYPE_MUL_SUPER_EFFECTIVE,
-
     TYPE_WATER, TYPE_FIRE, TYPE_MUL_SUPER_EFFECTIVE,
     TYPE_WATER, TYPE_WATER, TYPE_MUL_NOT_EFFECTIVE,
     TYPE_WATER, TYPE_GRASS, TYPE_MUL_NOT_EFFECTIVE,
-    TYPE_WATER, TYPE_ICE, TYPE_MUL_NOT_EFFECTIVE, // New
     TYPE_WATER, TYPE_GROUND, TYPE_MUL_SUPER_EFFECTIVE,
     TYPE_WATER, TYPE_ROCK, TYPE_MUL_SUPER_EFFECTIVE,
     TYPE_WATER, TYPE_DRAGON, TYPE_MUL_NOT_EFFECTIVE,
-
     TYPE_ELECTRIC, TYPE_WATER, TYPE_MUL_SUPER_EFFECTIVE,
     TYPE_ELECTRIC, TYPE_ELECTRIC, TYPE_MUL_NOT_EFFECTIVE,
     TYPE_ELECTRIC, TYPE_GRASS, TYPE_MUL_NOT_EFFECTIVE,
     TYPE_ELECTRIC, TYPE_GROUND, TYPE_MUL_NO_EFFECT,
     TYPE_ELECTRIC, TYPE_FLYING, TYPE_MUL_SUPER_EFFECTIVE,
     TYPE_ELECTRIC, TYPE_DRAGON, TYPE_MUL_NOT_EFFECTIVE,
-
     TYPE_GRASS, TYPE_FIRE, TYPE_MUL_NOT_EFFECTIVE,
     TYPE_GRASS, TYPE_WATER, TYPE_MUL_SUPER_EFFECTIVE,
     TYPE_GRASS, TYPE_GRASS, TYPE_MUL_NOT_EFFECTIVE,
@@ -349,7 +343,6 @@ const u8 gTypeEffectiveness[375] =
     TYPE_GRASS, TYPE_ROCK, TYPE_MUL_SUPER_EFFECTIVE,
     TYPE_GRASS, TYPE_DRAGON, TYPE_MUL_NOT_EFFECTIVE,
     TYPE_GRASS, TYPE_STEEL, TYPE_MUL_NOT_EFFECTIVE,
-
     TYPE_ICE, TYPE_WATER, TYPE_MUL_NOT_EFFECTIVE,
     TYPE_ICE, TYPE_GRASS, TYPE_MUL_SUPER_EFFECTIVE,
     TYPE_ICE, TYPE_ICE, TYPE_MUL_NOT_EFFECTIVE,
@@ -358,7 +351,6 @@ const u8 gTypeEffectiveness[375] =
     TYPE_ICE, TYPE_DRAGON, TYPE_MUL_SUPER_EFFECTIVE,
     TYPE_ICE, TYPE_STEEL, TYPE_MUL_NOT_EFFECTIVE,
     TYPE_ICE, TYPE_FIRE, TYPE_MUL_NOT_EFFECTIVE,
-
     TYPE_FIGHTING, TYPE_NORMAL, TYPE_MUL_SUPER_EFFECTIVE,
     TYPE_FIGHTING, TYPE_ICE, TYPE_MUL_SUPER_EFFECTIVE,
     TYPE_FIGHTING, TYPE_POISON, TYPE_MUL_NOT_EFFECTIVE,
@@ -366,19 +358,14 @@ const u8 gTypeEffectiveness[375] =
     TYPE_FIGHTING, TYPE_PSYCHIC, TYPE_MUL_NOT_EFFECTIVE,
     TYPE_FIGHTING, TYPE_BUG, TYPE_MUL_NOT_EFFECTIVE,
     TYPE_FIGHTING, TYPE_ROCK, TYPE_MUL_SUPER_EFFECTIVE,
-    TYPE_FIGHTING, TYPE_GHOST, TYPE_MUL_NO_EFFECT,
     TYPE_FIGHTING, TYPE_DARK, TYPE_MUL_SUPER_EFFECTIVE,
     TYPE_FIGHTING, TYPE_STEEL, TYPE_MUL_SUPER_EFFECTIVE,
-    TYPE_FIGHTING, TYPE_FAIRY, TYPE_MUL_NOT_EFFECTIVE,
-
     TYPE_POISON, TYPE_GRASS, TYPE_MUL_SUPER_EFFECTIVE,
     TYPE_POISON, TYPE_POISON, TYPE_MUL_NOT_EFFECTIVE,
     TYPE_POISON, TYPE_GROUND, TYPE_MUL_NOT_EFFECTIVE,
     TYPE_POISON, TYPE_ROCK, TYPE_MUL_NOT_EFFECTIVE,
     TYPE_POISON, TYPE_GHOST, TYPE_MUL_NOT_EFFECTIVE,
     TYPE_POISON, TYPE_STEEL, TYPE_MUL_NO_EFFECT,
-    TYPE_POISON, TYPE_FAIRY, TYPE_MUL_SUPER_EFFECTIVE,
-
     TYPE_GROUND, TYPE_FIRE, TYPE_MUL_SUPER_EFFECTIVE,
     TYPE_GROUND, TYPE_ELECTRIC, TYPE_MUL_SUPER_EFFECTIVE,
     TYPE_GROUND, TYPE_GRASS, TYPE_MUL_NOT_EFFECTIVE,
@@ -387,20 +374,17 @@ const u8 gTypeEffectiveness[375] =
     TYPE_GROUND, TYPE_BUG, TYPE_MUL_NOT_EFFECTIVE,
     TYPE_GROUND, TYPE_ROCK, TYPE_MUL_SUPER_EFFECTIVE,
     TYPE_GROUND, TYPE_STEEL, TYPE_MUL_SUPER_EFFECTIVE,
-
     TYPE_FLYING, TYPE_ELECTRIC, TYPE_MUL_NOT_EFFECTIVE,
     TYPE_FLYING, TYPE_GRASS, TYPE_MUL_SUPER_EFFECTIVE,
     TYPE_FLYING, TYPE_FIGHTING, TYPE_MUL_SUPER_EFFECTIVE,
     TYPE_FLYING, TYPE_BUG, TYPE_MUL_SUPER_EFFECTIVE,
     TYPE_FLYING, TYPE_ROCK, TYPE_MUL_NOT_EFFECTIVE,
     TYPE_FLYING, TYPE_STEEL, TYPE_MUL_NOT_EFFECTIVE,
-
     TYPE_PSYCHIC, TYPE_FIGHTING, TYPE_MUL_SUPER_EFFECTIVE,
     TYPE_PSYCHIC, TYPE_POISON, TYPE_MUL_SUPER_EFFECTIVE,
     TYPE_PSYCHIC, TYPE_PSYCHIC, TYPE_MUL_NOT_EFFECTIVE,
     TYPE_PSYCHIC, TYPE_DARK, TYPE_MUL_NO_EFFECT,
     TYPE_PSYCHIC, TYPE_STEEL, TYPE_MUL_NOT_EFFECTIVE,
-
     TYPE_BUG, TYPE_FIRE, TYPE_MUL_NOT_EFFECTIVE,
     TYPE_BUG, TYPE_GRASS, TYPE_MUL_SUPER_EFFECTIVE,
     TYPE_BUG, TYPE_FIGHTING, TYPE_MUL_NOT_EFFECTIVE,
@@ -410,9 +394,6 @@ const u8 gTypeEffectiveness[375] =
     TYPE_BUG, TYPE_GHOST, TYPE_MUL_NOT_EFFECTIVE,
     TYPE_BUG, TYPE_DARK, TYPE_MUL_SUPER_EFFECTIVE,
     TYPE_BUG, TYPE_STEEL, TYPE_MUL_NOT_EFFECTIVE,
-    //TYPE_BUG, TYPE_FAIRY, TYPE_MUL_NOT_EFFECTIVE,
-    TYPE_BUG, TYPE_FAIRY, TYPE_MUL_SUPER_EFFECTIVE, // New
-
     TYPE_ROCK, TYPE_FIRE, TYPE_MUL_SUPER_EFFECTIVE,
     TYPE_ROCK, TYPE_ICE, TYPE_MUL_SUPER_EFFECTIVE,
     TYPE_ROCK, TYPE_FIGHTING, TYPE_MUL_NOT_EFFECTIVE,
@@ -420,40 +401,27 @@ const u8 gTypeEffectiveness[375] =
     TYPE_ROCK, TYPE_FLYING, TYPE_MUL_SUPER_EFFECTIVE,
     TYPE_ROCK, TYPE_BUG, TYPE_MUL_SUPER_EFFECTIVE,
     TYPE_ROCK, TYPE_STEEL, TYPE_MUL_NOT_EFFECTIVE,
-
     TYPE_GHOST, TYPE_NORMAL, TYPE_MUL_NO_EFFECT,
     TYPE_GHOST, TYPE_PSYCHIC, TYPE_MUL_SUPER_EFFECTIVE,
     TYPE_GHOST, TYPE_DARK, TYPE_MUL_NOT_EFFECTIVE,
+    TYPE_GHOST, TYPE_STEEL, TYPE_MUL_NOT_EFFECTIVE,
     TYPE_GHOST, TYPE_GHOST, TYPE_MUL_SUPER_EFFECTIVE,
-
     TYPE_DRAGON, TYPE_DRAGON, TYPE_MUL_SUPER_EFFECTIVE,
     TYPE_DRAGON, TYPE_STEEL, TYPE_MUL_NOT_EFFECTIVE,
-    TYPE_DRAGON, TYPE_FAIRY, TYPE_MUL_NO_EFFECT,
-
     TYPE_DARK, TYPE_FIGHTING, TYPE_MUL_NOT_EFFECTIVE,
     TYPE_DARK, TYPE_PSYCHIC, TYPE_MUL_SUPER_EFFECTIVE,
-    TYPE_DARK, TYPE_BUG, TYPE_MUL_NOT_EFFECTIVE, // New
     TYPE_DARK, TYPE_GHOST, TYPE_MUL_SUPER_EFFECTIVE,
     TYPE_DARK, TYPE_DARK, TYPE_MUL_NOT_EFFECTIVE,
-    TYPE_DARK, TYPE_FAIRY, TYPE_MUL_NOT_EFFECTIVE,
-
+    TYPE_DARK, TYPE_STEEL, TYPE_MUL_NOT_EFFECTIVE,
     TYPE_STEEL, TYPE_FIRE, TYPE_MUL_NOT_EFFECTIVE,
     TYPE_STEEL, TYPE_WATER, TYPE_MUL_NOT_EFFECTIVE,
     TYPE_STEEL, TYPE_ELECTRIC, TYPE_MUL_NOT_EFFECTIVE,
     TYPE_STEEL, TYPE_ICE, TYPE_MUL_SUPER_EFFECTIVE,
     TYPE_STEEL, TYPE_ROCK, TYPE_MUL_SUPER_EFFECTIVE,
     TYPE_STEEL, TYPE_STEEL, TYPE_MUL_NOT_EFFECTIVE,
-    TYPE_STEEL, TYPE_FAIRY, TYPE_MUL_SUPER_EFFECTIVE,
-
-    TYPE_FAIRY, TYPE_FIRE, TYPE_MUL_NOT_EFFECTIVE,
-    TYPE_FAIRY, TYPE_FIGHTING, TYPE_MUL_SUPER_EFFECTIVE,
-    TYPE_FAIRY, TYPE_POISON, TYPE_MUL_NOT_EFFECTIVE,
-    TYPE_FAIRY, TYPE_BUG, TYPE_MUL_NOT_EFFECTIVE, // New
-    TYPE_FAIRY, TYPE_DRAGON, TYPE_MUL_SUPER_EFFECTIVE,
-    TYPE_FAIRY, TYPE_DARK, TYPE_MUL_SUPER_EFFECTIVE,
-    TYPE_FAIRY, TYPE_STEEL, TYPE_MUL_NOT_EFFECTIVE,
-
     TYPE_FORESIGHT, TYPE_FORESIGHT, TYPE_MUL_NO_EFFECT,
+    TYPE_NORMAL, TYPE_GHOST, TYPE_MUL_NO_EFFECT,
+    TYPE_FIGHTING, TYPE_GHOST, TYPE_MUL_NO_EFFECT,
     TYPE_ENDTABLE, TYPE_ENDTABLE, TYPE_MUL_NO_EFFECT
 };
 
@@ -477,7 +445,6 @@ const u8 gTypeNames[NUMBER_OF_MON_TYPES][TYPE_NAME_LENGTH + 1] =
     [TYPE_ICE] = _("ICE"),
     [TYPE_DRAGON] = _("DRAGON"),
     [TYPE_DARK] = _("DARK"),
-    [TYPE_FAIRY] = _("FAIRY"),
 };
 
 // This is a factor in how much money you get for beating a trainer.
@@ -1581,7 +1548,10 @@ static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum)
         ZeroEnemyPartyMons();
         for (i = 0; i < gTrainers[trainerNum].partySize; i++)
         {
-            if (gTrainers[trainerNum].encounterMusic_gender & F_TRAINER_FEMALE)
+
+            if (gTrainers[trainerNum].doubleBattle == TRUE)
+                personalityValue = 0x80;
+            else if (gTrainers[trainerNum].encounterMusic_gender & F_TRAINER_FEMALE)
                 personalityValue = 0x78; // Use personality more likely to result in a female Pokémon
             else
                 personalityValue = 0x88; // Use personality more likely to result in a male Pokémon
@@ -1599,8 +1569,8 @@ static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum)
                     nameHash += gSpeciesNames[partyData[i].species][j];
 
                 personalityValue += nameHash << 8;
-                fixedIV = partyData[i].iv;
-                CreateTrainerMon(&party[i], partyData[i].species, partyData[i].lvl, fixedIV, TRUE, personalityValue, trainerNum, i, partyData[i].variant);
+                fixedIV = partyData[i].iv * MAX_PER_STAT_IVS / 255;
+                CreateMon(&party[i], partyData[i].species, partyData[i].lvl, fixedIV, TRUE, personalityValue, OT_ID_RANDOM_NO_SHINY, 0);
                 break;
             }
             case F_TRAINER_PARTY_CUSTOM_MOVESET:
@@ -1611,8 +1581,8 @@ static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum)
                     nameHash += gSpeciesNames[partyData[i].species][j];
 
                 personalityValue += nameHash << 8;
-                fixedIV = partyData[i].iv;
-                CreateTrainerMon(&party[i], partyData[i].species, partyData[i].lvl, fixedIV, TRUE, personalityValue, trainerNum, i, partyData[i].variant);
+                fixedIV = partyData[i].iv * MAX_PER_STAT_IVS / 255;
+                CreateMon(&party[i], partyData[i].species, partyData[i].lvl, fixedIV, TRUE, personalityValue, OT_ID_RANDOM_NO_SHINY, 0);
 
                 for (j = 0; j < MAX_MON_MOVES; j++)
                 {
@@ -1629,8 +1599,8 @@ static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum)
                     nameHash += gSpeciesNames[partyData[i].species][j];
 
                 personalityValue += nameHash << 8;
-                fixedIV = partyData[i].iv;
-                CreateTrainerMon(&party[i], partyData[i].species, partyData[i].lvl, fixedIV, TRUE, personalityValue, trainerNum, i, partyData[i].variant);
+                fixedIV = partyData[i].iv * MAX_PER_STAT_IVS / 255;
+                CreateMon(&party[i], partyData[i].species, partyData[i].lvl, fixedIV, TRUE, personalityValue, OT_ID_RANDOM_NO_SHINY, 0);
 
                 SetMonData(&party[i], MON_DATA_HELD_ITEM, &partyData[i].heldItem);
                 break;
@@ -1643,8 +1613,8 @@ static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum)
                     nameHash += gSpeciesNames[partyData[i].species][j];
 
                 personalityValue += nameHash << 8;
-                fixedIV = partyData[i].iv;
-                CreateTrainerMon(&party[i], partyData[i].species, partyData[i].lvl, fixedIV, TRUE, personalityValue, trainerNum, i, partyData[i].variant);
+                fixedIV = partyData[i].iv * MAX_PER_STAT_IVS / 255;
+                CreateMon(&party[i], partyData[i].species, partyData[i].lvl, fixedIV, TRUE, personalityValue, OT_ID_RANDOM_NO_SHINY, 0);
                 SetMonData(&party[i], MON_DATA_HELD_ITEM, &partyData[i].heldItem);
 
                 for (j = 0; j < MAX_MON_MOVES; j++)
@@ -1799,7 +1769,7 @@ void CB2_InitEndLinkBattle(void)
     gBattle_BG3_X = 0;
     gBattle_BG3_Y = 0;
     InitBattleBgsVideo();
-    LoadCompressedPalette(gBattleInterface_Textbox_Pal, 0, 64);
+    LoadCompressedPalette(gBattleInterface_Textbox_Pal, BG_PLTT_ID(0), 2 * PLTT_SIZE_4BPP);
     LoadBattleMenuWindowGfx();
     ResetSpriteData();
     ResetTasks();
@@ -2286,7 +2256,7 @@ static void BattleStartClearSetData(void)
         gHitMarker |= HITMARKER_NO_ANIMATIONS;
 
     gBattleScripting.battleStyle = gSaveBlock2Ptr->optionsBattleStyle;
-    gBattleScripting.monCaught = FALSE;
+
     gMultiHitCounter = 0;
     gBattleOutcome = 0;
     gBattleControllerExecFlags = 0;
@@ -2303,8 +2273,7 @@ static void BattleStartClearSetData(void)
     gBattleScripting.animTurn = 0;
     gBattleScripting.animTargetsHit = 0;
     gLeveledUpInBattle = 0;
-    // set in battle_controllers::SetBattlePartyIds
-    // gAbsentBattlerFlags = 0;
+    gAbsentBattlerFlags = 0;
     gBattleStruct->runTries = 0;
     gBattleStruct->safariRockThrowCounter = 0;
     gBattleStruct->safariBaitThrowCounter = 0;
@@ -2539,8 +2508,8 @@ void FaintClearSetData(void)
         *(i * 8 + gActiveBattler * 2 + (u8 *)(gBattleStruct->lastTakenMoveFrom) + 1) = 0;
     }
     gBattleResources->flags->flags[gActiveBattler] = 0;
-    gBattleMons[gActiveBattler].type1 = GetVariantType1(gBattleMons[gActiveBattler].species, gBattleMons[gActiveBattler].variant);
-    gBattleMons[gActiveBattler].type2 = GetVariantType2(gBattleMons[gActiveBattler].species, gBattleMons[gActiveBattler].variant);
+    gBattleMons[gActiveBattler].type1 = gSpeciesInfo[gBattleMons[gActiveBattler].species].types[0];
+    gBattleMons[gActiveBattler].type2 = gSpeciesInfo[gBattleMons[gActiveBattler].species].types[1];
 }
 
 static void BattleIntroGetMonsData(void)
@@ -2604,8 +2573,8 @@ static void BattleIntroDrawTrainersOrMonsSprites(void)
             for (i = 0; i < sizeof(struct BattlePokemon); i++)
                 ptr[i] = gBattleBufferB[gActiveBattler][4 + i];
 
-            gBattleMons[gActiveBattler].type1 = GetVariantType1(gBattleMons[gActiveBattler].species, gBattleMons[gActiveBattler].variant);
-            gBattleMons[gActiveBattler].type2 = GetVariantType2(gBattleMons[gActiveBattler].species, gBattleMons[gActiveBattler].variant);
+            gBattleMons[gActiveBattler].type1 = gSpeciesInfo[gBattleMons[gActiveBattler].species].types[0];
+            gBattleMons[gActiveBattler].type2 = gSpeciesInfo[gBattleMons[gActiveBattler].species].types[1];
             gBattleMons[gActiveBattler].ability = GetAbilityBySpecies(gBattleMons[gActiveBattler].species, gBattleMons[gActiveBattler].abilityNum);
             hpOnSwitchout = &gBattleStruct->hpOnSwitchout[GetBattlerSide(gActiveBattler)];
             *hpOnSwitchout = gBattleMons[gActiveBattler].hp;
@@ -4471,7 +4440,7 @@ static void HandleAction_NothingIsFainted(void)
     ++gCurrentTurnActionNumber;
     gCurrentActionFuncId = gActionsByTurnOrder[gCurrentTurnActionNumber];
     gHitMarker &= ~(HITMARKER_DESTINYBOND | HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_ATTACKSTRING_PRINTED
-                    | HITMARKER_NO_PPDEDUCT | HITMARKER_IGNORE_SAFEGUARD | HITMARKER_IGNORE_ON_AIR
+                    | HITMARKER_NO_PPDEDUCT | HITMARKER_STATUS_ABILITY_EFFECT | HITMARKER_IGNORE_ON_AIR
                     | HITMARKER_IGNORE_UNDERGROUND | HITMARKER_IGNORE_UNDERWATER | HITMARKER_PASSIVE_DAMAGE
                     | HITMARKER_OBEYS | HITMARKER_WAKE_UP_CLEAR | HITMARKER_SYNCHRONISE_EFFECT
                     | HITMARKER_CHARGING | HITMARKER_NEVER_SET);
@@ -4483,7 +4452,7 @@ static void HandleAction_ActionFinished(void)
     gCurrentActionFuncId = gActionsByTurnOrder[gCurrentTurnActionNumber];
     SpecialStatusesClear();
     gHitMarker &= ~(HITMARKER_DESTINYBOND | HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_ATTACKSTRING_PRINTED
-                    | HITMARKER_NO_PPDEDUCT | HITMARKER_IGNORE_SAFEGUARD | HITMARKER_IGNORE_ON_AIR
+                    | HITMARKER_NO_PPDEDUCT | HITMARKER_STATUS_ABILITY_EFFECT | HITMARKER_IGNORE_ON_AIR
                     | HITMARKER_IGNORE_UNDERGROUND | HITMARKER_IGNORE_UNDERWATER | HITMARKER_PASSIVE_DAMAGE
                     | HITMARKER_OBEYS | HITMARKER_WAKE_UP_CLEAR | HITMARKER_SYNCHRONISE_EFFECT
                     | HITMARKER_CHARGING | HITMARKER_NEVER_SET);
