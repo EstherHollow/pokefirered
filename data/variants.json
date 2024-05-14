@@ -1,0 +1,36 @@
+{
+  "species": [
+    {
+      "index": 1,
+      "name": "bulbasaur",
+      "parts": [
+        {
+          "name": "body",
+          "indices": [
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        {
+          "name": "bulb",
+          "indices": [
+            11,
+            12,
+            13,
+            14
+          ]
+        },
+        {
+          "name": "mouth",
+          "indices": [
+            6,
+            7,
+            8
+          ]
+        }
+      ]
+    }
+  ]
+}
