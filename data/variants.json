@@ -5288,6 +5288,17 @@
       "name": "snorlax",
       "parts": [
         {
+          "correlation": 1,
+          "name": "body",
+          "indices": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "offset": 283
+        },
+        {
           "correlation": 2,
           "name": "accents",
           "indices": [
@@ -5304,10 +5315,6 @@
           "correlation": 3,
           "name": "mouth",
           "indices": [
-            1,
-            2,
-            3,
-            4,
             11
           ],
           "offset": 454
@@ -14697,6 +14704,26 @@
           "offset": 788
         }
       ]
+    }
+  ],
+  "tags": [
+    {
+      "name": "random",
+      "type": 0,
+      "start": 0,
+      "end": 999
+    },
+    {
+      "name": "flame",
+      "type": 0,
+      "start": 97,
+      "end": 273
+    },
+    {
+      "name": "daylight",
+      "type": 0,
+      "start": 309,
+      "end": 691
     }
   ]
 }
