@@ -43,15 +43,15 @@
           "parts": [
             {
               "name": "body",
-              "tag": "giant"
+              "tag": "earth"
             },
             {
               "name": "bulb",
-              "tag": "verde"
+              "tag": "leaf"
             },
             {
               "name": "flower",
-              "tag": "glass"
+              "tag": "sunset"
             }
           ]
         },
@@ -60,15 +60,15 @@
           "parts": [
             {
               "name": "body",
-              "tag": ""
+              "tag": "desert"
             },
             {
               "name": "bulb",
-              "tag": ""
+              "tag": "pond"
             },
             {
               "name": "flower",
-              "tag": ""
+              "tag": "feast"
             }
           ]
         },
@@ -77,15 +77,15 @@
           "parts": [
             {
               "name": "body",
-              "tag": ""
+              "tag": "fashion"
             },
             {
               "name": "bulb",
-              "tag": ""
+              "tag": "royal"
             },
             {
               "name": "flower",
-              "tag": ""
+              "tag": "glow"
             }
           ]
         },
@@ -94,15 +94,15 @@
           "parts": [
             {
               "name": "body",
-              "tag": ""
+              "tag": "deep"
             },
             {
               "name": "bulb",
-              "tag": ""
+              "tag": "luster"
             },
             {
               "name": "flower",
-              "tag": ""
+              "tag": "spectrum"
             }
           ]
         }
