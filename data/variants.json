@@ -47,16 +47,16 @@
                 "type": 1,
                 "lightness": 0,
                 "saturation": 0,
-                "hue": 93
+                "hue": 32
               }
             },
             {
               "name": "bulb",
               "tag": {
                 "type": 1,
-                "lightness": 0,
-                "saturation": 0,
-                "hue": 102
+                "lightness": 2,
+                "saturation": 2,
+                "hue": 28
               }
             },
             {
@@ -64,8 +64,8 @@
               "tag": {
                 "type": 1,
                 "lightness": 0,
-                "saturation": 0,
-                "hue": 38
+                "saturation": -1,
+                "hue": 6
               }
             }
           ]
@@ -77,27 +77,27 @@
               "name": "body",
               "tag": {
                 "type": 1,
-                "lightness": 0,
-                "saturation": 0,
-                "hue": 31
+                "lightness": -3,
+                "saturation": -1,
+                "hue": 8
               }
             },
             {
               "name": "bulb",
               "tag": {
                 "type": 1,
-                "lightness": 0,
-                "saturation": 0,
-                "hue": 63
+                "lightness": -2,
+                "saturation": -2,
+                "hue": 15
               }
             },
             {
               "name": "flower",
               "tag": {
                 "type": 1,
-                "lightness": 0,
-                "saturation": 0,
-                "hue": 23
+                "lightness": -2,
+                "saturation": -2,
+                "hue": 2
               }
             }
           ]
@@ -109,27 +109,27 @@
               "name": "body",
               "tag": {
                 "type": 1,
-                "lightness": 0,
-                "saturation": 0,
-                "hue": 73
+                "lightness": 4,
+                "saturation": 1,
+                "hue": 13
               }
             },
             {
               "name": "bulb",
               "tag": {
                 "type": 1,
-                "lightness": 0,
-                "saturation": 0,
-                "hue": 166
+                "lightness": -1,
+                "saturation": 1,
+                "hue": 51
               }
             },
             {
               "name": "flower",
               "tag": {
                 "type": 1,
-                "lightness": 0,
-                "saturation": 0,
-                "hue": 184
+                "lightness": -2,
+                "saturation": -3,
+                "hue": 51
               }
             }
           ]
@@ -141,18 +141,18 @@
               "name": "body",
               "tag": {
                 "type": 1,
-                "lightness": 0,
-                "saturation": 0,
-                "hue": 184
+                "lightness": -2,
+                "saturation": -2,
+                "hue": 45
               }
             },
             {
               "name": "bulb",
               "tag": {
                 "type": 1,
-                "lightness": 0,
-                "saturation": 0,
-                "hue": 126
+                "lightness": -1,
+                "saturation": -2,
+                "hue": 35
               }
             },
             {
@@ -160,8 +160,8 @@
               "tag": {
                 "type": 1,
                 "lightness": 0,
-                "saturation": 0,
-                "hue": 246
+                "saturation": -2,
+                "hue": 62
               }
             }
           ]
@@ -214,27 +214,27 @@
               "name": "body",
               "tag": {
                 "type": 1,
-                "lightness": 0,
+                "lightness": -1,
                 "saturation": 0,
-                "hue": 88
+                "hue": 38
               }
             },
             {
               "name": "leaves",
               "tag": {
                 "type": 1,
-                "lightness": 0,
-                "saturation": 0,
-                "hue": 96
+                "lightness": 2,
+                "saturation": 1,
+                "hue": 23
               }
             },
             {
               "name": "flower",
               "tag": {
                 "type": 1,
-                "lightness": 0,
+                "lightness": 1,
                 "saturation": 0,
-                "hue": 68
+                "hue": 10
               }
             }
           ]
@@ -246,27 +246,27 @@
               "name": "body",
               "tag": {
                 "type": 1,
-                "lightness": 0,
-                "saturation": 0,
-                "hue": 31
+                "lightness": -2,
+                "saturation": 1,
+                "hue": 8
               }
             },
             {
               "name": "leaves",
               "tag": {
                 "type": 1,
-                "lightness": 0,
-                "saturation": 0,
-                "hue": 64
+                "lightness": 2,
+                "saturation": -1,
+                "hue": 16
               }
             },
             {
               "name": "flower",
               "tag": {
                 "type": 1,
-                "lightness": 0,
-                "saturation": 0,
-                "hue": 23
+                "lightness": -1,
+                "saturation": 3,
+                "hue": 3
               }
             }
           ]
@@ -278,27 +278,27 @@
               "name": "body",
               "tag": {
                 "type": 1,
-                "lightness": 0,
-                "saturation": 0,
-                "hue": 67
+                "lightness": 3,
+                "saturation": 2,
+                "hue": 12
               }
             },
             {
               "name": "leaves",
               "tag": {
                 "type": 1,
-                "lightness": 0,
-                "saturation": 0,
-                "hue": 187
+                "lightness": -1,
+                "saturation": 1,
+                "hue": 46
               }
             },
             {
               "name": "flower",
               "tag": {
                 "type": 1,
-                "lightness": 0,
-                "saturation": 0,
-                "hue": 185
+                "lightness": 1,
+                "saturation": 2,
+                "hue": 47
               }
             }
           ]
@@ -310,27 +310,27 @@
               "name": "body",
               "tag": {
                 "type": 1,
-                "lightness": 0,
+                "lightness": -2,
                 "saturation": 0,
-                "hue": 181
+                "hue": 42
               }
             },
             {
               "name": "leaves",
               "tag": {
                 "type": 1,
-                "lightness": 0,
-                "saturation": 0,
-                "hue": 126
+                "lightness": 7,
+                "saturation": -3,
+                "hue": 31
               }
             },
             {
               "name": "flower",
               "tag": {
                 "type": 1,
-                "lightness": 0,
-                "saturation": 0,
-                "hue": 247
+                "lightness": -1,
+                "saturation": 2,
+                "hue": 61
               }
             }
           ]
@@ -393,7 +393,7 @@
                 "type": 1,
                 "lightness": 0,
                 "saturation": 0,
-                "hue": 91
+                "hue": 35
               }
             },
             {
@@ -401,26 +401,26 @@
               "tag": {
                 "type": 1,
                 "lightness": 0,
-                "saturation": 0,
-                "hue": 100
+                "saturation": 1,
+                "hue": 28
               }
             },
             {
               "name": "flower",
               "tag": {
                 "type": 1,
-                "lightness": 0,
-                "saturation": 0,
-                "hue": 47
+                "lightness": 2,
+                "saturation": 2,
+                "hue": 9
               }
             },
             {
               "name": "spots",
               "tag": {
                 "type": 1,
-                "lightness": 0,
-                "saturation": 0,
-                "hue": 67
+                "lightness": 1,
+                "saturation": 1,
+                "hue": 16
               }
             }
           ]
@@ -432,36 +432,36 @@
               "name": "body",
               "tag": {
                 "type": 1,
-                "lightness": 0,
+                "lightness": -2,
                 "saturation": 0,
-                "hue": 31
+                "hue": 6
               }
             },
             {
               "name": "leaves",
               "tag": {
                 "type": 1,
-                "lightness": 0,
+                "lightness": 1,
                 "saturation": 0,
-                "hue": 64
+                "hue": 17
               }
             },
             {
               "name": "flower",
               "tag": {
                 "type": 1,
-                "lightness": 0,
-                "saturation": 0,
-                "hue": 22
+                "lightness": 2,
+                "saturation": 2,
+                "hue": 5
               }
             },
             {
               "name": "spots",
               "tag": {
                 "type": 1,
-                "lightness": 0,
-                "saturation": 0,
-                "hue": 47
+                "lightness": 7,
+                "saturation": -3,
+                "hue": 6
               }
             }
           ]
@@ -473,36 +473,36 @@
               "name": "body",
               "tag": {
                 "type": 1,
-                "lightness": 0,
-                "saturation": 0,
-                "hue": 76
+                "lightness": 2,
+                "saturation": 2,
+                "hue": 13
               }
             },
             {
               "name": "leaves",
               "tag": {
                 "type": 1,
-                "lightness": 0,
-                "saturation": 0,
-                "hue": 166
+                "lightness": -2,
+                "saturation": -2,
+                "hue": 40
               }
             },
             {
               "name": "flower",
               "tag": {
                 "type": 1,
-                "lightness": 0,
-                "saturation": 0,
-                "hue": 184
+                "lightness": 2,
+                "saturation": 1,
+                "hue": 48
               }
             },
             {
               "name": "spots",
               "tag": {
                 "type": 1,
-                "lightness": 0,
-                "saturation": 0,
-                "hue": 73
+                "lightness": 4,
+                "saturation": -4,
+                "hue": 16
               }
             }
           ]
@@ -514,18 +514,18 @@
               "name": "body",
               "tag": {
                 "type": 1,
-                "lightness": 0,
+                "lightness": -1,
                 "saturation": 0,
-                "hue": 184
+                "hue": 45
               }
             },
             {
               "name": "leaves",
               "tag": {
                 "type": 1,
-                "lightness": 0,
-                "saturation": 0,
-                "hue": 126
+                "lightness": 1,
+                "saturation": 1,
+                "hue": 31
               }
             },
             {
@@ -533,8 +533,8 @@
               "tag": {
                 "type": 1,
                 "lightness": 0,
-                "saturation": 0,
-                "hue": 248
+                "saturation": 2,
+                "hue": 61
               }
             },
             {
@@ -542,8 +542,8 @@
               "tag": {
                 "type": 1,
                 "lightness": 0,
-                "saturation": 0,
-                "hue": 231
+                "saturation": -1,
+                "hue": 50
               }
             }
           ]
@@ -3488,19 +3488,28 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": 0,
+                "hue": 15
               }
             },
             {
               "name": "spots",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 2,
+                "saturation": 3,
+                "hue": 8
               }
             },
             {
               "name": "ears",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": 2,
+                "hue": 59
               }
             }
           ]
@@ -3511,19 +3520,28 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": -1,
+                "saturation": 2,
+                "hue": 6
               }
             },
             {
               "name": "spots",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": 0,
+                "hue": 6
               }
             },
             {
               "name": "ears",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": 4,
+                "hue": 7
               }
             }
           ]
@@ -3534,19 +3552,28 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 2,
+                "lightness": 0,
+                "saturation": 1,
+                "hue": 0
               }
             },
             {
               "name": "spots",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": -1,
+                "hue": 0
               }
             },
             {
               "name": "ears",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": 6,
+                "hue": 53
               }
             }
           ]
@@ -3557,19 +3584,28 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 4,
+                "saturation": -2,
+                "hue": 43
               }
             },
             {
               "name": "spots",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": -1,
+                "saturation": -2,
+                "hue": 63
               }
             },
             {
               "name": "ears",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": 0,
+                "hue": 4
               }
             }
           ]
@@ -7802,19 +7838,28 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": -8,
+                "saturation": 1,
+                "hue": 10
               }
             },
             {
               "name": "accents",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": -8,
+                "saturation": -6,
+                "hue": 11
               }
             },
             {
               "name": "nose",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": -2,
+                "saturation": 0,
+                "hue": 2
               }
             }
           ]
@@ -7825,19 +7870,28 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": -3,
+                "saturation": 2,
+                "hue": 0
               }
             },
             {
               "name": "accents",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": -1,
+                "saturation": 0,
+                "hue": 6
               }
             },
             {
               "name": "nose",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 2,
+                "saturation": -4,
+                "hue": 51
               }
             }
           ]
@@ -7848,19 +7902,28 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 7,
+                "saturation": -8,
+                "hue": 10
               }
             },
             {
               "name": "accents",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": -5,
+                "saturation": -1,
+                "hue": 6
               }
             },
             {
               "name": "nose",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 2,
+                "saturation": -1,
+                "hue": 2
               }
             }
           ]
@@ -10646,13 +10709,19 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": -2,
+                "saturation": 0,
+                "hue": 48
               }
             },
             {
               "name": "flames",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": -2,
+                "saturation": 3,
+                "hue": 3
               }
             }
           ]
@@ -10663,13 +10732,19 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": -2,
+                "saturation": -4,
+                "hue": 58
               }
             },
             {
               "name": "flames",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 7,
+                "saturation": -7,
+                "hue": 53
               }
             }
           ]
@@ -10680,13 +10755,19 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": -1,
+                "saturation": 1,
+                "hue": 13
               }
             },
             {
               "name": "flames",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 4,
+                "saturation": 4,
+                "hue": 56
               }
             }
           ]
@@ -12465,19 +12546,28 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": -2,
+                "saturation": 0,
+                "hue": 57
               }
             },
             {
               "name": "smoke",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": 1,
+                "hue": 60
               }
             },
             {
               "name": "mouth",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": 0,
+                "hue": 6
               }
             }
           ]
@@ -12488,19 +12578,28 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": 0,
+                "hue": 53
               }
             },
             {
               "name": "smoke",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": 0,
+                "hue": 47
               }
             },
             {
               "name": "mouth",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": 0,
+                "hue": 61
               }
             }
           ]
@@ -12511,19 +12610,28 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 1,
+                "saturation": 1,
+                "hue": 52
               }
             },
             {
               "name": "smoke",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": -1,
+                "saturation": 1,
+                "hue": 3
               }
             },
             {
               "name": "mouth",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": -4,
+                "saturation": -3,
+                "hue": 60
               }
             }
           ]
@@ -12534,19 +12642,28 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": -2,
+                "saturation": -7,
+                "hue": 56
               }
             },
             {
               "name": "smoke",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 6,
+                "saturation": -7,
+                "hue": 58
               }
             },
             {
               "name": "mouth",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 2,
+                "saturation": -6,
+                "hue": 43
               }
             }
           ]
@@ -12777,13 +12894,19 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": -1,
+                "saturation": -4,
+                "hue": 10
               }
             },
             {
               "name": "shadow",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": -3,
+                "saturation": -6,
+                "hue": 14
               }
             }
           ]
@@ -12794,13 +12917,19 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": -2,
+                "saturation": 2,
+                "hue": 7
               }
             },
             {
               "name": "shadow",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": -4,
+                "saturation": 1,
+                "hue": 4
               }
             }
           ]
@@ -12811,13 +12940,19 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 1,
+                "saturation": 3,
+                "hue": 15
               }
             },
             {
               "name": "shadow",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": 4,
+                "hue": 8
               }
             }
           ]
@@ -12828,13 +12963,19 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 6,
+                "saturation": 1,
+                "hue": 45
               }
             },
             {
               "name": "shadow",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 3,
+                "saturation": 1,
+                "hue": 45
               }
             }
           ]
@@ -17472,7 +17613,10 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": 0,
+                "hue": 0
               }
             }
           ]
@@ -17483,7 +17627,10 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": 0,
+                "hue": 38
               }
             }
           ]
@@ -17494,7 +17641,10 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 2,
+                "lightness": 0,
+                "saturation": -8,
+                "hue": 0
               }
             }
           ]
@@ -17505,7 +17655,9 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 3,
+                "lightness": 0,
+                "saturation": 0
               }
             }
           ]
@@ -19326,19 +19478,28 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 2,
+                "saturation": -1,
+                "hue": 52
               }
             },
             {
               "name": "belly",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 6,
+                "saturation": -8,
+                "hue": 20
               }
             },
             {
               "name": "eyes",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": 0,
+                "hue": 57
               }
             }
           ]
@@ -19349,19 +19510,28 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 3,
+                "saturation": 0,
+                "hue": 45
               }
             },
             {
               "name": "belly",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 4,
+                "saturation": -7,
+                "hue": 58
               }
             },
             {
               "name": "eyes",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": 0,
+                "hue": 56
               }
             }
           ]
@@ -19372,19 +19542,28 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": -8,
+                "saturation": -8,
+                "hue": 28
               }
             },
             {
               "name": "belly",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 4,
+                "saturation": -6,
+                "hue": 57
               }
             },
             {
               "name": "eyes",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": -2,
+                "hue": 4
               }
             }
           ]
@@ -19395,19 +19574,28 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 1,
+                "saturation": 2,
+                "hue": 0
               }
             },
             {
               "name": "belly",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 7,
+                "saturation": -8,
+                "hue": 17
               }
             },
             {
               "name": "eyes",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": 0,
+                "hue": 58
               }
             }
           ]
@@ -23668,19 +23856,28 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": -2,
+                "hue": 46
               }
             },
             {
               "name": "wool",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": -3,
+                "hue": 16
               }
             },
             {
               "name": "accents",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": 0,
+                "hue": 15
               }
             }
           ]
@@ -23691,19 +23888,28 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 2,
+                "saturation": -2,
+                "hue": 53
               }
             },
             {
               "name": "wool",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": -2,
+                "hue": 49
               }
             },
             {
               "name": "accents",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": -1,
+                "saturation": 1,
+                "hue": 11
               }
             }
           ]
@@ -23714,19 +23920,28 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": -4,
+                "hue": 48
               }
             },
             {
               "name": "wool",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": 2,
+                "hue": 2
               }
             },
             {
               "name": "accents",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": -2,
+                "saturation": 4,
+                "hue": 6
               }
             }
           ]
@@ -23737,19 +23952,26 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 2,
+                "saturation": 1,
+                "hue": 4
               }
             },
             {
               "name": "wool",
               "tag": {
-                "type": 0
+                "type": 3,
+                "lightness": 0,
+                "saturation": 0
               }
             },
             {
               "name": "accents",
               "tag": {
-                "type": 0
+                "type": 3,
+                "lightness": 0,
+                "saturation": 0
               }
             }
           ]
@@ -25934,19 +26156,28 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": -2,
+                "saturation": 1,
+                "hue": 0
               }
             },
             {
               "name": "accents",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 4,
+                "saturation": 1,
+                "hue": 12
               }
             },
             {
               "name": "eyes",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": 0,
+                "hue": 0
               }
             }
           ]
@@ -25957,19 +26188,28 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": 2,
+                "hue": 15
               }
             },
             {
               "name": "accents",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": -1,
+                "saturation": 1,
+                "hue": 4
               }
             },
             {
               "name": "eyes",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": -4,
+                "hue": 0
               }
             }
           ]
@@ -25980,19 +26220,28 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": 2,
+                "hue": 51
               }
             },
             {
               "name": "accents",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": -2,
+                "saturation": -1,
+                "hue": 47
               }
             },
             {
               "name": "eyes",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": 1,
+                "hue": 13
               }
             }
           ]
@@ -26003,19 +26252,28 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": 3,
+                "hue": 32
               }
             },
             {
               "name": "accents",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 7,
+                "saturation": -8,
+                "hue": 0
               }
             },
             {
               "name": "eyes",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": 0,
+                "hue": 35
               }
             }
           ]
@@ -27072,13 +27330,19 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": 1,
+                "hue": 16
               }
             },
             {
               "name": "accents",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 1,
+                "saturation": 0,
+                "hue": 40
               }
             }
           ]
@@ -27089,13 +27353,19 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": 0,
+                "hue": 8
               }
             },
             {
               "name": "accents",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": 1,
+                "hue": 59
               }
             }
           ]
@@ -27106,13 +27376,19 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": -1,
+                "saturation": 1,
+                "hue": 61
               }
             },
             {
               "name": "accents",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 3,
+                "saturation": 0,
+                "hue": 49
               }
             }
           ]
@@ -27123,13 +27399,19 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 6,
+                "saturation": -8,
+                "hue": 12
               }
             },
             {
               "name": "accents",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": -1,
+                "saturation": -2,
+                "hue": 35
               }
             }
           ]
@@ -37202,19 +37484,28 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 1,
+                "saturation": -3,
+                "hue": 49
               }
             },
             {
               "name": "hair",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 2,
+                "saturation": 0,
+                "hue": 31
               }
             },
             {
               "name": "horn",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": 0,
+                "hue": 5
               }
             }
           ]
@@ -37225,19 +37516,28 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 1,
+                "saturation": -2,
+                "hue": 50
               }
             },
             {
               "name": "hair",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 2,
+                "saturation": 2,
+                "hue": 49
               }
             },
             {
               "name": "horn",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 6,
+                "saturation": 0,
+                "hue": 60
               }
             }
           ]
@@ -37248,19 +37548,28 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 2,
+                "saturation": -4,
+                "hue": 56
               }
             },
             {
               "name": "hair",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": 1,
+                "hue": 61
               }
             },
             {
               "name": "horn",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": -3,
+                "hue": 35
               }
             }
           ]
@@ -37271,19 +37580,28 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": -7,
+                "saturation": -8,
+                "hue": 14
               }
             },
             {
               "name": "hair",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 6,
+                "saturation": -8,
+                "hue": 55
               }
             },
             {
               "name": "horn",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": -1,
+                "saturation": 0,
+                "hue": 3
               }
             }
           ]
@@ -37335,19 +37653,28 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 1,
+                "saturation": -3,
+                "hue": 49
               }
             },
             {
               "name": "hair",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 2,
+                "saturation": 0,
+                "hue": 31
               }
             },
             {
               "name": "horn",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": 0,
+                "hue": 5
               }
             }
           ]
@@ -37358,19 +37685,28 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 1,
+                "saturation": -2,
+                "hue": 50
               }
             },
             {
               "name": "hair",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 2,
+                "saturation": 2,
+                "hue": 49
               }
             },
             {
               "name": "horn",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 6,
+                "saturation": 0,
+                "hue": 60
               }
             }
           ]
@@ -37381,19 +37717,28 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 2,
+                "saturation": -4,
+                "hue": 56
               }
             },
             {
               "name": "hair",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": 1,
+                "hue": 61
               }
             },
             {
               "name": "horn",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 0,
+                "saturation": -3,
+                "hue": 35
               }
             }
           ]
@@ -37404,19 +37749,28 @@
             {
               "name": "body",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": -7,
+                "saturation": -8,
+                "hue": 14
               }
             },
             {
               "name": "hair",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": 6,
+                "saturation": -8,
+                "hue": 55
               }
             },
             {
               "name": "horn",
               "tag": {
-                "type": 0
+                "type": 1,
+                "lightness": -1,
+                "saturation": 0,
+                "hue": 3
               }
             }
           ]
