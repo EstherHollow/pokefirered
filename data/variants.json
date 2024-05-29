@@ -46,8 +46,8 @@
               "tag": {
                 "type": "hue",
                 "lightness": 0,
-                "saturation": 0,
-                "hue": 32,
+                "saturation": 1,
+                "hue": 14,
                 "variance": "small"
               }
             },
@@ -55,9 +55,9 @@
               "name": "bulb",
               "tag": {
                 "type": "hue",
-                "lightness": 2,
-                "saturation": 2,
-                "hue": 28,
+                "lightness": -2,
+                "saturation": 1,
+                "hue": 18,
                 "variance": "small"
               }
             },
@@ -65,10 +65,10 @@
               "name": "flower",
               "tag": {
                 "type": "hue",
-                "lightness": 0,
+                "lightness": 1,
                 "saturation": -1,
-                "hue": 6,
-                "variance": "small"
+                "hue": 3,
+                "variance": "tiny"
               }
             }
           ]
@@ -80,9 +80,9 @@
               "name": "body",
               "tag": {
                 "type": "hue",
-                "lightness": -3,
-                "saturation": -1,
-                "hue": 8,
+                "lightness": -2,
+                "saturation": 0,
+                "hue": 6,
                 "variance": "small"
               }
             },
@@ -90,9 +90,9 @@
               "name": "bulb",
               "tag": {
                 "type": "hue",
-                "lightness": -2,
+                "lightness": -1,
                 "saturation": -2,
-                "hue": 15,
+                "hue": 9,
                 "variance": "small"
               }
             },
@@ -115,9 +115,9 @@
               "name": "body",
               "tag": {
                 "type": "hue",
-                "lightness": 4,
-                "saturation": 1,
-                "hue": 13,
+                "lightness": 5,
+                "saturation": 2,
+                "hue": 8,
                 "variance": "small"
               }
             },
@@ -127,8 +127,8 @@
                 "type": "hue",
                 "lightness": -1,
                 "saturation": 1,
-                "hue": 51,
-                "variance": "small"
+                "hue": 24,
+                "variance": "tiny"
               }
             },
             {
@@ -136,8 +136,8 @@
               "tag": {
                 "type": "hue",
                 "lightness": -2,
-                "saturation": -3,
-                "hue": 51,
+                "saturation": -4,
+                "hue": 27,
                 "variance": "small"
               }
             }
@@ -150,9 +150,9 @@
               "name": "body",
               "tag": {
                 "type": "hue",
-                "lightness": -2,
-                "saturation": -2,
-                "hue": 45,
+                "lightness": -1,
+                "saturation": 1,
+                "hue": 23,
                 "variance": "small"
               }
             },
@@ -161,8 +161,8 @@
               "tag": {
                 "type": "hue",
                 "lightness": -1,
-                "saturation": -2,
-                "hue": 35,
+                "saturation": 0,
+                "hue": 18,
                 "variance": "small"
               }
             },
@@ -170,10 +170,10 @@
               "name": "flower",
               "tag": {
                 "type": "hue",
-                "lightness": 0,
-                "saturation": -2,
-                "hue": 62,
-                "variance": "small"
+                "lightness": 1,
+                "saturation": -1,
+                "hue": 30,
+                "variance": "tiny"
               }
             }
           ]
@@ -227,9 +227,9 @@
               "name": "body",
               "tag": {
                 "type": "hue",
-                "lightness": -1,
-                "saturation": 0,
-                "hue": 38,
+                "lightness": 3,
+                "saturation": 5,
+                "hue": 12,
                 "variance": "small"
               }
             },
@@ -237,9 +237,9 @@
               "name": "leaves",
               "tag": {
                 "type": "hue",
-                "lightness": 2,
-                "saturation": 1,
-                "hue": 23,
+                "lightness": -7,
+                "saturation": 7,
+                "hue": 17,
                 "variance": "small"
               }
             },
@@ -247,9 +247,9 @@
               "name": "flower",
               "tag": {
                 "type": "hue",
-                "lightness": 1,
-                "saturation": 0,
-                "hue": 10,
+                "lightness": -2,
+                "saturation": -3,
+                "hue": 5,
                 "variance": "small"
               }
             }
@@ -263,8 +263,8 @@
               "tag": {
                 "type": "hue",
                 "lightness": -2,
-                "saturation": 1,
-                "hue": 8,
+                "saturation": -3,
+                "hue": 5,
                 "variance": "small"
               }
             },
@@ -272,9 +272,9 @@
               "name": "leaves",
               "tag": {
                 "type": "hue",
-                "lightness": 2,
-                "saturation": -1,
-                "hue": 16,
+                "lightness": -2,
+                "saturation": -3,
+                "hue": 7,
                 "variance": "small"
               }
             },
@@ -282,8 +282,8 @@
               "name": "flower",
               "tag": {
                 "type": "hue",
-                "lightness": -1,
-                "saturation": 3,
+                "lightness": -2,
+                "saturation": -3,
                 "hue": 3,
                 "variance": "small"
               }
@@ -297,9 +297,9 @@
               "name": "body",
               "tag": {
                 "type": "hue",
-                "lightness": 3,
-                "saturation": 2,
-                "hue": 12,
+                "lightness": 5,
+                "saturation": 1,
+                "hue": 7,
                 "variance": "small"
               }
             },
@@ -307,9 +307,9 @@
               "name": "leaves",
               "tag": {
                 "type": "hue",
-                "lightness": -1,
-                "saturation": 1,
-                "hue": 46,
+                "lightness": 0,
+                "saturation": -3,
+                "hue": 19,
                 "variance": "small"
               }
             },
@@ -317,9 +317,9 @@
               "name": "flower",
               "tag": {
                 "type": "hue",
-                "lightness": 1,
-                "saturation": 2,
-                "hue": 47,
+                "lightness": -3,
+                "saturation": -2,
+                "hue": 24,
                 "variance": "small"
               }
             }
@@ -333,8 +333,8 @@
               "tag": {
                 "type": "hue",
                 "lightness": -2,
-                "saturation": 0,
-                "hue": 42,
+                "saturation": -3,
+                "hue": 23,
                 "variance": "small"
               }
             },
@@ -342,9 +342,9 @@
               "name": "leaves",
               "tag": {
                 "type": "hue",
-                "lightness": 7,
+                "lightness": -1,
                 "saturation": -3,
-                "hue": 31,
+                "hue": 18,
                 "variance": "small"
               }
             },
@@ -352,9 +352,9 @@
               "name": "flower",
               "tag": {
                 "type": "hue",
-                "lightness": -1,
-                "saturation": 2,
-                "hue": 61,
+                "lightness": 0,
+                "saturation": -2,
+                "hue": 30,
                 "variance": "small"
               }
             }
@@ -417,9 +417,9 @@
               "name": "body",
               "tag": {
                 "type": "hue",
-                "lightness": 0,
-                "saturation": 0,
-                "hue": 35,
+                "lightness": 3,
+                "saturation": 5,
+                "hue": 12,
                 "variance": "small"
               }
             },
@@ -427,9 +427,9 @@
               "name": "leaves",
               "tag": {
                 "type": "hue",
-                "lightness": 0,
-                "saturation": 1,
-                "hue": 28,
+                "lightness": -7,
+                "saturation": 7,
+                "hue": 17,
                 "variance": "small"
               }
             },
@@ -437,9 +437,9 @@
               "name": "flower",
               "tag": {
                 "type": "hue",
-                "lightness": 2,
-                "saturation": 2,
-                "hue": 9,
+                "lightness": -2,
+                "saturation": -3,
+                "hue": 5,
                 "variance": "small"
               }
             },
@@ -463,8 +463,8 @@
               "tag": {
                 "type": "hue",
                 "lightness": -2,
-                "saturation": 0,
-                "hue": 6,
+                "saturation": -3,
+                "hue": 5,
                 "variance": "small"
               }
             },
@@ -472,9 +472,9 @@
               "name": "leaves",
               "tag": {
                 "type": "hue",
-                "lightness": 1,
-                "saturation": 0,
-                "hue": 17,
+                "lightness": -2,
+                "saturation": -3,
+                "hue": 7,
                 "variance": "small"
               }
             },
@@ -482,9 +482,9 @@
               "name": "flower",
               "tag": {
                 "type": "hue",
-                "lightness": 2,
-                "saturation": 2,
-                "hue": 5,
+                "lightness": -2,
+                "saturation": -3,
+                "hue": 3,
                 "variance": "small"
               }
             },
@@ -507,9 +507,9 @@
               "name": "body",
               "tag": {
                 "type": "hue",
-                "lightness": 2,
-                "saturation": 2,
-                "hue": 13,
+                "lightness": 5,
+                "saturation": 1,
+                "hue": 7,
                 "variance": "small"
               }
             },
@@ -517,9 +517,9 @@
               "name": "leaves",
               "tag": {
                 "type": "hue",
-                "lightness": -2,
-                "saturation": -2,
-                "hue": 40,
+                "lightness": 0,
+                "saturation": -3,
+                "hue": 19,
                 "variance": "small"
               }
             },
@@ -527,9 +527,9 @@
               "name": "flower",
               "tag": {
                 "type": "hue",
-                "lightness": 2,
-                "saturation": 1,
-                "hue": 48,
+                "lightness": -3,
+                "saturation": -2,
+                "hue": 24,
                 "variance": "small"
               }
             },
@@ -552,9 +552,9 @@
               "name": "body",
               "tag": {
                 "type": "hue",
-                "lightness": -1,
-                "saturation": 0,
-                "hue": 45,
+                "lightness": -2,
+                "saturation": -3,
+                "hue": 23,
                 "variance": "small"
               }
             },
@@ -562,9 +562,9 @@
               "name": "leaves",
               "tag": {
                 "type": "hue",
-                "lightness": 1,
-                "saturation": 1,
-                "hue": 31,
+                "lightness": -1,
+                "saturation": -3,
+                "hue": 18,
                 "variance": "small"
               }
             },
@@ -573,8 +573,8 @@
               "tag": {
                 "type": "hue",
                 "lightness": 0,
-                "saturation": 2,
-                "hue": 61,
+                "saturation": -2,
+                "hue": 30,
                 "variance": "small"
               }
             },
@@ -584,7 +584,7 @@
                 "type": "hue",
                 "lightness": 0,
                 "saturation": -1,
-                "hue": 50,
+                "hue": 31,
                 "variance": "small"
               }
             }
