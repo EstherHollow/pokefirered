@@ -2231,13 +2231,11 @@ static void CreateDisplayMonSprite(void)
     u8 palSlot;
     u8 spriteId;
     struct SpriteSheet sheet = {gStorage->tileBuffer, MON_PIC_SIZE, GFXTAG_DISPLAY_MON};
-    struct SpritePalette palette = {gStorage->displayMonPalBuffer, PALTAG_DISPLAY_MON};
+    struct SpritePalette palette = {gStorage->displayMonPalette, PALTAG_DISPLAY_MON};
     struct SpriteTemplate template = sSpriteTemplate_DisplayMon;
 
     for (i = 0; i < MON_PIC_SIZE; i++)
         gStorage->tileBuffer[i] = 0;
-    for (i = 0; i < 0x10; i++)
-        gStorage->displayMonPalBuffer[i] = 0;
 
     gStorage->displayMonSprite = NULL;
 
@@ -2275,9 +2273,8 @@ static void LoadDisplayMonGfx(u16 species, u32 personality)
     if (species != SPECIES_NONE)
     {
         HandleLoadSpecialPokePic(&gMonFrontPicTable[species], gStorage->tileBuffer, species, personality);
-        LZ77UnCompWram(gStorage->displayMonPalette, gStorage->displayMonPalBuffer);
         CpuCopy32(gStorage->tileBuffer, gStorage->displayMonTilePtr, 0x800);
-        LoadPalette(gStorage->displayMonPalBuffer, gStorage->displayMonPalOffset, PLTT_SIZE_4BPP);
+        LoadPalette(gStorage->displayMonPalette, gStorage->displayMonPalOffset, PLTT_SIZE_4BPP);
         gStorage->displayMonSprite->invisible = FALSE;
     }
     else
