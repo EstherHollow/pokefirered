@@ -18,6 +18,8 @@
 const void RGBToOklab(u16 color, s16* lightness, s16* a, s16* b);
 const u16 OklabToRGB(s16 lightness, s16 a, s16 b);
 
+const u16 ApplyNormal(u16 input, u8 iterations);
+
 const void CartesianToPolar(s16 x, s16 y, u16* radius, u16* theta);
 const void PolarToCartesian(u16 radius, u16 theta, s16* x, s16* y);
 

@@ -63,6 +63,7 @@ EWRAM_DATA struct Pokemon gEnemyParty[PARTY_SIZE] = {};
 EWRAM_DATA struct Pokemon gPlayerParty[PARTY_SIZE] = {};
 EWRAM_DATA struct SpriteTemplate gMultiuseSpriteTemplate = {0};
 static EWRAM_DATA struct MonSpritesGfxManager *sMonSpritesGfxManager = NULL;
+EWRAM_DATA struct SpritePalette gDynamicPalette = {0};
 
 static union PokemonSubstruct *GetSubstruct(struct BoxPokemon *boxMon, u32 personality, u8 substructType);
 static u16 GetDeoxysStat(struct Pokemon *mon, s32 statId);
@@ -5907,10 +5908,6 @@ const struct SpritePalette *GetMonSpritePalStructFromOtIdPersonality(u16 species
         return &gMonPaletteTable[0];
 
     return &gMonPaletteTable[species];
-
-//    u32 shinyValue;
-//    shinyValue = GET_SHINY_VALUE(otId, personality);
-//    if (shinyValue < SHINY_ODDS)
 }
 
 bool32 IsHMMove2(u16 move)

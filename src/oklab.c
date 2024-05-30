@@ -1,8 +1,10 @@
 #include "global.h"
 #include "oklab.h"
+#include "data/graphics/math.h"
 #include "data/graphics/oklab.h"
 
 #define CLAMP(num, min, max) (num < min ? min : num > max ? max : num)
+#define ATAN2(x, y) (x <= y ? gAtanLookup[x * OKLAB_MAX / y] : QUARTER_ROTATION - gAtanLookup[y * OKLAB_MAX / x])
 
 const void RGBToOklab(u16 color, s16* lightness, s16* a, s16* b) {
     s16 red, green, blue, l, m, s;
@@ -66,7 +68,14 @@ const u16 OklabToRGB(s16 lightness, s16 a, s16 b) {
     return TO_COLOR(red, green, blue);
 }
 
-#define ATAN2_LOOKUP(x, y) (x <= y ? gAtanLookup[x * OKLAB_MAX / y] : QUARTER_ROTATION - gAtanLookup[y * OKLAB_MAX / x])
+const u16 ApplyNormal(u16 input, u8 iterations) {
+    while (iterations > 0) {
+        input = gNormalLookup[input];
+        iterations--;
+    }
+
+    return input;
+}
 
 const void CartesianToPolar(s16 x, s16 y, u16* radius, u16* theta) {
     u16 temp;
@@ -75,13 +84,13 @@ const void CartesianToPolar(s16 x, s16 y, u16* radius, u16* theta) {
 
     if (x > 0) {
         if (y > 0) {
-            *theta = ATAN2_LOOKUP(x, y);
+            *theta = ATAN2(x, y);
         }
         else if (y < 0) {
             temp = x;
             x = -y;
             y = temp;
-            *theta = ATAN2_LOOKUP(x, y) + QUARTER_ROTATION;
+            *theta = ATAN2(x, y) + QUARTER_ROTATION;
         }
         else /* y == 0 */ {
             *theta = QUARTER_ROTATION;
@@ -92,27 +101,19 @@ const void CartesianToPolar(s16 x, s16 y, u16* radius, u16* theta) {
             temp = x;
             x = y;
             y = -temp;
-            *theta = ATAN2_LOOKUP(x, y) + (QUARTER_ROTATION * 3);
+            *theta = ATAN2(x, y) + (QUARTER_ROTATION * 3);
         }
         else if (y < 0) {
             x = -x;
             y = -y;
-            *theta = ATAN2_LOOKUP(x, y) + HALF_ROTATION;
+            *theta = ATAN2(x, y) + HALF_ROTATION;
         }
         else /* y == 0 */ {
             *theta = QUARTER_ROTATION * 3;
         }
     }
     else /* x == 0 */ {
-        if (y > 0) {
-            *theta = 0;
-        }
-        else if (y < 0) {
-            *theta = HALF_ROTATION;
-        }
-        else /* y == 0 */ {
-            *theta = 0;
-        }
+        *theta = y >= 0 ? 0 : HALF_ROTATION;
     }
 }
 
