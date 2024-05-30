@@ -24,6 +24,7 @@
 #include "party_menu.h"
 #include "field_specials.h"
 #include "berry.h"
+#include "oklab.h"
 #include "constants/items.h"
 #include "constants/item_effects.h"
 #include "constants/hoenn_cries.h"
@@ -5891,15 +5892,15 @@ const u32 *GetMonFrontSpritePal(struct Pokemon *mon)
 
 const u32 *GetMonSpritePalFromSpeciesAndPersonality(u16 species, u32 otId, u32 personality)
 {
-    u32 shinyValue;
+//    u32 shinyValue;
 
     if (species > SPECIES_EGG)
         return gMonPaletteTable[0].data;
 
-    shinyValue = GET_SHINY_VALUE(otId, personality);
-    if (shinyValue < SHINY_ODDS)
-        return gMonShinyPaletteTable[species].data;
-    else
+//    shinyValue = GET_SHINY_VALUE(otId, personality);
+//    if (shinyValue < SHINY_ODDS)
+//        return gMonShinyPaletteTable[species].data;
+//    else
         return gMonPaletteTable[species].data;
 }
 
@@ -5913,12 +5914,12 @@ const struct CompressedSpritePalette *GetMonSpritePalStruct(struct Pokemon *mon)
 
 const struct CompressedSpritePalette *GetMonSpritePalStructFromOtIdPersonality(u16 species, u32 otId , u32 personality)
 {
-    u32 shinyValue;
+//    u32 shinyValue;
 
-    shinyValue = GET_SHINY_VALUE(otId, personality);
-    if (shinyValue < SHINY_ODDS)
-        return &gMonShinyPaletteTable[species];
-    else
+//    shinyValue = GET_SHINY_VALUE(otId, personality);
+//    if (shinyValue < SHINY_ODDS)
+//        return &gMonShinyPaletteTable[species];
+//    else
         return &gMonPaletteTable[species];
 }
 
