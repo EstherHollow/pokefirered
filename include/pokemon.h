@@ -402,7 +402,7 @@ const u16 *GetMonFrontSpritePal(struct Pokemon *mon);
 const u16 *GetMonSpritePalFromSpeciesAndPersonality(u16 species, u32 otId, u32 personality);
 const struct SpritePalette *GetMonSpritePalStruct(struct Pokemon *mon);
 const struct SpritePalette *GetMonSpritePalStructFromOtIdPersonality(u16 species, u32 otId, u32 personality);
-const struct SpritePalette *RotateMonSpritePalette(u16 species);
+const struct SpritePalette *RotateMonSpritePalette(u16 species, u32 personality);
 bool32 IsHMMove2(u16 move);
 bool8 IsMonSpriteNotFlipped(u16 species);
 s8 GetFlavorRelationByPersonality(u32 personality, u8 flavor);

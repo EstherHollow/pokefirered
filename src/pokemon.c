@@ -25,7 +25,6 @@
 #include "field_specials.h"
 #include "berry.h"
 #include "oklab.h"
-#include "data/pokemon/subsprites.h"
 #include "constants/items.h"
 #include "constants/item_effects.h"
 #include "constants/hoenn_cries.h"
@@ -5908,14 +5907,13 @@ const struct SpritePalette *GetMonSpritePalStructFromOtIdPersonality(u16 species
     if (species > SPECIES_EGG)
         return &gMonPaletteTable[0];
 
-    return RotateMonSpritePalette(species);
+    return RotateMonSpritePalette(species, personality);
 }
 
 //#define REF_GET_OFFSET(index) gSubspriteOffsets[species][GET_BITS2(gSubspriteIndices[species], index)]
 #define REF_ROTATE_COLOR(index) RotateColor(gMonPaletteTable[species].data[index], rotation)
-const struct SpritePalette *RotateMonSpritePalette(u16 species) {
-    u16 rotation = 500;
-//    u8 *offsets = GetMonSubspriteOffsets(species);
+const struct SpritePalette *RotateMonSpritePalette(u16 species, u32 personality) {
+    u16 rotation = ApplyNormal(Random() % (OKLAB_MAX + 1), 1);
 
     const u16 data[16] = {
             0,

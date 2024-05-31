@@ -1,7 +1,7 @@
 #include "global.h"
 #include "oklab.h"
-#include "data/graphics/math.h"
 #include "data/graphics/oklab.h"
+#include "data/graphics/math.h"
 
 #define CLAMP(num, min, max) (num < min ? min : num > max ? max : num)
 #define BLEND(min, max, factor) (((max - min + 1) * factor / 100) + min)
