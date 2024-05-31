@@ -15,6 +15,9 @@
 #define QUARTER_ROTATION (FULL_ROTATION / 4)
 #define EIGTH_ROTATION (FULL_ROTATION / 8)
 
+#define SPECTRUM_SEGMENTS 10
+#define SPECTRUM_SEGMENT_LENGTH 100
+
 const void RGBToOklab(u16 color, s16* lightness, s16* a, s16* b);
 const u16 OklabToRGB(s16 lightness, s16 a, s16 b);
 
@@ -24,5 +27,8 @@ const void CartesianToPolar(s16 x, s16 y, u16* radius, u16* theta);
 const void PolarToCartesian(u16 radius, u16 theta, s16* x, s16* y);
 
 const u16 RotateColor(u16 color, u16 rotation);
+
+const u16 ToBalancedSpectrum(u16 angle);
+const u16 ToLinearSpectrum(u16 angle);
 
 #endif //GUARD_OKLAB_H

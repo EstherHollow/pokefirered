@@ -4,6 +4,7 @@
 #include "data/graphics/oklab.h"
 
 #define CLAMP(num, min, max) (num < min ? min : num > max ? max : num)
+#define BLEND(min, max, factor) (((max - min + 1) * factor / 100) + min)
 #define ATAN2(x, y) (x <= y ? gAtanLookup[x * OKLAB_MAX / y] : QUARTER_ROTATION - gAtanLookup[y * OKLAB_MAX / x])
 
 const void RGBToOklab(u16 color, s16* lightness, s16* a, s16* b) {
@@ -147,8 +148,39 @@ const u16 RotateColor(u16 color, u16 rotation) {
     CartesianToPolar(a, b, &radius, &theta);
 
     radius += 15; // More saturation.
+
+    theta = ToBalancedSpectrum(theta);
     theta = (theta + rotation) % FULL_ROTATION;
+    theta = ToLinearSpectrum(theta);
 
     PolarToCartesian(radius, theta, &a, &b);
     return OklabToRGB(lightness, a, b);
+}
+
+const u16 ToBalancedSpectrum(u16 theta) {
+    u16 index = theta / SPECTRUM_SEGMENT_LENGTH;
+    u16 factor = (theta % SPECTRUM_SEGMENT_LENGTH) * 100 / SPECTRUM_SEGMENT_LENGTH;
+
+    if (index < SPECTRUM_SEGMENTS) {
+        return BLEND(gSpectrumKeys[index], gSpectrumKeys[index + 1], factor);
+    }
+    else {
+        return gSpectrumKeys[SPECTRUM_SEGMENTS];
+    }
+}
+
+const u16 ToLinearSpectrum(u16 theta) {
+    u8 i;
+    u16 factor;
+    u16 result = gSpectrumKeys[SPECTRUM_SEGMENTS]; // Default
+
+    for (i = 0; i < SPECTRUM_SEGMENTS; i++) {
+        if (theta >= gSpectrumKeys[i] && theta < gSpectrumKeys[i + 1]) {
+            factor = (theta - gSpectrumKeys[i]) * SPECTRUM_SEGMENT_LENGTH / (gSpectrumKeys[i + 1] - gSpectrumKeys[i]);
+            result = (i * SPECTRUM_SEGMENT_LENGTH) + factor;
+            break;
+        }
+    }
+
+    return result;
 }
