@@ -25,6 +25,7 @@
 #include "field_specials.h"
 #include "berry.h"
 #include "oklab.h"
+#include "data/pokemon/subsprites.h"
 #include "constants/items.h"
 #include "constants/item_effects.h"
 #include "constants/hoenn_cries.h"
@@ -5907,7 +5908,41 @@ const struct SpritePalette *GetMonSpritePalStructFromOtIdPersonality(u16 species
     if (species > SPECIES_EGG)
         return &gMonPaletteTable[0];
 
-    return &gMonPaletteTable[species];
+    return RotateMonSpritePalette(species);
+}
+
+//#define REF_GET_OFFSET(index) gSubspriteOffsets[species][GET_BITS2(gSubspriteIndices[species], index)]
+#define REF_ROTATE_COLOR(index) RotateColor(gMonPaletteTable[species].data[index], rotation)
+const struct SpritePalette *RotateMonSpritePalette(u16 species) {
+    u16 rotation = 500;
+//    u8 *offsets = GetMonSubspriteOffsets(species);
+
+    const u16 data[16] = {
+            0,
+            REF_ROTATE_COLOR(1),
+            REF_ROTATE_COLOR(2),
+            REF_ROTATE_COLOR(3),
+            REF_ROTATE_COLOR(4),
+            REF_ROTATE_COLOR(5),
+            REF_ROTATE_COLOR(6),
+            REF_ROTATE_COLOR(7),
+            REF_ROTATE_COLOR(8),
+            REF_ROTATE_COLOR(9),
+            REF_ROTATE_COLOR(10),
+            REF_ROTATE_COLOR(11),
+            REF_ROTATE_COLOR(12),
+            REF_ROTATE_COLOR(13),
+            REF_ROTATE_COLOR(14),
+            REF_ROTATE_COLOR(15),
+    };
+
+    struct SpritePalette buffer = {
+            .data = data,
+            .tag = species,
+    };
+
+    gDynamicPalette = buffer;
+    return &gDynamicPalette;
 }
 
 bool32 IsHMMove2(u16 move)

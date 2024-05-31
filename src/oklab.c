@@ -92,7 +92,7 @@ const void CartesianToPolar(s16 x, s16 y, u16* radius, u16* theta) {
             y = temp;
             *theta = ATAN2(x, y) + QUARTER_ROTATION;
         }
-        else /* y == 0 */ {
+        else /*y == 0*/ {
             *theta = QUARTER_ROTATION;
         }
     }
@@ -108,11 +108,11 @@ const void CartesianToPolar(s16 x, s16 y, u16* radius, u16* theta) {
             y = -y;
             *theta = ATAN2(x, y) + HALF_ROTATION;
         }
-        else /* y == 0 */ {
+        else /*y == 0*/ {
             *theta = QUARTER_ROTATION * 3;
         }
     }
-    else /* x == 0 */ {
+    else /*x == 0*/ {
         *theta = y >= 0 ? 0 : HALF_ROTATION;
     }
 }
@@ -144,12 +144,11 @@ const u16 RotateColor(u16 color, u16 rotation) {
     u16 radius, theta;
 
     RGBToOklab(color, &lightness, &a, &b);
-
     CartesianToPolar(a, b, &radius, &theta);
 
+    radius += 15; // More saturation.
     theta = (theta + rotation) % FULL_ROTATION;
 
     PolarToCartesian(radius, theta, &a, &b);
-
     return OklabToRGB(lightness, a, b);
 }
